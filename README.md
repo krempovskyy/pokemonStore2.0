@@ -23,23 +23,45 @@ Table of Contents
 •	Created Tables
 ________________________________________
 Features
-Functionality of the project is described as below, 
-1.	Feature 1 - Dmytro Krempovskyy – Home page 
 
-2.	Feature 2 - Vinh Nguyen
+Below is the list of features to be developed. Progress will be tracked frequently
 
-3.	Feature 3 - Lien Pham 
-4.	Feature 4 – Madushani Piyadasa – Contact Page
+1.	Feature 1 - Dmytro Krempovskyy – User Authentication & Account Management
 
-5.	Feature 5 – Madushani / Dmytro - Shopping  Cart
-6.	Feature 6 – Vinh Nguyen  - Admin console
+2.	Feature 2 - Vinh Nguyen / Lien Pham - Product Listening and Categories 
+
+3.	Feature 3 – Madushani Piyadasa – Contact Page
+   
+    > A contact form allow users to send inqueries and Feedback
+    > includes fields for name, e-mail, subject and message
+    > javacsript validation to ensure form compeleteness
+
+4.	Feature 4 – Madushani / Dmytro - Shopping  Cart
+
+    > users can add/ remove items from their cart
+    > Order Summary
+
+5.	Feature 5 – Vinh Nguyen  - Admin console
+
+
+6. Feature 6 - Responsive and Accessible Design
+    > Optimized for Mobile, Tablet and Desktop users 
 
 
 ________________________________________
 
 Database Tables
 
-List the database tables that are part of your project.
+Below are the planned database tables for the Project
+
+
+		
+		
+		
+		
+		
+		
+		
 •	Table 1 (Created By): Table Name
 •	Table 2 (Created By): Table Name
 •	Table 3 (Created By): Table Name
