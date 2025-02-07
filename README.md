@@ -40,7 +40,8 @@ Below is the list of features to be developed. Progress will be tracked frequent
 
 4.	Feature 4 – Madushani / Dmytro - Shopping  Cart
 
-    > users can add/ remove items from their cart
+    > Users can add/ remove items from their cart
+    
     > Order Summary
 
 5.	Feature 5 – Vinh Nguyen  - Admin console
