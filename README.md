@@ -33,7 +33,9 @@ Below is the list of features to be developed. Progress will be tracked frequent
 3.	Feature 3 – Madushani Piyadasa – Contact Page
    
     > A contact form allow users to send inqueries and Feedback
+    
     > includes fields for name, e-mail, subject and message
+     
     > javacsript validation to ensure form compeleteness
 
 4.	Feature 4 – Madushani / Dmytro - Shopping  Cart
