@@ -15,7 +15,9 @@ Title : Pokémon Merchandise Online Shop
 Objective 
 
 The Pokémon merchandise online shop project aims to create a user-friendly, engaging, and visually appealing e-commerce platform for fans of the Pokémon franchise.  
+
 Background
+
 This website will serve as a one stop shop for purchasing official Pokémon themed merchandise, including clothing, accessories, toys, collectibles and more. The platform will prioritize usability, accessibility, and a seamless shopping experience to cater to Pokémon enthusiasts. 
 
 Table of Contents
