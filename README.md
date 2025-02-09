@@ -1,6 +1,8 @@
 # pokemonStore2.0
 Pokémon Merchandise Online Shop - Team Number 9
 
+
+
 1.	Vinh Nguyen
 2.	Lien Pham
 3.	Dmytro Krempovskyy
@@ -64,6 +66,14 @@ _______________________________________
 ## Database Tables
 
 Below is the planned database structure
+
+| Table Name       | Created By             | Description    |
+| -----------      | ----------             | ------------   |
+| Users            | Dmytro                 | Stores User Information|
+| Products         | Vinh/Lien              |                                       |
+| Cart             |                        | Stores Cart Items                 |
+| Contact          | Madu                   | Stores User Inquery   |
+
 
 **Table name  Created by  Description**
 
