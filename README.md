@@ -26,38 +26,92 @@ Table of Contents
 ________________________________________
 ## Features
 Functionality of the project is described as below, 
-1.	Feature 1 - Dmytro Krempovskyy – Home page 
 
-2.	Feature 2 - Vinh Nguyen
-
-3.	Feature 3 - Lien Pham 
-4.	Feature 4 – Madushani Piyadasa – Contact Page
-
-5.	Feature 5 – Madushani / Dmytro - Shopping  Cart
-6.	Feature 6 – Vinh Nguyen  - Admin console
+1.	Feature 1 - Dmytro Krempovskyy – User Authentication & Account Management
 
 
-________________________________________
+2.	Feature 2 - Vinh Nguyen / Lien Pham - Product Listening and Categories 
 
-Database Tables
 
-List the database tables that are part of your project.
-•	Table 1 (Created By): Table Name
-•	Table 2 (Created By): Table Name
-•	Table 3 (Created By): Table Name
+3.	Feature 3 – Madushani Piyadasa – Contact Page
+
+    > A contact form allow users to send inqueries and Feedback
+
+    > Includes fields for name, e-mail, subject and message
+     
+    > Javacsript validation to ensure form compeleteness
+
+4.	Feature 4 – Madushani / Dmytro - Shopping  Cart
+
+    > Users can add/ remove items from their cart
+
+    > Order Summary
+
+5.	Feature 5 - Vinh Nguyen / Lien Pham - Search & Filters
+
+
+
+6. Feature 6 – Vinh Nguyen  - Admin console
+
+
+7.	Feature 7 - Responsive and Accessible Design
+
+    > Optimized for Mobile, Tablet and Desktop users 
+
+
+_______________________________________
+
+## Database Tables
+
+Below is the planned database structure
+
+**Table name  Created by  Description**
+Users       Dmytro      Stores User Information 
+
+Products    Vinh/Lien   
+
+Cart                    strores cart items
+
+Contact     Madu        Stores user inquery
+
+
 Include the ER Diagram of the database.
 ________________________________________
 
 ## # Created Forms
 
-List and describe any forms that have been created as part of your project. Include details about the purpose of each form and any validation logic.
-•	Form 1 (Created By): Form Name: Link to the related code file (github) | Link to the form (shell.hamk.fi). | Validations Applied
-•	Form 2: (Created By): Form Name: Link to the related code file (github) | Link to the form (shell.hamk.fi). | Validations Applied
-•	Form 3: (Created By): Form Name: Link to the related code file (github) | Link to the form (shell.hamk.fi). | Validations Applied
+List of forms include in the project
+
+**Form name     Created by       Description           Validation Applied**
+
+Registration    Dmytro          Allow users to create accounts  E-mail & password validation 
+
+Login form      Dmytro          User authentication     Required fields and password encryption 
+
+Product upload form     Vinh    admin adds new products     Image validation adn required fields 
+
+Order Summary form              Summary of the shopping cart  
+
+Contact form        Madu        User submit inquiries       required fields and email validation 
+
 ________________________________________
 
 ## # Created Tables
-List any tables that you have created in the project work
+Database tables that will be created
+
+Table name      created by      link to GitHub      Link to Shell 
+
+Users
+
+Products
+
+Cart
+
+Contact 
+
+
+
+
 •	Table 1 (Created By): Table Name | Link to the related code file (github) | Link to the table (shell.hamk.fi).
 •	Table 2 (Created By): Table Name | Link to the related code file (github) | Link to the table (shell.hamk.fi).
 •	Table 3 (Created By): Table Name | Link to the related code file (github) | Link to the table (shell.hamk.fi).
