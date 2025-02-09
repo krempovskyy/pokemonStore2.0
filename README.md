@@ -67,23 +67,14 @@ _______________________________________
 
 Below is the planned database structure
 
-| Table Name       | Created By             | Description    |
-| -----------      | ----------             | ------------   |
-| Users            | Dmytro                 | Stores User Information|
-| Products         | Vinh/Lien              |                                       |
-| Cart             |                        | Stores Cart Items                 |
-| Contact          | Madu                   | Stores User Inquery   |
+| **Table Name       | Created By **            | **Description  **  
+| -----------        | ----------               | ------------   
+| Users              | Dmytro                   | Stores User Information
+| Products           | Vinh/Lien                |                                       
+| Cart               |                          | Stores Cart Items                 
+| Contact            | Madu                     | Stores User Inquery   
 
 
-**Table name  Created by  Description**
-
-Users       Dmytro      Stores User Information 
-
-Products    Vinh/Lien   
-
-Cart                    strores cart items
-
-Contact     Madu        Stores user inquery
 
 
 Include the ER Diagram of the database.
