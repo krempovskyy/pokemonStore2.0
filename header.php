@@ -62,5 +62,5 @@ header .logo img{
                 <li class="nav-item"><a href="contact.html" class="nav-link">Contact Us</a></li> 
             </ul>
         </nav>
-        <h1 class="logo"><img src="logo.png" alt="logo"></h1>
+        <h1 class="logo"><img src="Images/logo.png" alt="logo"></h1>
     </header>
