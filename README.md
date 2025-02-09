@@ -98,17 +98,17 @@ ________________________________________
 Database tables that will be created
 
 |**Table name**        | **Created by**   | **Link to GitHub**           | **Link to Shell**
-|---------------       | -----------  | ---------------                  | ---------------------
-| Users                |              |                                  |
-| Prodcuts             |              |                                  |
-| Cart                 |              |                                  |
-| Contact              |              |                                  |
+|---------------       | -----------      | ---------------              | ---------------------
+| Users                |                  |                              |
+| Prodcuts             |                  |                              |
+| Cart                 |                  |                              |
+| Contact              |                  |                              |
 
  
 
 
 
 
-•	Table 1 (Created By): Table Name | Link to the related code file (github) | Link to the table (shell.hamk.fi).
+
 
  
