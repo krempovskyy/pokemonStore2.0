@@ -1,5 +1,7 @@
 # pokemonStore2.0
-Pokémon Merchandise Online Shop - Team Number
+Pokémon Merchandise Online Shop 
+
+ Team Number
 
 1.	Vinh Nguyen
 2.	Lien Pham
@@ -8,9 +10,9 @@ Pokémon Merchandise Online Shop - Team Number
 
 A brief description of our web development project.
 
-Title : Pokémon Merchandise Online Shop
+# Title : Pokémon Merchandise Online Shop
 
-Objective 
+## Objective ## 
 
 The Pokémon merchandise online shop project aims to create a user-friendly, engaging, and visually appealing e-commerce platform for fans of the Pokémon franchise.  
 Background
@@ -22,31 +24,51 @@ Table of Contents
 •	Created Forms
 •	Created Tables
 ________________________________________
-Features
-Functionality of the project is described as below, 
-1.	Feature 1 - Dmytro Krempovskyy – Home page 
 
-2.	Feature 2 - Vinh Nguyen
+## # Features
 
-3.	Feature 3 - Lien Pham 
-4.	Feature 4 – Madushani Piyadasa – Contact Page
+Below is the list of features to be developed. Progress will be tracked frequently
 
-5.	Feature 5 – Madushani / Dmytro - Shopping  Cart
-6.	Feature 6 – Vinh Nguyen  - Admin console
+1.	Feature 1 - Dmytro Krempovskyy – User Authentication & Account Management
+
+2.	Feature 2 - Vinh Nguyen / Lien Pham - Product Listening and Categories 
+
+3.	Feature 3 – Madushani Piyadasa – Contact Page
+   
+    > A contact form allow users to send inqueries and Feedback
+
+    > Includes fields for name, e-mail, subject and message
+
+    > Javacsript validation to ensure form compeleteness
+
+4.	Feature 4 – Madushani / Dmytro - Shopping  Cart
+
+    > Users can add/ remove items from their cart
+    > Order Summary
+
+5.	Feature 5 – Vinh Nguyen  - Admin console
+
+
+6. Feature 6 - Responsive and Accessible Design
+    > Optimized for Mobile, Tablet and Desktop users 
 
 
 ________________________________________
 
-Database Tables
+## # Database Tables
 
-List the database tables that are part of your project.
-•	Table 1 (Created By): Table Name
-•	Table 2 (Created By): Table Name
-•	Table 3 (Created By): Table Name
-Include the ER Diagram of the database.
+Below are the planned database tables for the Project
+
+**Table Name |  Created By |  Description**
+> Users      |             |                
+> Products   |             |    
+> Orders     |             | 
+> Cart       |             |  
+> Inquiries  |  Madushani  |  Cus.inq from form 
+
 ________________________________________
 
-Created Forms
+## # Created Forms
 
 List and describe any forms that have been created as part of your project. Include details about the purpose of each form and any validation logic.
 •	Form 1 (Created By): Form Name: Link to the related code file (github) | Link to the form (shell.hamk.fi). | Validations Applied
@@ -54,7 +76,7 @@ List and describe any forms that have been created as part of your project. Incl
 •	Form 3: (Created By): Form Name: Link to the related code file (github) | Link to the form (shell.hamk.fi). | Validations Applied
 ________________________________________
 
-Created Tables
+## # Created Tables
 List any tables that you have created in the project work
 •	Table 1 (Created By): Table Name | Link to the related code file (github) | Link to the table (shell.hamk.fi).
 •	Table 2 (Created By): Table Name | Link to the related code file (github) | Link to the table (shell.hamk.fi).
