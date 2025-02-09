@@ -102,15 +102,18 @@ ________________________________________
 ## # Created Tables
 Database tables that will be created
 
-Table name      created by      link to GitHub      Link to Shell 
+|**Table name          | Created by   | Link to GitHub                   | Link to Shell**
+|---------------       | -----------  | ---------------                  | ---------------------
 
-Users
+| Users                |              |                                  |
 
-Products
+| Prodcuts             |              |                                  |
 
-Cart
+| Cart                 |              |                                  |
 
-Contact 
+| Contact              |              |                                  |
+
+ 
 
 
 
