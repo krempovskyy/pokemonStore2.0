@@ -24,7 +24,7 @@ Table of Contents
 •	Created Forms
 •	Created Tables
 ________________________________________
-Features
+## Features
 Functionality of the project is described as below, 
 1.	Feature 1 - Dmytro Krempovskyy – Home page 
 
