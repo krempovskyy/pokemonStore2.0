@@ -67,7 +67,7 @@ _______________________________________
 
 Below is the planned database structure
 
-| **Table Name       | Created By **            | **Description  **  
+| **Table Name**      | **Created By**            | **Description**  
 | -----------        | ----------               | ------------   
 | Users              | Dmytro                   | Stores User Information
 | Products           | Vinh/Lien                |                                       
@@ -84,7 +84,7 @@ ________________________________________
 
 List of forms include in the project
 
-|**Form name          | Created by **  | Description **                   | **Validation Applied**
+|**Form name**        | **Created by** | **Description **                 | **Validation Applied**
 |---------------      | -----------    | ---------------                  | ---------------------
 | Registration        | Dmytro         | Allow users to create accounts   | E-mail & password validation 
 | Login form          | Dmytro         | User authentication              | Required fields and password encryption 
@@ -97,15 +97,11 @@ ________________________________________
 ## # Created Tables
 Database tables that will be created
 
-|**Table name          | Created by   | Link to GitHub                   | Link to Shell**
+|**Table name**        | **Created by**   | **Link to GitHub**           | **Link to Shell**
 |---------------       | -----------  | ---------------                  | ---------------------
-
 | Users                |              |                                  |
-
 | Prodcuts             |              |                                  |
-
 | Cart                 |              |                                  |
-
 | Contact              |              |                                  |
 
  
