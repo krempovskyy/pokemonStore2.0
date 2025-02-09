@@ -66,6 +66,7 @@ _______________________________________
 Below is the planned database structure
 
 **Table name  Created by  Description**
+
 Users       Dmytro      Stores User Information 
 
 Products    Vinh/Lien   
