@@ -84,8 +84,8 @@ ________________________________________
 
 List of forms include in the project
 
-|**Form name          | Created by   | Description                       | Validation Applied**
-|---------------      | -----------  | ---------------                   | ---------------------
+|**Form name          | Created by **  | Description **                      | **Validation Applied**
+|---------------      | -----------    | ---------------                     | ---------------------
 
 | Registration        | Dmytro       | Allow users to create accounts    | E-mail & password validation 
 
