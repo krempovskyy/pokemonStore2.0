@@ -84,17 +84,18 @@ ________________________________________
 
 List of forms include in the project
 
-**Form name           Created by       Description                            Validation Applied**
+|**Form name          | Created by   | Description                       | Validation Applied**
+|---------------      | -----------  | ---------------                   | ---------------------
 
-Registration          Dmytro          Allow users to create accounts          E-mail & password validation 
+| Registration        | Dmytro       | Allow users to create accounts    | E-mail & password validation 
 
-Login form            Dmytro          User authentication                     Required fields and password encryption 
+| Login form          | Dmytro       | User authentication               | Required fields and password encryption 
 
-Product upload form   Vinh            Admin adds new products                 Image validation adn required fields 
+| Product upload form | Vinh         | Admin adds new products           | Image validation adn required fields 
 
-Order Summary form    Madu/Dmytro     Summary of the shopping cart  
+| Order Summary form  | Madu/Dmytro  | Summary of the shopping cart      |
 
-Contact form          Madu            User submit inquiries                   Required fields and email validation 
+| Contact form        | Madu         | User submit inquiries             | Required fields and email validation 
 
 ________________________________________
 
