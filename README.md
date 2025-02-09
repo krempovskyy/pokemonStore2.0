@@ -1,5 +1,5 @@
 # pokemonStore2.0
-Pokémon Merchandise Online Shop - Team Number
+Pokémon Merchandise Online Shop - Team Number 9
 
 1.	Vinh Nguyen
 2.	Lien Pham
