@@ -1,0 +1,143 @@
+/* Login Page */
+.login-page {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #8860d0 0%, #5c4d8c 100%);
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.login-card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.1);
+    animation: fadeIn 0.5s ease;
+}
+
+.login-logo {
+    max-width: 150px;
+    height: auto;
+}
+
+/* Form Styles */
+.input-group {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.input-group-text {
+    background: #f8f9fa;
+    border: none;
+    color: #8860d0;
+}
+
+.form-control {
+    border: none;
+    padding: 0.75rem 1rem;
+    background: #f8f9fa;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    background: #fff;
+}
+
+/* Login Button */
+.login-btn {
+    padding: 0.75rem;
+    background: linear-gradient(135deg, #8860d0 0%, #5c4d8c 100%);
+    border: none;
+    font-weight: 500;
+    position: relative;
+    height: 48px;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #7450b3 0%, #4c3f73 100%);
+}
+
+/* Custom Spinner */
+.custom-spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Loading State */
+.login-btn.loading .btn-text {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.login-btn.loading .custom-spinner {
+    opacity: 1;
+    visibility: visible;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* Toggle Password Button */
+.toggle-password {
+    border: none;
+    background: #f8f9fa;
+}
+
+.toggle-password:hover {
+    background: #e9ecef;
+}
+
+/* Remember Me & Forgot Password */
+.form-check-input:checked {
+    background-color: #8860d0;
+    border-color: #8860d0;
+}
+
+.forgot-password {
+    color: #8860d0;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.forgot-password:hover {
+    color: #5c4d8c;
+    text-decoration: underline;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .login-card {
+        padding: 2rem;
+        margin: 1rem;
+    }
+    
+    .login-logo {
+        max-width: 120px;
+    }
+}

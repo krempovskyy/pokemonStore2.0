@@ -32,8 +32,35 @@ Functionality of the project is described as below,
 1.	Feature 1 - Dmytro Krempovskyy – User Authentication & Account Management
 
 
-2.	Feature 2 - Vinh Nguyen / Lien Pham - Product Listening and Categories 
+2.	Feature 2 - Product Listing and Categories
 
+### Implemented Features
+- **Product Display**
+  - Responsive product grid layout
+  - Product cards with image, name, price
+  - Category badges and hover effects
+
+- **Filter System**
+  - Brand filters (Pokemon/Figure)
+  - Interactive price range slider
+  - Real-time filtering functionality
+
+- **Quick Review**
+  - Modal-based product preview
+  - Image gallery with thumbnails
+  - Detailed product information
+  - Mobile-friendly touch interactions
+
+### Files Structure
+```
+toys.php         - Main products page
+css/products.css - Styling
+scripts/products.js - Filter & Quick Review functionality
+```
+
+### Contributors
+- **Vinh Nguyen** - Filter system & interactions
+- **Lien Pham** - Product grid & UI design
 
 3.	Feature 3 – Madushani Piyadasa – Contact Page
 
