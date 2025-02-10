@@ -54,6 +54,7 @@ Functionality of the project is described as below,
 ### Files Structure
 ```
 toys.php         - Main products page
+clothes.php      - Main products page
 css/products.css - Styling
 scripts/products.js - Filter & Quick Review functionality
 ```
@@ -77,7 +78,8 @@ scripts/products.js - Filter & Quick Review functionality
     > Order Summary
 
 5.	Feature 5 - Vinh Nguyen / Lien Pham - Search & Filters
-
+    > Users can search/ filter which products they looking for quickly
+    > Users can shorten the products list suitable for their demand
 
 
 6. Feature 6 – Vinh Nguyen  - Admin console
@@ -97,7 +99,7 @@ Below is the planned database structure
 | **Table Name**      | **Created By**            | **Description**  
 | -----------        | ----------               | ------------   
 | Users              | Dmytro                   | Stores User Information
-| Products           | Vinh/Lien                |                                       
+| Products           | Vinh/Lien                | Stores Products Infomation                                      
 | Cart               |                          | Stores Cart Items                 
 | Contact            | Madu                     | Stores User Inquery   
 
@@ -115,7 +117,7 @@ List of forms include in the project
 |---------------      | -----------    | ---------------                  | ---------------------
 | Registration        | Dmytro         | Allow users to create accounts   | E-mail & password validation 
 | Login form          | Dmytro         | User authentication              | Required fields and password encryption 
-| Product upload form | Vinh           | Admin adds new products          | Image validation adn required fields 
+| Product upload form | Vinh           | Admin adds new products          | Image validation and required fields 
 | Order Summary form  | Madu/Dmytro    | Summary of the shopping cart     |
 | Contact form        | Madu           | User submit inquiries            | Required fields and email validation 
 
@@ -127,7 +129,8 @@ Database tables that will be created
 |**Table name**        | **Created by**   | **Link to GitHub**           | **Link to Shell**
 |---------------       | -----------      | ---------------              | ---------------------
 | Users                |                  |                              |
-| Prodcuts             |                  |                              |
+| Products / Toys      |                  |                              |
+| Products / Clothes   |                  |                              |
 | Cart                 |                  |                              |
 | Contact              |                  |                              |
 
