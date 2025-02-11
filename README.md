@@ -67,7 +67,7 @@ _______________________________________
 
 Below is the planned database structure
 
-| **Table Name**      | **Created By**            | **Description**  
+| **Table Name**     | **Created By**           | **Description**  
 | -----------        | ----------               | ------------   
 | Users              | Dmytro                   | Stores User Information
 | Products           | Vinh/Lien                |                                       
