@@ -131,7 +131,7 @@ Database tables that will be created
 | Users                |                  |                              |
 | Products / Toys      |                  |                              |
 | Products / Clothes   |                  |                              |
-| Cart                 |                  |                              |
+6| Cart                 |                  |                              |
 | Contact              |                  |                              |
 
  
