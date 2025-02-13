@@ -8,6 +8,7 @@ $products = [
     [
         'name' => 'Crop top',
         'price' => 26.99,
+        'category' => 'Women',
         'image' => 'CROP TOP.png',
         'gallery' => [
             'CROP TOP.png'
@@ -16,6 +17,7 @@ $products = [
     [
         'name' => 'Tank Top',
         'price' => 29.99,
+        'category' => 'Women',
         'image' => 'TANK TOP.png',
         'gallery' => [
             'TANK TOP.png'
@@ -24,6 +26,7 @@ $products = [
     [
         'name' => 'Hoodie',
         'price' => 49.99,
+        'category'=> 'Women',
         'image' => 'HOODIE WOMAN.png',
         'gallery' => [
             'HOODIE WOMAN.png'
@@ -32,6 +35,7 @@ $products = [
     [
         'name' => 'Jacket',
         'price' => 39.99,
+        'category'=> 'Men',
         'image' => 'JACKET MAN.png',
         'gallery' => [
             'JACKET MAN.png'
@@ -40,6 +44,7 @@ $products = [
     [
         'name' => 'Hoodie',
         'price' => 49.99,
+        'category'=> 'Men',
         'image' => 'HOODIE MAN.png',
         'gallery' => [
             'HOODIE MAN.png'
@@ -48,6 +53,7 @@ $products = [
     [
         'name' => 'Sweater',
         'price' => 59.99,
+        'category'=> 'Men',
         'image' => 'SWEATER MAN.png',
         'gallery' => [
             'SWEATER MAN.png'
@@ -56,6 +62,7 @@ $products = [
     [
         'name' => 'Hat',
         'price' => 19.99,
+        'category'=> 'Unisex',
         'image' => 'UNI HAT.png',
         'gallery' => [
             'UNI HAT.png'
@@ -64,6 +71,7 @@ $products = [
     [
         'name' => 'T-Shirt',
         'price' => 19.99,
+        'category'=> 'Unisex',
         'image' => 'T SHIRT MEN.png',
         'gallery' => [
             'T SHIRT MEN.png'
@@ -72,6 +80,7 @@ $products = [
     [
         'name' => 'Gloves',
         'price' => 9.99,
+        'category'=> 'Unisex',
         'image' => 'GLOVES UNI.png',
         'gallery' => [
             'GLOVES UNI.png'
@@ -80,6 +89,7 @@ $products = [
     [
         'name' => 'Multi Purposes Tote',
         'price' => 29.99,
+        'category'=> 'Unisex',
         'image' => 'TOTE.png',
         'gallery' => [
             'TOTE.png'
@@ -88,6 +98,7 @@ $products = [
     [
         'name' => 'Earbuds Case',
         'price' => 19.99,
+        'category'=> 'Unisex',
         'image' => 'CASE EARBUDS.png',
         'gallery' => [
             'CASE EARBUDS.png'
@@ -96,6 +107,7 @@ $products = [
     [
         'name' => 'IP Shock Case',
         'price' => 19.99,
+        'category'=> 'Unisex',
         'image' => 'SHOCK CASE.png',
         'gallery' => [
             'SHOCK CASE.png'
@@ -168,11 +180,11 @@ $products = [
                 <div class="products-grid">
                     <div class="row g-4">
                         <?php
-                        // Loop through products
                         foreach ($products as $product) {
+                            if ($product['category'] == "Women") {
                             echo '<div class="col-12 col-md-6 col-lg-4">
                                     <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
-                                        <div class="product-badge">FIGURE</div>
+                                        <div class="product-badge">Women</div>
                                         <div class="img-container">
                                             <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
                                             <div class="quick-view">
@@ -191,6 +203,58 @@ $products = [
                                         </div>
                                     </div>
                                 </div>';
+                            } 
+                            elseif ($product['category'] == "Men") 
+                            {
+                                echo '<div class="col-12 col-md-6 col-lg-4">
+                                    <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
+                                        <div class="product-badge">Men</div>
+                                        <div class="img-container">
+                                            <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
+                                            <div class="quick-view">
+                                                <button class="quick-view-btn" aria-label="Quick view ' . $product['name'] . '">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i> Quick View
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <h3 class="product-title">' . $product['name'] . '</h3>
+                                            <p class="product-price">$'. $product['price'] . '</p>
+                                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(this, ' . $product['price'] . ')">
+                                                <span class="btn-text">ADD TO CART</span>
+                                                <span class="loading-spinner d-none"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>';# code...
+
+                            }
+                            else  {
+                                # code...
+                            
+                            
+                                echo '<div class="col-12 col-md-6 col-lg-4">
+                                    <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
+                                        <div class="product-badge">Unisex</div>
+                                        <div class="img-container">
+                                            <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
+                                            <div class="quick-view">
+                                                <button class="quick-view-btn" aria-label="Quick view ' . $product['name'] . '">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i> Quick View
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <h3 class="product-title">' . $product['name'] . '</h3>
+                                            <p class="product-price">$'. $product['price'] . '</p>
+                                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(this, ' . $product['price'] . ')">
+                                                <span class="btn-text">ADD TO CART</span>
+                                                <span class="loading-spinner d-none"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>';# code...
+                            } 
                         }
                         ?>
                     </div>
@@ -235,7 +299,7 @@ $products = [
                                 </div>
                                 <div class="stat-item">
                                     <div class="stat-label">Category</div>
-                                    <div class="stat-value">Figure</div>
+                                    <div class="stat-value"><?php echo $product['category']; ?></div>
                                 </div>
                             </div>
                             <button class="add-to-cart-btn w-100">
