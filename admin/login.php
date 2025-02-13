@@ -9,7 +9,7 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <!-- Custom CSS -->
-    <link href="css/login.css" rel="stylesheet">
+    <link href="/admin/css/login.css" rel="stylesheet">
 </head>
 <body class="login-page">
     <div class="container">
@@ -17,7 +17,7 @@
             <div class="col-md-6 col-lg-4">
                 <div class="login-card">
                     <div class="text-center mb-4">
-                        <img src="../images/logo.png" alt="Pokemon Store Logo" class="login-logo">
+                        <img src="/images/logo.png" alt="Pokemon Store Logo" class="login-logo">
                         <h2 class="mt-3">Admin Login</h2>
                     </div>
                     
@@ -64,6 +64,6 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
-    <script src="js/admin.js"></script>
+    <script src="/admin/js/admin.js"></script>
 </body>
 </html>

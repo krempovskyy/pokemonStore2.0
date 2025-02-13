@@ -10,19 +10,25 @@ checkAuth();
     <title>Admin Dashboard - Pokemon Store</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="/admin/css/dashboard.css" rel="stylesheet">
 </head>
 <body class="admin-dashboard">
-    <div class="container-fluid py-5">
+    <!-- Toggle Menu Button -->
+    <button class="menu-toggle">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-lg-3 side-bar">
+            <div class="side-bar">
                 <div class="logo-container mb-4">
-                    <img src="../images/logo.png" alt="Logo" class="logo">
+                    <img src="/images/logo.png" alt="Logo" class="logo">
                 </div>
                 
-                <div class="menu-container">
-                    <nav class="nav-menu">
+                <nav class="nav-menu">
+                    <!-- Menu Items -->
+                    <div class="menu-items">
                         <a href="index.php" class="menu-item active">
                             <i class="fas fa-home"></i>
                             <span>Dashboard</span>
@@ -30,6 +36,7 @@ checkAuth();
                         <a href="products.php" class="menu-item">  
                             <i class="fas fa-box"></i>
                             <span>Products</span>
+                        </a>
                         <a href="orders.php" class="menu-item">
                             <i class="fas fa-shopping-cart"></i>
                             <span>Orders</span>
@@ -38,20 +45,131 @@ checkAuth();
                             <i class="fas fa-users"></i>
                             <span>Customers</span>
                         </a>
-                    </nav>
-                </div>
+                    </div>
 
-
-
-                <!-- Main Content -->
-                <div class="menu-container">
-                </div>
+                    <!-- User Badge -->
+                    <div class="userBadge">
+                        <div class="user-info">
+                            <img src="/images/user.png" alt="User" class="user-avatar">
+                            <div class="user-details">
+                                <span class="user-name">Admin</span>
+                                <span class="user-role">Administrator</span>
+                            </div>
+                        </div>
+                        <a href="#" class="menu-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </nav>
             </div>
-            <div class="col-lg-9">
 
+            <!-- Main Content -->
+            <div class="main-content">
+                <!-- Content Header -->
+                <div class="content-header">
+                    <h1>Dashboard Overview</h1>
+                    <div class="date-time">
+                        <?php echo date('l, F j, Y'); ?>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-row">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Total Orders</h3>
+                            <p class="stats-number">150</p>
+                            <span class="stats-trend positive">
+                                <i class="fas fa-arrow-up"></i> 12.5%
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Revenue</h3>
+                            <p class="stats-number">$15,890</p>
+                            <span class="stats-trend positive">
+                                <i class="fas fa-arrow-up"></i> 8.2%
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Customers</h3>
+                            <p class="stats-number">1,250</p>
+                            <span class="stats-trend positive">
+                                <i class="fas fa-arrow-up"></i> 5.3%
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Products</h3>
+                            <p class="stats-number">486</p>
+                            <span class="stats-trend negative">
+                                <i class="fas fa-arrow-down"></i> 2.1%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="recent-orders">
+                    <div class="section-header">
+                        <h2>Recent Orders</h2>
+                        <a href="orders.php" class="btn btn-primary">
+                            View All
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Products</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Sample data -->
+                                <tr>
+                                    <td>#ORD-2024</td>
+                                    <td>John Doe</td>
+                                    <td>Pikachu Plush, Pokemon Cards</td>
+                                    <td>$89.99</td>
+                                    <td><span class="badge bg-success">Completed</span></td>
+                                    <td>2024-01-20</td>
+                                </tr>
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/admin/js/dashboard.js"></script>
 </body>
 </html>

@@ -1,36 +1,23 @@
-# # Protect admin directory
-# <IfModule mod_rewrite.c>
-#     RewriteEngine On
-#     RewriteBase /
-    
-#     # Redirect all requests to HTTPS
-#     RewriteCond %{HTTPS} off
-#     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-    
-#     # Protect admin directory
-#     RewriteRule ^admin/$ admin/index.php [L]
-# </IfModule>
+# Enable rewrite engine
+RewriteEngine On
+RewriteBase /
 
-# Protect .htaccess file
+# Protect .htaccess
 <Files .htaccess>
     Order allow,deny
     Deny from all
 </Files>
 
-# Protect admin directory with Basic Auth
-<Directory "/path/to/your/admin">
-    AuthType Basic
-    AuthName "Admin Area"
-    AuthUserFile /path/to/.htpasswd
-    Require valid-user
-</Directory>
+# Admin routing rules
+RewriteCond %{REQUEST_URI} ^/admin/?$
+RewriteRule ^admin/?$ admin/index.php [L]
 
-# Test mode
+RewriteCond %{REQUEST_URI} ^/admin/login/?$
+RewriteRule ^admin/login/?$ admin/login.php [L]
+
+# Protect admin directory except for development
 <IfModule mod_rewrite.c>
-    RewriteEngine On
-    RewriteBase /
-    
-    # Allow access to admin directory in development environment
+    # Allow access only from localhost
     RewriteCond %{HTTP_HOST} ^localhost [NC,OR]
     RewriteCond %{HTTP_HOST} ^127\.0\.0\.1 [NC]
     RewriteRule ^admin/(.*)$ admin/$1 [L]
