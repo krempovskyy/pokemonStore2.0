@@ -137,12 +137,12 @@ $products = [
                     <div class="filter-group">
                         <h3>Gender</h3>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="type">
-                            <label class="form-check-label" for="type">Men & Unisex</label>
+                            <input class="form-check-input" type="checkbox" value="" id="Mtype">
+                            <label class="form-check-label" for="Mtype">Men & Unisex</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="type">
-                            <label class="form-check-label" for="type">Women & Unisex</label>
+                            <input class="form-check-input" type="checkbox" value="" id="Wtype">
+                            <label class="form-check-label" for="Wtype">Women & Unisex</label>
                         </div>
                     </div>
                     
@@ -299,7 +299,8 @@ $products = [
                                 </div>
                                 <div class="stat-item">
                                     <div class="stat-label">Category</div>
-                                    <div class="stat-value"><?php echo $product['category']; ?></div>
+                                    <div class="stat-value"><?php echo $product['category']; ?></div> 
+                                    <!-- //add category name but always display UNISEX// -->
                                 </div>
                             </div>
                             <button class="add-to-cart-btn w-100">

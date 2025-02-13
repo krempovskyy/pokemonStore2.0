@@ -5,6 +5,8 @@ const selectedPrice = document.querySelector('.selected-price');
 // Get filter elements
 const pokemonCheckbox = document.getElementById('pokemon');
 const figureCheckbox = document.getElementById('figure');
+const mtypeCheckbox = document.getElementById('Mtype'); //ADD FILTER CLOTHES PAGE//
+const wtypeCheckbox = document.getElementById('Wtype'); //ADD FILTER CLOTHES PAGE//
 const productCards = document.querySelectorAll('.product-card');
 
 // Filter products based on checkboxes and price
@@ -12,17 +14,21 @@ function filterProducts() {
     const maxPrice = parseInt(priceRange.value);
     const showPokemon = pokemonCheckbox.checked;
     const showFigure = figureCheckbox.checked;
+    const showMen = mtypeCheckbox.checked; //FOR CLOTHES PAGE//
+    const showWomen = wtypeCheckbox.checked; // FOR CLOTHES PAGE//
     let visibleProducts = 0;
 
     productCards.forEach(card => {
         const price = parseInt(card.querySelector('.product-price').textContent.replace('$', ''));
         const isFigure = card.querySelector('.product-badge').textContent === 'FIGURE';
         const isPokemon = !isFigure;
+        const isMen = card.querySelector('.product-badge').textContent === 'Men & Unisex'; //CLOTHES PAGE//
+        const isWomen = card.querySelector('.product-badge').textContent === 'Women & unisex'; //CLOTHES PAGE//
 
         const matchesPrice = price <= maxPrice;
         const matchesCategory = (!showPokemon && !showFigure) || (showPokemon && isPokemon) || (showFigure && isFigure);
-
-        const shouldShow = matchesPrice && matchesCategory;
+        const matchesGender = (!showMen && !showWomen) || (showMen && isMen) || (showWomen && isWomen); //CLOTHES PAGE//
+        const shouldShow = matchesPrice && matchesCategory && matchesGender; //CLOTHES PAGES//
         card.closest('.col-12').style.display = shouldShow ? 'block' : 'none';
         if (shouldShow) visibleProducts++;
     });
@@ -64,6 +70,8 @@ priceRange.addEventListener('input', function() {
 // Add event listeners to checkboxes
 pokemonCheckbox.addEventListener('change', filterProducts);
 figureCheckbox.addEventListener('change', filterProducts);
+mtypeCheckbox.addEventListener('change', filterProducts); //CLOTHES PAGES//
+wtypeCheckbox.addEventListener('change', filterProducts); //CLOTHES PAGE//
 
 // Initialize slider on page load
 window.addEventListener('load', function() {
@@ -89,6 +97,8 @@ backToTopBtn.addEventListener('click', () => {
 function resetFilters() {
     pokemonCheckbox.checked = false;
     figureCheckbox.checked = false;
+    mtypeCheckbox.checked = false; //CLOTHES PAGE//
+    wtypeCheckbox.checked = false; //CLOTHES PAGE//
     priceRange.value = priceRange.max;
     selectedPrice.textContent = '$' + priceRange.value;
     priceRange.style.setProperty('--value', '100%');
