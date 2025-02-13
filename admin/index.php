@@ -1,6 +1,9 @@
 <?php
 include 'includes/auth.php';
 checkAuth();
+
+// Set current page for active menu item
+$currentPage = 'dashboard';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,49 +23,8 @@ checkAuth();
 
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
-            <div class="side-bar">
-                <div class="logo-container mb-4">
-                    <img src="/images/logo.png" alt="Logo" class="logo">
-                </div>
-                
-                <nav class="nav-menu">
-                    <!-- Menu Items -->
-                    <div class="menu-items">
-                        <a href="index.php" class="menu-item active">
-                            <i class="fas fa-home"></i>
-                            <span>Dashboard</span>
-                        </a>
-                        <a href="products.php" class="menu-item">  
-                            <i class="fas fa-box"></i>
-                            <span>Products</span>
-                        </a>
-                        <a href="orders.php" class="menu-item">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Orders</span>
-                        </a>
-                        <a href="customers.php" class="menu-item">
-                            <i class="fas fa-users"></i>
-                            <span>Customers</span>
-                        </a>
-                    </div>
-
-                    <!-- User Badge -->
-                    <div class="userBadge">
-                        <div class="user-info">
-                            <img src="/images/user.png" alt="User" class="user-avatar">
-                            <div class="user-details">
-                                <span class="user-name">Admin</span>
-                                <span class="user-role">Administrator</span>
-                            </div>
-                        </div>
-                        <a href="#" class="menu-item" id="logoutBtn">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Logout</span>
-                        </a>
-                    </div>
-                </nav>
-            </div>
+            <!-- Include Sidebar -->
+            <?php include 'includes/sidebar.php'; ?>
 
             <!-- Main Content -->
             <div class="main-content">

@@ -12,8 +12,12 @@ RewriteBase /
 RewriteCond %{REQUEST_URI} ^/admin/?$
 RewriteRule ^admin/?$ admin/index.php [L]
 
-RewriteCond %{REQUEST_URI} ^/admin/login/?$
+# Handle admin login
 RewriteRule ^admin/login/?$ admin/login.php [L]
+
+# Handle admin sections
+RewriteCond %{REQUEST_URI} ^/admin/([^/]+)/?$
+RewriteRule ^admin/([^/]+)/?$ admin/$1/index.php [L]
 
 # Protect admin directory except for development
 <IfModule mod_rewrite.c>
