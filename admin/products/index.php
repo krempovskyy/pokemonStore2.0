@@ -68,6 +68,7 @@ $currentPage = 'products';
                                 <th>
                                     <input type="checkbox" class="form-check-input" id="selectAll">
                                 </th>
+                                <th>ID</th>
                                 <th>Image</th>
                                 <th>Product Name</th>
                                 <th>Category</th>
@@ -82,6 +83,7 @@ $currentPage = 'products';
                                 <td>
                                     <input type="checkbox" class="form-check-input product-select">
                                 </td>
+                                <td>1</td>
                                 <td>
                                     <img src="/images/products/pikachu.jpg" alt="Product" class="product-img">
                                 </td>
@@ -145,7 +147,67 @@ $currentPage = 'products';
                 </div>
                 <div class="modal-body">
                     <form id="productForm">
-                        <!-- Product form fields here -->
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label for="productName" class="form-label">Product Name</label>
+                                    <input type="text" class="form-control" id="productName" name="productName" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="productCategory" class="form-label">Category</label>
+                                        <select class="form-select" id="productCategory" name="productCategory" required>
+                                            <option value="">Select Category</option>
+                                            <option value="pokemon">Pokemon</option>
+                                            <option value="figure">Figure</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="productPrice" class="form-label">Price ($)</label>
+                                        <input type="number" 
+                                               class="form-control" 
+                                               id="productPrice" 
+                                               name="productPrice" 
+                                               min="0" 
+                                               step="0.01" 
+                                               required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="productStock" class="form-label">Stock Quantity</label>
+                                        <input type="number" class="form-control" id="productStock" name="productStock" min="0" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="productStatus" class="form-label">Status</label>
+                                        <select class="form-select" id="productStatus" name="productStatus" required>
+                                            <option value="instock">In Stock</option>
+                                            <option value="lowstock">Low Stock</option>
+                                            <option value="outofstock">Out of Stock</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">Product Image</label>
+                                    <div class="product-image-upload">
+                                        <div class="image-preview" id="imagePreview">
+                                            <img src="/images/placeholder.png" alt="Preview" id="previewImg">
+                                        </div>
+                                        <input type="file" class="form-control" id="productImage" name="productImage" accept="image/*">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productDescription" class="form-label">Product Description</label>
+                            <textarea class="form-control" id="productDescription" name="productDescription" rows="4"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Product</button>
+                        </div>
                     </form>
                 </div>
             </div>
