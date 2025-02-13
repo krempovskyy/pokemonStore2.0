@@ -10,26 +10,48 @@ checkAuth();
     <title>Admin Dashboard - Pokemon Store</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="css/admin.css" rel="stylesheet">
+    <link href="css/dashboard.css" rel="stylesheet">
 </head>
-<body>
-    <div class="dashboard">
-        <h1>Welcome to Dashboard</h1>
-        <p>Logged in as: <span id="adminUsername"></span></p>
-        <button onclick="logout()" class="btn btn-danger">Logout</button>
+<body class="admin-dashboard">
+    <div class="container-fluid py-5">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 side-bar">
+                <div class="logo-container mb-4">
+                    <img src="../images/logo.png" alt="Logo" class="logo">
+                </div>
+                
+                <div class="menu-container">
+                    <nav class="nav-menu">
+                        <a href="index.php" class="menu-item active">
+                            <i class="fas fa-home"></i>
+                            <span>Dashboard</span>
+                        </a>
+                        <a href="products.php" class="menu-item">  
+                            <i class="fas fa-box"></i>
+                            <span>Products</span>
+                        <a href="orders.php" class="menu-item">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span>Orders</span>
+                        </a>
+                        <a href="customers.php" class="menu-item">
+                            <i class="fas fa-users"></i>
+                            <span>Customers</span>
+                        </a>
+                    </nav>
+                </div>
+
+
+
+                <!-- Main Content -->
+                <div class="menu-container">
+                </div>
+            </div>
+            <div class="col-lg-9">
+
+            </div>
+        </div>
     </div>
 
-    <script>
-        // Hiển thị username
-        document.getElementById('adminUsername').textContent = 
-            localStorage.getItem('adminUsername');
-        
-        // Hàm logout
-        function logout() {
-            localStorage.removeItem('adminLoggedIn');
-            localStorage.removeItem('adminUsername');
-            window.location.href = 'login.php';
-        }
-    </script>
 </body>
 </html>

@@ -1,42 +1,125 @@
-// Price range slider
+// Constants
+const ANIMATION_DURATION = 200;
+const FILTER_DELAY = 50;
+
+// Elements
 const priceRange = document.getElementById('priceRange');
 const selectedPrice = document.querySelector('.selected-price');
-
-// Get filter elements
-const pokemonCheckbox = document.getElementById('pokemon');
-const figureCheckbox = document.getElementById('figure');
-const mtypeCheckbox = document.getElementById('Mtype'); //ADD FILTER CLOTHES PAGE//
-const wtypeCheckbox = document.getElementById('Wtype'); //ADD FILTER CLOTHES PAGE//
+const filterCheckboxes = {
+    pokemon: document.getElementById('pokemon'),
+    figure: document.getElementById('figure'),
+    menType: document.getElementById('Mtype'),
+    womenType: document.getElementById('Wtype')
+};
 const productCards = document.querySelectorAll('.product-card');
 
-// Filter products based on checkboxes and price
+// Initialize slider
+function initializeSlider() {
+    if (!priceRange) return;
+
+    const maxValue = priceRange.max;
+    updateSliderUI(maxValue);
+    
+    // Event listeners
+    priceRange.addEventListener('input', handleSliderInput);
+    priceRange.addEventListener('touchstart', () => priceRange.classList.add('active'));
+    priceRange.addEventListener('touchend', () => priceRange.classList.remove('active'));
+}
+
+// Handle slider input
+function handleSliderInput(e) {
+    const value = e.target.value;
+    updateSliderUI(value);
+    
+    // Sử dụng requestAnimationFrame thay vì setTimeout
+    requestAnimationFrame(filterProducts);
+}
+
+// Update slider UI
+function updateSliderUI(value) {
+    if (!priceRange || !selectedPrice) return;
+
+    // Update price text with animation
+    selectedPrice.textContent = `$${value}`;
+    selectedPrice.classList.add('price-updated');
+    setTimeout(() => selectedPrice.classList.remove('price-updated'), ANIMATION_DURATION);
+
+    // Update slider background
+    const percentage = (value - priceRange.min) / (priceRange.max - priceRange.min) * 100;
+    priceRange.style.setProperty('--value', `${percentage}%`);
+}
+
+// Filter products
 function filterProducts() {
+    if (!priceRange) return;
+
     const maxPrice = parseInt(priceRange.value);
-    const showPokemon = pokemonCheckbox.checked;
-    const showFigure = figureCheckbox.checked;
-    const showMen = mtypeCheckbox.checked; //FOR CLOTHES PAGE//
-    const showWomen = wtypeCheckbox.checked; // FOR CLOTHES PAGE//
+    const filters = {
+        pokemon: filterCheckboxes.pokemon?.checked,
+        figure: filterCheckboxes.figure?.checked,
+        men: filterCheckboxes.menType?.checked,
+        women: filterCheckboxes.womenType?.checked
+    };
+
     let visibleProducts = 0;
+    
+    // Sử dụng requestAnimationFrame để tối ưu hiệu năng
+    requestAnimationFrame(() => {
+        productCards.forEach(card => {
+            const price = parseInt(card.querySelector('.product-price').textContent.replace('$', ''));
+            const badge = card.querySelector('.product-badge').textContent;
+            const cardContainer = card.closest('.col-12');
 
-    productCards.forEach(card => {
-        const price = parseInt(card.querySelector('.product-price').textContent.replace('$', ''));
-        const isFigure = card.querySelector('.product-badge').textContent === 'FIGURE';
-        const isPokemon = !isFigure;
-        const isMen = card.querySelector('.product-badge').textContent === 'Men & Unisex'; //CLOTHES PAGE//
-        const isWomen = card.querySelector('.product-badge').textContent === 'Women & unisex'; //CLOTHES PAGE//
+            const isVisible = checkVisibility(price, maxPrice, badge, filters);
+            
+            if (isVisible) {
+                cardContainer.style.display = 'block';
+                card.classList.remove('filtered-out');
+                visibleProducts++;
+            } else {
+                card.classList.add('filtered-out');
+                cardContainer.style.display = 'none';
+            }
+        });
 
-        const matchesPrice = price <= maxPrice;
-        const matchesCategory = (!showPokemon && !showFigure) || (showPokemon && isPokemon) || (showFigure && isFigure);
-        const matchesGender = (!showMen && !showWomen) || (showMen && isMen) || (showWomen && isWomen); //CLOTHES PAGE//
-        const shouldShow = matchesPrice && matchesCategory && matchesGender; //CLOTHES PAGES//
-        card.closest('.col-12').style.display = shouldShow ? 'block' : 'none';
-        if (shouldShow) visibleProducts++;
+        updateEmptyState(visibleProducts);
     });
+}
 
-    // Show/hide empty state message
-    const emptyState = document.querySelector('.no-results');
+// Check product visibility based on filters
+function checkVisibility(price, maxPrice, badge, filters) {
+    // Price check
+    if (price > maxPrice) return false;
+
+    // Category check (for toys)
+    if (filters.pokemon || filters.figure) {
+        if (!((filters.pokemon && badge === 'POKEMON') || 
+              (filters.figure && badge === 'FIGURE'))) {
+            return false;
+        }
+    }
+
+    // Gender check (for clothes)
+    if (filters.men || filters.women) {
+        const isUnisex = badge === 'Unisex';
+        const isMen = badge === 'Men';
+        const isWomen = badge === 'Women';
+
+        if (!((filters.men && (isMen || isUnisex)) || 
+              (filters.women && (isWomen || isUnisex)))) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// Update empty state message
+function updateEmptyState(visibleProducts) {
+    const existingMessage = document.querySelector('.no-results');
+    
     if (visibleProducts === 0) {
-        if (!emptyState) {
+        if (!existingMessage) {
             const message = `
                 <div class="no-results">
                     <i class="fas fa-search"></i>
@@ -47,36 +130,61 @@ function filterProducts() {
             document.querySelector('.products-grid').insertAdjacentHTML('beforeend', message);
         }
     } else {
-        emptyState?.remove();
+        existingMessage?.remove();
     }
 }
 
-// Update price and slider background when slider moves
-priceRange.addEventListener('input', function() {
-    // Update price text
-    selectedPrice.textContent = '$' + this.value;
+// Reset filters
+function resetFilters() {
+    // Reset checkboxes
+    Object.values(filterCheckboxes).forEach(checkbox => {
+        if (checkbox) checkbox.checked = false;
+    });
+
+    // Reset slider with animation
+    if (priceRange) {
+        const currentValue = parseInt(priceRange.value);
+        const maxValue = parseInt(priceRange.max);
+        animateSliderReset(currentValue, maxValue);
+    }
+}
+
+// Animate slider reset
+function animateSliderReset(start, end) {
+    const steps = 10;
+    const increment = (end - start) / steps;
+    let step = 0;
+
+    function animate() {
+        if (step < steps) {
+            const value = start + (increment * step);
+            priceRange.value = value;
+            updateSliderUI(Math.round(value));
+            step++;
+            requestAnimationFrame(animate);
+        } else {
+            priceRange.value = end;
+            updateSliderUI(end);
+            filterProducts();
+        }
+    }
+
+    animate();
+}
+
+// Initialize on page load
+window.addEventListener('load', () => {
+    initializeSlider();
+    addTouchFeedback();
     
-    // Calculate percentage for background
-    const value = (this.value - this.min) / (this.max - this.min) * 100;
-    
-    // Update background gradient
-    this.style.setProperty('--value', `${value}%`);
-
-    // Apply filters
-    filterProducts();
-});
-
-
-// Add event listeners to checkboxes
-pokemonCheckbox.addEventListener('change', filterProducts);
-figureCheckbox.addEventListener('change', filterProducts);
-mtypeCheckbox.addEventListener('change', filterProducts); //CLOTHES PAGES//
-wtypeCheckbox.addEventListener('change', filterProducts); //CLOTHES PAGE//
-
-// Initialize slider on page load
-window.addEventListener('load', function() {
-    // Set initial slider background to 100%
-    priceRange.style.setProperty('--value', '100%');
+    // Thêm event listeners cho checkboxes với debounce ngắn hơn
+    Object.values(filterCheckboxes).forEach(checkbox => {
+        if (checkbox) {
+            checkbox.addEventListener('change', () => {
+                filterProducts(); // Bỏ debounce để phản hồi ngay lập tức
+            });
+        }
+    });
 });
 
 // Back to top functionality
@@ -93,17 +201,6 @@ window.addEventListener('scroll', () => {
 backToTopBtn.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
-
-function resetFilters() {
-    pokemonCheckbox.checked = false;
-    figureCheckbox.checked = false;
-    mtypeCheckbox.checked = false; //CLOTHES PAGE//
-    wtypeCheckbox.checked = false; //CLOTHES PAGE//
-    priceRange.value = priceRange.max;
-    selectedPrice.textContent = '$' + priceRange.value;
-    priceRange.style.setProperty('--value', '100%');
-    filterProducts();
-}
 
 // Quick View functionality
 function showQuickView(product) {
@@ -257,3 +354,16 @@ document.querySelectorAll('.product-card').forEach(card => {
         }
     });
 });
+
+// Add touch feedback
+function addTouchFeedback() {
+    const filterSection = document.querySelector('.filter-section');
+    
+    filterSection?.addEventListener('touchstart', () => {
+        filterSection.style.transform = 'scale(0.99)';
+    });
+
+    filterSection?.addEventListener('touchend', () => {
+        filterSection.style.transform = 'scale(1)';
+    });
+}
