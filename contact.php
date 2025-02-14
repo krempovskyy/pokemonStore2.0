@@ -12,7 +12,7 @@
 // include the header file 
 $title ="Contact Page";
 //$md = "global header footer";
-include 'header.php';
+include 'includes/header.php';
 ?>
 <>
 
@@ -28,8 +28,8 @@ include 'header.php';
         </nav>
         <h1 class="logo"><img src="images/logo.png" alt="logo"></h1>
     </header>
-    <?php
-// include the footer file 
 
-include 'footer.php';
+<?php
+// include the footer file 
+include 'includes/footer.php';
 ?>

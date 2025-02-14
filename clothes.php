@@ -1,7 +1,7 @@
 <?php
 $title = "Pokemon Store - Clothes";
 $md = "Explore our collection of Pokemon clothes and accessories";
-include 'layout/header.php';
+include 'includes/header.php';
 
 // Define products array first
 $products = [
@@ -299,8 +299,7 @@ $products = [
                                 </div>
                                 <div class="stat-item">
                                     <div class="stat-label">Category</div>
-                                    <div class="stat-value"><?php echo $product['category']; ?></div> 
-                                    <!-- //add category name but always display UNISEX// -->
+                                    <div class="stat-value category-value"></div>
                                 </div>
                             </div>
                             <button class="add-to-cart-btn w-100">
@@ -318,4 +317,4 @@ $products = [
 <button id="backToTop" class="back-to-top-btn">↑</button>
 
 <script src="scripts/products.js"></script>
-<?php include 'layout/footer.php'; ?>
+<?php include 'includes/footer.php'; ?>

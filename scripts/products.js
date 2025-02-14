@@ -303,6 +303,17 @@ function showQuickView(product) {
     const addToCartBtn = modal.querySelector('.add-to-cart-btn');
     addToCartBtn.onclick = () => addToCart(addToCartBtn, product.price);
     
+    // Update category - check if category exists first
+    const categoryValue = modal.querySelector('.category-value');
+    if (categoryValue) {
+        if (product.category) {
+            categoryValue.textContent = product.category;
+        } else {
+            // Fallback nếu không có category
+            categoryValue.textContent = 'Unknown';
+        }
+    }
+    
     // Show modal
     modalInstance.show();
     

@@ -1,13 +1,14 @@
 <?php
 $title = "Pokemon Store - Toys & Cards";
 $md = "Explore our collection of Pokemon toys, figures, and plushies";
-include 'layout/header.php';
+include 'includes/header.php';
 
 // Define products array first
 $products = [
     [
         'name' => 'Hamburger Snorlax',
         'price' => 109,
+        'category' => 'Plushie',
         'image' => 'snorlax-burger.jpg',
         'gallery' => [
             'snorlax-burger.jpg',
@@ -19,6 +20,7 @@ $products = [
     [
         'name' => 'Pikachu Cos Mario',
         'price' => 89,
+        'category' => 'Figure',
         'image' => 'pikachu-cos-mario.jpg',
         'gallery' => [
             'pikachu-cos-mario.jpg'
@@ -28,6 +30,7 @@ $products = [
     [
         'name' => 'Charizard Family',
         'price' => 149,
+        'category' => 'Figure',
         'image' => 'charizard-family.jpg',
         'gallery' => [
             'charizard-family.jpg'
@@ -37,6 +40,7 @@ $products = [
     [
         'name' => 'Eevee',
         'price' => 79,
+        'category' => 'Plushie',
         'image' => 'eevee.jpg',
         'gallery' => [
             'eevee.jpg'
@@ -45,6 +49,7 @@ $products = [
     [
         'name' => 'Mewtwo',
         'price' => 299,
+        'category' => 'Figure',
         'image' => 'mewtwo.jpg',
         'gallery' => [
             'mewtwo.jpg'
@@ -53,6 +58,7 @@ $products = [
     [
         'name' => 'Gengar',
         'price' => 95,
+        'category' => 'Plushie',
         'image' => 'gengar.jpg',
         'gallery' => [
             'gengar.jpg'
@@ -61,6 +67,7 @@ $products = [
     [
         'name' => 'Bulbasaur Family',
         'price' => 69,
+        'category' => 'Figure',
         'image' => 'bulbasaur-family.jpg',
         'gallery' => [
             'bulbasaur-family.jpg'
@@ -69,6 +76,7 @@ $products = [
     [
         'name' => 'Squirtle',
         'price' => 85,
+        'category' => 'Plushie',
         'image' => 'squirtle.jpg',
         'gallery' => [
             'squirtle.jpg'
@@ -77,6 +85,7 @@ $products = [
     [
         'name' => 'Gyarados',
         'price' => 199,
+        'category' => 'Figure',
         'image' => 'Gyarados.jpg',
         'gallery' => [
             'Gyarados.jpg'
@@ -85,6 +94,7 @@ $products = [
     [
         'name' => 'Dragonite',
         'price' => 99,
+        'category' => 'Plushie',
         'image' => 'Dragonite.jpg',
         'gallery' => [
             'Dragonite.jpg'
@@ -93,6 +103,7 @@ $products = [
     [
         'name' => 'Rayquaza',
         'price' => 249,
+        'category' => 'Figure',
         'image' => 'Rayquaza.jpg',
         'gallery' => [
             'Rayquaza.jpg'
@@ -101,6 +112,7 @@ $products = [
     [
         'name' => 'Mimikyu',
         'price' => 89,
+        'category' => 'Plushie',
         'image' => 'Mimikyu.jpg',
         'gallery' => [
             'Mimikyu.jpg'
@@ -128,14 +140,18 @@ $products = [
                     
                     <!-- Brand Filter -->
                     <div class="filter-group">
-                        <h3>BRAND</h3>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="pokemon">
-                            <label class="form-check-label" for="pokemon">POKEMON</label>
-                        </div>
+                        <h3>CATEGORY</h3>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="" id="figure">
-                            <label class="form-check-label" for="figure">FIGURE</label>
+                            <label class="form-check-label" for="figure">Figure</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="plushie">
+                            <label class="form-check-label" for="plushie">Plushie</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="card">
+                            <label class="form-check-label" for="card">Card</label>
                         </div>
                     </div>
                     
@@ -177,7 +193,7 @@ $products = [
                         foreach ($products as $product) {
                             echo '<div class="col-12 col-md-6 col-lg-4">
                                     <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
-                                        <div class="product-badge">FIGURE</div>
+                                        <div class="product-badge">' . $product['category'] . '</div>
                                         <div class="img-container">
                                             <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
                                             <div class="quick-view">
@@ -240,7 +256,7 @@ $products = [
                                 </div>
                                 <div class="stat-item">
                                     <div class="stat-label">Category</div>
-                                    <div class="stat-value">Figure</div>
+                                    <div class="stat-value category-value"></div>
                                 </div>
                             </div>
                             <button class="add-to-cart-btn w-100">
@@ -258,4 +274,4 @@ $products = [
 <button id="backToTop" class="back-to-top-btn">↑</button>
 
 <script src="scripts/products.js"></script>
-<?php include 'layout/footer.php'; ?>
+<?php include 'includes/footer.php'; ?>
