@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ContactUs</title>
-    <link rel="stylesheet" href="contactStyle.css">
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
@@ -14,6 +13,9 @@ $title ="Contact Page";
 //$md = "global header footer";
 include 'includes/header.php';
 ?>
+
+<link rel="stylesheet" href="contactStyle.css">
+<link href="css/contactStyle.css" rel="stylesheet">
 
 <article>
         <div class="contact-section">
