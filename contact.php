@@ -28,7 +28,7 @@ include 'includes/header.php';
                 <p>1111, Hämeenlinna</p>
             </div>
 
-            <form action="#" method="POST" class="contact-form">
+            <form action="contact_process.php" method="POST" class="contact-form" onsubmit="return validateForm()">
                 <div class="form-group">
                     <label for="name">Name:</label>
                     <input type="text" id="name" name="name" class="form-control" required>
