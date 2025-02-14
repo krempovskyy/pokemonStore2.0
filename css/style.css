@@ -31,8 +31,8 @@ main {
 }
 
 /*Visited link styling in the navigation*/
-.nav-item a:visited{
-    color:rgb(83, 154, 121)
+.nav-link:visited{
+    color:rgb(83, 154, 121) !important;
 }
 
 .nav-link:hover {
