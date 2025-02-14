@@ -53,7 +53,7 @@ include 'includes/header.php';
             </ul>
         </div>    
     </article>
-<script scr="scripts/contact.js"></script>
+<script src="scripts/contact.js"></script>
 <?php
 // include the footer file 
 include 'includes/footer.php';
