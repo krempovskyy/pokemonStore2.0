@@ -14,7 +14,6 @@ $title ="Contact Page";
 //$md = "global header footer";
 include 'includes/header.php';
 ?>
-<>
 
 <article>
         <div class="contact-section">
