@@ -30,6 +30,11 @@ main {
     transition: color 0.3s ease;
 }
 
+/*Visited link styling in the navigation*/
+header .nav-item a:visited{
+    color:rgb(83, 154, 121)
+}
+
 .nav-link:hover {
     color: #8860d0 !important;
 }
