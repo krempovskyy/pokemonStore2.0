@@ -2,7 +2,7 @@
 $title = "Pokemon Store - Home";
 $md = "Welcome to Pokemon Store - Your one-stop shop for Pokemon merchandise";
 
-include 'layout/header.php';
+include 'includes/header.php';
 ?>
 
 <main>
@@ -31,4 +31,4 @@ include 'layout/header.php';
     </div>
 </main>
 
-<?php include 'layout/footer.php'; ?>
+<?php include 'includes/footer.php'; ?>

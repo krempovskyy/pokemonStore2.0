@@ -1,0 +1,73 @@
+/*Contact section styling*/
+.contact-section {
+    padding: 30px;
+    max-width: 1500px;
+    margin: auto;
+    background-color: rgb(139, 210, 234);
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+/*Contact info layout*/
+.contact-info{
+    font-family: 'Luckiest Guy', cursive;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-weight:lighter;
+}
+/*Styling for images inside the conatct info */
+.contact-info img.contact-image {
+    max-width: 150px;
+    border-radius:10px
+}
+/*Contact form styling*/
+.contact-form{
+    margin-top: 30px;
+}
+/*Individual form group styling*/
+.contact-form .form-group {
+    margin-bottom: 15px;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 15px;
+    font-weight: lighter;
+
+}
+/*Button styling in the contact form*/
+.contact-form button{
+    margin-top: 10px;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 15px;
+    font-weight: lighter;
+}
+/*Hover effect for button*/
+.contact-form button:hover{
+    background-color: #8860d0;
+}
+/*Custom heading styling for heading3*/
+h3.custom-heading{
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 25px;
+    font-weight: normal;
+}
+/*Social link section styling*/
+.social-links{
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 20px;
+    margin: 25px;
+    font-weight:lighter;
+
+}
+
+/*Individual list items in social links*/
+.social-links ul li{
+    display: inline;
+    margin: 0 10px;
+    }
+/*Styling links inside social links*/
+.social-links ul li a{
+    text-decoration:underline;
+    color:black;
+}
+/*hover effect for links inside social links*/
+.social-links .nav-item1 a:hover{
+    color: rgb(172, 180, 9);
+}

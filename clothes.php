@@ -1,121 +1,116 @@
 <?php
-$title = "Pokemon Store - Toys & Cards";
-$md = "Explore our collection of Pokemon toys, figures, and plushies";
+$title = "Pokemon Store - Clothes";
+$md = "Explore our collection of Pokemon clothes and accessories";
 include 'includes/header.php';
 
 // Define products array first
 $products = [
     [
-        'name' => 'Hamburger Snorlax',
-        'price' => 109,
-        'category' => 'Plushie',
-        'image' => 'snorlax-burger.jpg',
+        'name' => 'Crop top',
+        'price' => 26.99,
+        'category' => 'Women',
+        'image' => 'CROP TOP.png',
         'gallery' => [
-            'snorlax-burger.jpg',
-            'pikachu-cos-mario.jpg',
-            'charizard-family.jpg'
+            'CROP TOP.png'
+            ],
+    ],
+    [
+        'name' => 'Tank Top',
+        'price' => 29.99,
+        'category' => 'Women',
+        'image' => 'TANK TOP.png',
+        'gallery' => [
+            'TANK TOP.png'
         ],
-        'description' => 'Adorable Snorlax figure enjoying a delicious hamburger. Perfect for Pokemon fans who love this sleepy Pokemon\'s eating habits!'
     ],
     [
-        'name' => 'Pikachu Cos Mario',
-        'price' => 89,
-        'category' => 'Figure',
-        'image' => 'pikachu-cos-mario.jpg',
+        'name' => 'Hoodie',
+        'price' => 49.99,
+        'category'=> 'Women',
+        'image' => 'HOODIE WOMAN.png',
         'gallery' => [
-            'pikachu-cos-mario.jpg'
+            'HOODIE WOMAN.png'
         ],
-        'description' => 'Cute Pikachu dressed as Mario! A unique crossover figure combining Pokemon and Super Mario universes.'
     ],
     [
-        'name' => 'Charizard Family',
-        'price' => 149,
-        'category' => 'Figure',
-        'image' => 'charizard-family.jpg',
+        'name' => 'Jacket',
+        'price' => 39.99,
+        'category'=> 'Men',
+        'image' => 'JACKET MAN.png',
         'gallery' => [
-            'charizard-family.jpg'
-        ],
-        'description' => 'Beautiful diorama featuring Charizard and its evolution line. Shows the majestic fire Pokemon in all its forms.'
-    ],
-    [
-        'name' => 'Eevee',
-        'price' => 79,
-        'category' => 'Plushie',
-        'image' => 'eevee.jpg',
-        'gallery' => [
-            'eevee.jpg'
+            'JACKET MAN.png'
         ]
     ],
     [
-        'name' => 'Mewtwo',
-        'price' => 299,
-        'category' => 'Figure',
-        'image' => 'mewtwo.jpg',
+        'name' => 'Hoodie',
+        'price' => 49.99,
+        'category'=> 'Men',
+        'image' => 'HOODIE MAN.png',
         'gallery' => [
-            'mewtwo.jpg'
+            'HOODIE MAN.png'
         ]
     ],
     [
-        'name' => 'Gengar',
-        'price' => 95,
-        'category' => 'Plushie',
-        'image' => 'gengar.jpg',
+        'name' => 'Sweater',
+        'price' => 59.99,
+        'category'=> 'Men',
+        'image' => 'SWEATER MAN.png',
         'gallery' => [
-            'gengar.jpg'
+            'SWEATER MAN.png'
         ]
     ],
     [
-        'name' => 'Bulbasaur Family',
-        'price' => 69,
-        'category' => 'Figure',
-        'image' => 'bulbasaur-family.jpg',
+        'name' => 'Hat',
+        'price' => 19.99,
+        'category'=> 'Unisex',
+        'image' => 'UNI HAT.png',
         'gallery' => [
-            'bulbasaur-family.jpg'
+            'UNI HAT.png'
         ]
     ],
     [
-        'name' => 'Squirtle',
-        'price' => 85,
-        'category' => 'Plushie',
-        'image' => 'squirtle.jpg',
+        'name' => 'T-Shirt',
+        'price' => 19.99,
+        'category'=> 'Unisex',
+        'image' => 'T SHIRT MEN.png',
         'gallery' => [
-            'squirtle.jpg'
+            'T SHIRT MEN.png'
         ]
     ],
     [
-        'name' => 'Gyarados',
-        'price' => 199,
-        'category' => 'Figure',
-        'image' => 'Gyarados.jpg',
+        'name' => 'Gloves',
+        'price' => 9.99,
+        'category'=> 'Unisex',
+        'image' => 'GLOVES UNI.png',
         'gallery' => [
-            'Gyarados.jpg'
+            'GLOVES UNI.png'
         ]
     ],
     [
-        'name' => 'Dragonite',
-        'price' => 99,
-        'category' => 'Plushie',
-        'image' => 'Dragonite.jpg',
+        'name' => 'Multi Purposes Tote',
+        'price' => 29.99,
+        'category'=> 'Unisex',
+        'image' => 'TOTE.png',
         'gallery' => [
-            'Dragonite.jpg'
+            'TOTE.png'
         ]
     ],
     [
-        'name' => 'Rayquaza',
-        'price' => 249,
-        'category' => 'Figure',
-        'image' => 'Rayquaza.jpg',
+        'name' => 'Earbuds Case',
+        'price' => 19.99,
+        'category'=> 'Unisex',
+        'image' => 'CASE EARBUDS.png',
         'gallery' => [
-            'Rayquaza.jpg'
+            'CASE EARBUDS.png'
         ]
     ],
     [
-        'name' => 'Mimikyu',
-        'price' => 89,
-        'category' => 'Plushie',
-        'image' => 'Mimikyu.jpg',
+        'name' => 'IP Shock Case',
+        'price' => 19.99,
+        'category'=> 'Unisex',
+        'image' => 'SHOCK CASE.png',
         'gallery' => [
-            'Mimikyu.jpg'
+            'SHOCK CASE.png'
         ]
     ]
 ];
@@ -126,7 +121,7 @@ $products = [
 
 <main>
     <div class="container">
-        <h1 class="page-title">TOYS & FIGURES</h1>
+        <h1 class="page-title">CLOTHES & ACCESSORIES</h1>
         <div class="title-underline"></div>
     </div>
 
@@ -140,18 +135,14 @@ $products = [
                     
                     <!-- Brand Filter -->
                     <div class="filter-group">
-                        <h3>CATEGORY</h3>
+                        <h3>Gender</h3>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="figure">
-                            <label class="form-check-label" for="figure">Figure</label>
+                            <input class="form-check-input" type="checkbox" value="" id="Mtype">
+                            <label class="form-check-label" for="Mtype">Men & Unisex</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="plushie">
-                            <label class="form-check-label" for="plushie">Plushie</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="card">
-                            <label class="form-check-label" for="card">Card</label>
+                            <input class="form-check-input" type="checkbox" value="" id="Wtype">
+                            <label class="form-check-label" for="Wtype">Women & Unisex</label>
                         </div>
                     </div>
                     
@@ -189,11 +180,11 @@ $products = [
                 <div class="products-grid">
                     <div class="row g-4">
                         <?php
-                        // Loop through products
                         foreach ($products as $product) {
+                            if ($product['category'] == "Women") {
                             echo '<div class="col-12 col-md-6 col-lg-4">
                                     <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
-                                        <div class="product-badge">' . $product['category'] . '</div>
+                                        <div class="product-badge">Women</div>
                                         <div class="img-container">
                                             <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
                                             <div class="quick-view">
@@ -212,6 +203,58 @@ $products = [
                                         </div>
                                     </div>
                                 </div>';
+                            } 
+                            elseif ($product['category'] == "Men") 
+                            {
+                                echo '<div class="col-12 col-md-6 col-lg-4">
+                                    <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
+                                        <div class="product-badge">Men</div>
+                                        <div class="img-container">
+                                            <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
+                                            <div class="quick-view">
+                                                <button class="quick-view-btn" aria-label="Quick view ' . $product['name'] . '">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i> Quick View
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <h3 class="product-title">' . $product['name'] . '</h3>
+                                            <p class="product-price">$'. $product['price'] . '</p>
+                                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(this, ' . $product['price'] . ')">
+                                                <span class="btn-text">ADD TO CART</span>
+                                                <span class="loading-spinner d-none"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>';# code...
+
+                            }
+                            else  {
+                                # code...
+                            
+                            
+                                echo '<div class="col-12 col-md-6 col-lg-4">
+                                    <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
+                                        <div class="product-badge">Unisex</div>
+                                        <div class="img-container">
+                                            <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
+                                            <div class="quick-view">
+                                                <button class="quick-view-btn" aria-label="Quick view ' . $product['name'] . '">
+                                                    <i class="fas fa-eye" aria-hidden="true"></i> Quick View
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="product-info">
+                                            <h3 class="product-title">' . $product['name'] . '</h3>
+                                            <p class="product-price">$'. $product['price'] . '</p>
+                                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(this, ' . $product['price'] . ')">
+                                                <span class="btn-text">ADD TO CART</span>
+                                                <span class="loading-spinner d-none"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>';# code...
+                            } 
                         }
                         ?>
                     </div>

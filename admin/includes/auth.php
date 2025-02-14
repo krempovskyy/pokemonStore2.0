@@ -1,11 +1,10 @@
 <?php
 function checkAuth() {
-    // Trong thực tế sẽ check session/database
-    // Hiện tại chỉ return true để test
+    // Kiểm tra session/database
     echo "
     <script>
         if (localStorage.getItem('adminLoggedIn') !== 'true') {
-            window.location.href = 'login.php';
+            window.location.href = '/admin/login.php'; // Thêm /admin/ vào path
         }
     </script>
     ";

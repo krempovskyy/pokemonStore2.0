@@ -6,7 +6,7 @@
                 <p class="mb-0">+358 999 99 99</p>
                 <p class="mb-0">info@pokestore.lol</p>
                 <p>11111, Hameenlinna</p>
-                <p class="copyright">&copy; <?php echo date('Y'); ?> Madushani Piyadasa</p>
+                <p class="copyright">&copy; <?php echo date('Y'); ?> Team 9</p>
             </div>
         </div>
     </div>

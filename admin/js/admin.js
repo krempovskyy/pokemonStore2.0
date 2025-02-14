@@ -14,7 +14,7 @@ document.querySelector('.toggle-password').addEventListener('click', function() 
     }
 });
 
-// Giả lập thông tin admin
+// Simulate admin credentials
 const ADMIN_CREDENTIALS = {
     username: 'admin',
     password: 'admin123'
@@ -30,7 +30,7 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     
     loginBtn.classList.add('loading');
     
-    // Giả lập API call
+    // simulate API call
     setTimeout(() => {
         if (username === ADMIN_CREDENTIALS.username && 
             password === ADMIN_CREDENTIALS.password) {
@@ -54,13 +54,13 @@ function checkLoginStatus() {
     const currentPage = window.location.pathname;
     
     if (currentPage.includes('login.php') && isLoggedIn) {
-        // Nếu đã login mà vào trang login -> chuyển về dashboard
+        // If logged in and go to login page -> redirect to dashboard
         window.location.href = 'index.php';
     } else if (!currentPage.includes('login.php') && !isLoggedIn) {
-        // Nếu chưa login mà vào các trang khác -> chuyển về login
+        // if not logged in and go to other pages -> redirect to login
         window.location.href = 'login.php';
     }
 }
 
-// Chạy check khi load trang
+// Check when reload page
 checkLoginStatus();
