@@ -31,7 +31,7 @@ main {
 }
 
 /*Visited link styling in the navigation*/
-header .nav-item a:visited{
+.nav-:visited{
     color:rgb(83, 154, 121)
 }
 
