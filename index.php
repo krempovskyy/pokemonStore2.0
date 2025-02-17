@@ -13,7 +13,7 @@ include 'includes/header.php';
                 <div class="category-card">
                     <h2 class="text-center mb-3">Shop now Clothes</h2>
                     <a href="clothes.php" class="category-link">
-                        <img src="pictures/clothes.jpg" alt="Pokemon Clothes" class="img-fluid category-image">
+                        <img src="images/clothesIndex.jpg" alt="Pokemon Clothes" class="img-fluid category-image">
                     </a>
                 </div>
             </div>
@@ -23,7 +23,7 @@ include 'includes/header.php';
                 <div class="category-card">
                     <h2 class="text-center mb-3">Shop now Toys & Cards</h2>
                     <a href="toys.php" class="category-link">
-                        <img src="pictures/toys.jpg" alt="Pokemon Toys & Cards" class="img-fluid category-image">
+                        <img src="images/toysIndex.jpg" alt="Pokemon Toys & Cards" class="img-fluid category-image">
                     </a>
                 </div>
             </div>
