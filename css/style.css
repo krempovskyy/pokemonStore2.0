@@ -52,6 +52,10 @@ footer p {
     font-size: 0.8rem;
 }
 
+.category-card:hover{
+    transform: scale(1.03);
+}
+
 /* Common Animations */
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
