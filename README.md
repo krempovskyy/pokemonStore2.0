@@ -106,7 +106,7 @@ Below is the planned database structure
 
 
 
-![ER diagram](images/ER.png)
+![ER diagram](images/ER.jpg)
 ________________________________________
 
 ## # Created Forms
