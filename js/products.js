@@ -31,7 +31,6 @@ function handleSliderInput(e) {
     const value = e.target.value;
     updateSliderUI(value);
     
-    // Sử dụng requestAnimationFrame thay vì setTimeout
     requestAnimationFrame(filterProducts);
 }
 
@@ -63,7 +62,7 @@ function filterProducts() {
 
     let visibleProducts = 0;
     
-    // Sử dụng requestAnimationFrame để tối ưu hiệu năng
+    // Use requestAnimationFrame to optimize performance
     requestAnimationFrame(() => {
         productCards.forEach(card => {
             const price = parseInt(card.querySelector('.product-price').textContent.replace('$', ''));
@@ -177,11 +176,11 @@ window.addEventListener('load', () => {
     initializeSlider();
     addTouchFeedback();
     
-    // Thêm event listeners cho checkboxes với debounce ngắn hơn
+    // Add event listeners for checkboxes with shorter debounce
     Object.values(filterCheckboxes).forEach(checkbox => {
         if (checkbox) {
             checkbox.addEventListener('change', () => {
-                filterProducts(); // Bỏ debounce để phản hồi ngay lập tức
+                filterProducts(); // Remove debounce for immediate response
             });
         }
     });
