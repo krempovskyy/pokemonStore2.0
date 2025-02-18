@@ -22,6 +22,7 @@ services:
       - "6034:3306"   #6034 in the the local machine and 3306 in the container
     volumes: # it persists updates made to the database
       - dbdata:/var/lib/mysql
+      - ./pokemonstore.sql:/docker-eentrypoint-initdb.d/pokemonstore.sql # load sql file at startup
     networks:
       - lan
 
