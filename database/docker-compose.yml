@@ -21,7 +21,7 @@ services:
     ports:
       - "6034:3306"   #6034 in the the local machine and 3306 in the container
     volumes: # it persists updates made to the database
-      - dbdata:/var/lib/mysql
+      - "./database:/docker-entrypoint-initdb.d"
     networks:
       - lan
 
