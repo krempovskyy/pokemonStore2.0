@@ -6,118 +6,145 @@ include 'includes/header.php';
 // Define products array first
 $products = [
     [
+        'id' => 2001,
         'name' => 'Crop top',
         'price' => 26.99,
         'category' => 'Women',
-        'image' => 'CROP TOP.png',
+        'image' => 'images/CROP TOP.png',
         'gallery' => [
-            'CROP TOP.png'
-            ],
+            'images/CROP TOP.png'
+        ],
+        'sizes' => ['XS', 'S', 'M', 'L', 'XL']
     ],
     [
+        'id' => 2002,
         'name' => 'Tank Top',
         'price' => 29.99,
         'category' => 'Women',
-        'image' => 'TANK TOP.png',
+        'image' => 'images/TANK TOP.png',
         'gallery' => [
-            'TANK TOP.png'
+            'images/TANK TOP.png'
         ],
+        'sizes' => ['XS', 'S', 'M', 'L', 'XL']
     ],
     [
+        'id' => 2003,
         'name' => 'Hoodie',
         'price' => 49.99,
         'category'=> 'Women',
-        'image' => 'HOODIE WOMAN.png',
+        'image' => 'images/HOODIE WOMAN.png',
         'gallery' => [
-            'HOODIE WOMAN.png'
+            'images/HOODIE WOMAN.png'
         ],
+        'sizes' => ['XS', 'S', 'M', 'L', 'XL']
     ],
     [
+        'id' => 2004,
         'name' => 'Jacket',
         'price' => 39.99,
         'category'=> 'Men',
-        'image' => 'JACKET MAN.png',
+        'image' => 'images/JACKET MAN.png',
         'gallery' => [
-            'JACKET MAN.png'
-        ]
+            'images/JACKET MAN.png'
+        ],
+        'sizes' => ['S', 'M', 'L', 'XL', 'XXL']
     ],
     [
+        'id' => 2005,
         'name' => 'Hoodie',
         'price' => 49.99,
         'category'=> 'Men',
-        'image' => 'HOODIE MAN.png',
+        'image' => 'images/HOODIE MAN.png',
         'gallery' => [
-            'HOODIE MAN.png'
-        ]
+            'images/HOODIE MAN.png'
+        ],
+        'sizes' => ['S', 'M', 'L', 'XL', 'XXL']
     ],
     [
+        'id' => 2006,
         'name' => 'Sweater',
         'price' => 59.99,
         'category'=> 'Men',
-        'image' => 'SWEATER MAN.png',
+        'image' => 'images/SWEATER MAN.png',
         'gallery' => [
-            'SWEATER MAN.png'
-        ]
+            'images/SWEATER MAN.png'
+        ],
+        'sizes' => ['S', 'M', 'L', 'XL', 'XXL']
     ],
     [
+        'id' => 2007,
         'name' => 'Hat',
         'price' => 19.99,
         'category'=> 'Unisex',
-        'image' => 'UNI HAT.png',
+        'image' => 'images/UNI HAT.png',
         'gallery' => [
-            'UNI HAT.png'
-        ]
+            'images/UNI HAT.png'
+        ],
+        'sizes' => ['One Size']
     ],
     [
+        'id' => 2008,
         'name' => 'T-Shirt',
         'price' => 19.99,
         'category'=> 'Unisex',
-        'image' => 'T SHIRT MEN.png',
+        'image' => 'images/T SHIRT MEN.png',
         'gallery' => [
-            'T SHIRT MEN.png'
-        ]
+            'images/T SHIRT MEN.png'
+        ],
+        'sizes' => ['XS', 'S', 'M', 'L', 'XL', 'XXL']
     ],
     [
+        'id' => 2009,
         'name' => 'Gloves',
         'price' => 9.99,
         'category'=> 'Unisex',
-        'image' => 'GLOVES UNI.png',
+        'image' => 'images/GLOVES UNI.png',
         'gallery' => [
-            'GLOVES UNI.png'
-        ]
+            'images/GLOVES UNI.png'
+        ],
+        'sizes' => ['S/M', 'L/XL']
     ],
     [
+        'id' => 2010,
         'name' => 'Multi Purposes Tote',
         'price' => 29.99,
         'category'=> 'Unisex',
-        'image' => 'TOTE.png',
+        'image' => 'images/TOTE.png',
         'gallery' => [
-            'TOTE.png'
-        ]
+            'images/TOTE.png'
+        ],
+        'sizes' => ['One Size']
     ],
     [
+        'id' => 2011,
         'name' => 'Earbuds Case',
         'price' => 19.99,
         'category'=> 'Unisex',
-        'image' => 'CASE EARBUDS.png',
+        'image' => 'images/CASE EARBUDS.png',
         'gallery' => [
-            'CASE EARBUDS.png'
-        ]
+            'images/CASE EARBUDS.png'
+        ],
+        'sizes' => ['One Size']
     ],
     [
+        'id' => 2012,
         'name' => 'IP Shock Case',
         'price' => 19.99,
         'category'=> 'Unisex',
-        'image' => 'SHOCK CASE.png',
+        'image' => 'images/SHOCK CASE.png',
         'gallery' => [
-            'SHOCK CASE.png'
-        ]
+            'images/SHOCK CASE.png'
+        ],
+        'sizes' => ['One Size']
     ]
 ];
 ?>
 
 <link href="css/style.css" rel="stylesheet">
 <link href="css/products.css" rel="stylesheet">
+<link href="css/modal.css" rel="stylesheet">
+<script src="js/cart-manager.js" defer></script>
+<script src="js/cart.js" defer></script>
 
 <main>
     <div class="container">
@@ -183,20 +210,20 @@ $products = [
                         foreach ($products as $product) {
                             if ($product['category'] == "Women") {
                             echo '<div class="col-12 col-md-6 col-lg-4">
-                                    <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
+                                    <div class="product-card" data-product=\'' . json_encode($product) . '\'>
                                         <div class="product-badge">Women</div>
                                         <div class="img-container">
-                                            <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
+                                            <img src="' . htmlspecialchars($product['image']) . '" alt="' . htmlspecialchars($product['name']) . '">
                                             <div class="quick-view">
-                                                <button class="quick-view-btn" aria-label="Quick view ' . $product['name'] . '">
+                                                <button class="quick-view-btn" aria-label="Quick view ' . htmlspecialchars($product['name']) . '">
                                                     <i class="fas fa-eye" aria-hidden="true"></i> Quick View
                                                 </button>
                                             </div>
                                         </div>
                                         <div class="product-info">
-                                            <h3 class="product-title">' . $product['name'] . '</h3>
-                                            <p class="product-price">$'. $product['price'] . '</p>
-                                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(this, ' . $product['price'] . ')">
+                                            <h3 class="product-title">' . htmlspecialchars($product['name']) . '</h3>
+                                            <p class="product-price">$'. number_format($product['price'], 2) . '</p>
+                                            <button class="add-to-cart-btn">
                                                 <span class="btn-text">ADD TO CART</span>
                                                 <span class="loading-spinner d-none"></span>
                                             </button>
@@ -207,54 +234,50 @@ $products = [
                             elseif ($product['category'] == "Men") 
                             {
                                 echo '<div class="col-12 col-md-6 col-lg-4">
-                                    <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
+                                    <div class="product-card" data-product=\'' . json_encode($product) . '\'>
                                         <div class="product-badge">Men</div>
                                         <div class="img-container">
-                                            <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
+                                            <img src="' . htmlspecialchars($product['image']) . '" alt="' . htmlspecialchars($product['name']) . '">
                                             <div class="quick-view">
-                                                <button class="quick-view-btn" aria-label="Quick view ' . $product['name'] . '">
+                                                <button class="quick-view-btn" aria-label="Quick view ' . htmlspecialchars($product['name']) . '">
                                                     <i class="fas fa-eye" aria-hidden="true"></i> Quick View
                                                 </button>
                                             </div>
                                         </div>
                                         <div class="product-info">
-                                            <h3 class="product-title">' . $product['name'] . '</h3>
-                                            <p class="product-price">$'. $product['price'] . '</p>
-                                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(this, ' . $product['price'] . ')">
+                                            <h3 class="product-title">' . htmlspecialchars($product['name']) . '</h3>
+                                            <p class="product-price">$'. number_format($product['price'], 2) . '</p>
+                                            <button class="add-to-cart-btn">
                                                 <span class="btn-text">ADD TO CART</span>
                                                 <span class="loading-spinner d-none"></span>
                                             </button>
                                         </div>
                                     </div>
-                                </div>';# code...
-
+                                </div>';
                             }
-                            else  {
-                                # code...
-                            
-                            
+                            else {
                                 echo '<div class="col-12 col-md-6 col-lg-4">
-                                    <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
+                                    <div class="product-card" data-product=\'' . json_encode($product) . '\'>
                                         <div class="product-badge">Unisex</div>
                                         <div class="img-container">
-                                            <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
+                                            <img src="' . htmlspecialchars($product['image']) . '" alt="' . htmlspecialchars($product['name']) . '">
                                             <div class="quick-view">
-                                                <button class="quick-view-btn" aria-label="Quick view ' . $product['name'] . '">
+                                                <button class="quick-view-btn" aria-label="Quick view ' . htmlspecialchars($product['name']) . '">
                                                     <i class="fas fa-eye" aria-hidden="true"></i> Quick View
                                                 </button>
                                             </div>
                                         </div>
                                         <div class="product-info">
-                                            <h3 class="product-title">' . $product['name'] . '</h3>
-                                            <p class="product-price">$'. $product['price'] . '</p>
-                                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(this, ' . $product['price'] . ')">
+                                            <h3 class="product-title">' . htmlspecialchars($product['name']) . '</h3>
+                                            <p class="product-price">$'. number_format($product['price'], 2) . '</p>
+                                            <button class="add-to-cart-btn">
                                                 <span class="btn-text">ADD TO CART</span>
                                                 <span class="loading-spinner d-none"></span>
                                             </button>
                                         </div>
                                     </div>
-                                </div>';# code...
-                            } 
+                                </div>';
+                            }
                         }
                         ?>
                     </div>
@@ -277,7 +300,10 @@ $products = [
                     <div class="col-md-6">
                         <div class="quick-view-gallery">
                             <div class="main-image">
-                                <div class="quick-view-image"></div>
+                                <div class="quick-view-image">
+                                    <div class="loading-spinner"></div>
+                                    <img src="" alt="" style="opacity: 0">
+                                </div>
                             </div>
                             <div class="thumbnail-list">
                                 <!-- Thumbnails will be inserted here by JS -->
@@ -292,17 +318,25 @@ $products = [
                                 <h3>Description</h3>
                                 <p></p>
                             </div>
+                            <div class="size-selector mb-3">
+                                <label for="modalSizeSelect" class="form-label">Select Size</label>
+                                <select class="form-select" id="modalSizeSelect">
+                                    <option value="">Select Size</option>
+                                </select>
+                                <div class="size-error mt-2 d-none"></div>
+                            </div>
                             <div class="product-stats">
                                 <div class="stat-item">
                                     <div class="stat-label">Stock Status</div>
-                                    <div class="stat-value">In Stock</div>
+                                    <div class="stat-value in-stock">In Stock</div>
                                 </div>
                                 <div class="stat-item">
                                     <div class="stat-label">Category</div>
                                     <div class="stat-value category-value"></div>
                                 </div>
                             </div>
-                            <button class="add-to-cart-btn w-100">
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart"></i>
                                 <span class="btn-text">ADD TO CART</span>
                                 <span class="loading-spinner d-none"></span>
                             </button>
@@ -316,5 +350,12 @@ $products = [
 
 <button id="backToTop" class="back-to-top-btn">↑</button>
 
-<script src="scripts/products.js"></script>
+<!-- Remove duplicate script loading -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <?php include 'includes/footer.php'; ?>
+
+<!-- Move all scripts to the end -->
+<script src="js/cart-manager.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/products.js"></script>

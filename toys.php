@@ -6,116 +6,128 @@ include 'includes/header.php';
 // Define products array first
 $products = [
     [
+        'id' => 1001,
         'name' => 'Hamburger Snorlax',
         'price' => 109,
         'category' => 'Plushie',
-        'image' => 'snorlax-burger.jpg',
+        'image' => 'images/snorlax-burger.jpg',
         'gallery' => [
-            'snorlax-burger.jpg',
-            'pikachu-cos-mario.jpg',
-            'charizard-family.jpg'
+            'images/snorlax-burger.jpg',
+            'images/pikachu-cos-mario.jpg',
+            'images/charizard-family.jpg'
         ],
         'description' => 'Adorable Snorlax figure enjoying a delicious hamburger. Perfect for Pokemon fans who love this sleepy Pokemon\'s eating habits!'
     ],
     [
+        'id' => 1002,
         'name' => 'Pikachu Cos Mario',
         'price' => 89,
         'category' => 'Figure',
-        'image' => 'pikachu-cos-mario.jpg',
+        'image' => 'images/pikachu-cos-mario.jpg',
         'gallery' => [
-            'pikachu-cos-mario.jpg'
+            'images/pikachu-cos-mario.jpg'
         ],
         'description' => 'Cute Pikachu dressed as Mario! A unique crossover figure combining Pokemon and Super Mario universes.'
     ],
     [
+        'id' => 1003,
         'name' => 'Charizard Family',
         'price' => 149,
         'category' => 'Figure',
-        'image' => 'charizard-family.jpg',
+        'image' => 'images/charizard-family.jpg',
         'gallery' => [
-            'charizard-family.jpg'
+            'images/charizard-family.jpg'
         ],
         'description' => 'Beautiful diorama featuring Charizard and its evolution line. Shows the majestic fire Pokemon in all its forms.'
     ],
     [
+        'id' => 1004,
         'name' => 'Eevee',
         'price' => 79,
         'category' => 'Plushie',
-        'image' => 'eevee.jpg',
+        'image' => 'images/eevee.jpg',
         'gallery' => [
-            'eevee.jpg'
+            'images/eevee.jpg'
         ]
     ],
     [
+        'id' => 1005,
         'name' => 'Mewtwo',
         'price' => 299,
         'category' => 'Figure',
-        'image' => 'mewtwo.jpg',
+        'image' => 'images/mewtwo.jpg',
         'gallery' => [
-            'mewtwo.jpg'
+            'images/mewtwo.jpg'
         ]
     ],
     [
+        'id' => 1006,
         'name' => 'Gengar',
         'price' => 95,
         'category' => 'Plushie',
-        'image' => 'gengar.jpg',
+        'image' => 'images/gengar.jpg',
         'gallery' => [
-            'gengar.jpg'
+            'images/gengar.jpg'
         ]
     ],
     [
+        'id' => 1007,
         'name' => 'Bulbasaur Family',
         'price' => 69,
         'category' => 'Figure',
-        'image' => 'bulbasaur-family.jpg',
+        'image' => 'images/bulbasaur-family.jpg',
         'gallery' => [
-            'bulbasaur-family.jpg'
+            'images/bulbasaur-family.jpg'
         ]
     ],
     [
+        'id' => 1008,
         'name' => 'Squirtle',
         'price' => 85,
         'category' => 'Plushie',
-        'image' => 'squirtle.jpg',
+        'image' => 'images/squirtle.jpg',
         'gallery' => [
-            'squirtle.jpg'
+            'images/squirtle.jpg'
         ]
     ],
     [
+        'id' => 1009,
         'name' => 'Gyarados',
         'price' => 199,
         'category' => 'Figure',
-        'image' => 'Gyarados.jpg',
+        'image' => 'images/Gyarados.jpg',
         'gallery' => [
-            'Gyarados.jpg'
+            'images/Gyarados.jpg'
         ]
     ],
     [
+        'id' => 1010,
         'name' => 'Dragonite',
         'price' => 99,
         'category' => 'Plushie',
-        'image' => 'Dragonite.jpg',
+        'image' => 'images/Dragonite.jpg',
         'gallery' => [
-            'Dragonite.jpg'
+            'images/Dragonite.jpg'
         ]
     ],
     [
+        'id' => 1011,
         'name' => 'Rayquaza',
         'price' => 249,
         'category' => 'Figure',
-        'image' => 'Rayquaza.jpg',
+        'image' => 'images/Rayquaza.jpg',
         'gallery' => [
-            'Rayquaza.jpg'
+            'images/Rayquaza.jpg'
         ]
     ],
     [
+        'id' => 1012,
         'name' => 'Mimikyu',
         'price' => 89,
         'category' => 'Plushie',
-        'image' => 'Mimikyu.jpg',
+        'image' => 'images/Mimikyu.jpg',
         'gallery' => [
-            'Mimikyu.jpg'
+            'images/Mimikyu.jpg'
         ]
     ]
 ];
@@ -123,6 +135,9 @@ $products = [
 
 <link href="css/style.css" rel="stylesheet">
 <link href="css/products.css" rel="stylesheet">
+<link href="css/modal.css" rel="stylesheet">
+<script src="js/cart-manager.js" defer></script>
+<script src="js/cart.js" defer></script>
 
 <main>
     <div class="container">
@@ -191,21 +206,24 @@ $products = [
                         <?php
                         // Loop through products
                         foreach ($products as $product) {
+                            // Properly encode the product data
+                            $productJson = htmlspecialchars(json_encode($product), ENT_QUOTES, 'UTF-8');
+                            
                             echo '<div class="col-12 col-md-6 col-lg-4">
-                                    <div class="product-card" onclick="showQuickView(' . htmlspecialchars(json_encode($product)) . ')">
-                                        <div class="product-badge">' . $product['category'] . '</div>
+                                    <div class="product-card" data-product="' . $productJson . '">
+                                        <div class="product-badge">' . htmlspecialchars($product['category']) . '</div>
                                         <div class="img-container">
-                                            <img src="images/' . $product['image'] . '" alt="' . $product['name'] . '">
+                                            <img src="' . htmlspecialchars($product['image']) . '" alt="' . htmlspecialchars($product['name']) . '">
                                             <div class="quick-view">
-                                                <button class="quick-view-btn" aria-label="Quick view ' . $product['name'] . '">
+                                                <button class="quick-view-btn" aria-label="Quick view ' . htmlspecialchars($product['name']) . '">
                                                     <i class="fas fa-eye" aria-hidden="true"></i> Quick View
                                                 </button>
                                             </div>
                                         </div>
                                         <div class="product-info">
-                                            <h3 class="product-title">' . $product['name'] . '</h3>
-                                            <p class="product-price">$'. $product['price'] . '</p>
-                                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(this, ' . $product['price'] . ')">
+                                            <h3 class="product-title">' . htmlspecialchars($product['name']) . '</h3>
+                                            <p class="product-price">$'. number_format($product['price'], 2) . '</p>
+                                            <button class="add-to-cart-btn">
                                                 <span class="btn-text">ADD TO CART</span>
                                                 <span class="loading-spinner d-none"></span>
                                             </button>
@@ -234,7 +252,10 @@ $products = [
                     <div class="col-md-6">
                         <div class="quick-view-gallery">
                             <div class="main-image">
-                                <div class="quick-view-image"></div>
+                                <div class="quick-view-image">
+                                    <div class="loading-spinner"></div>
+                                    <img src="" alt="" style="opacity: 0">
+                                </div>
                             </div>
                             <div class="thumbnail-list">
                                 <!-- Thumbnails will be inserted here by JS -->
@@ -252,14 +273,15 @@ $products = [
                             <div class="product-stats">
                                 <div class="stat-item">
                                     <div class="stat-label">Stock Status</div>
-                                    <div class="stat-value">In Stock</div>
+                                    <div class="stat-value in-stock">In Stock</div>
                                 </div>
                                 <div class="stat-item">
                                     <div class="stat-label">Category</div>
                                     <div class="stat-value category-value"></div>
                                 </div>
                             </div>
-                            <button class="add-to-cart-btn w-100">
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-shopping-cart"></i>
                                 <span class="btn-text">ADD TO CART</span>
                                 <span class="loading-spinner d-none"></span>
                             </button>
@@ -273,5 +295,12 @@ $products = [
 
 <button id="backToTop" class="back-to-top-btn">↑</button>
 
-<script src="scripts/products.js"></script>
+<!-- Remove duplicate script loading -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <?php include 'includes/footer.php'; ?>
+
+<!-- Move all scripts to the end -->
+<script src="js/cart-manager.js"></script>
+<script src="js/cart.js"></script>
+<script src="js/products.js"></script>

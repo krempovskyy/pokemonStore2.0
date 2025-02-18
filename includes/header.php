@@ -27,7 +27,7 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link" href="index.php">Home</a>
                         </li>
@@ -38,12 +38,32 @@
                             <a class="nav-link" href="toys.php">Toys</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="cart.php">Cart</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="contact.php">Contact Us</a>
                         </li>
                     </ul>
+                    <div class="d-flex align-items-center">
+                        <a href="cart.php" class="cart-icon me-3">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="cart-count">0</span>
+                        </a>
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <div class="dropdown">
+                                <button class="btn btn-link dropdown-toggle user-menu" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-user-circle"></i>
+                                    <span><?php echo htmlspecialchars($_SESSION['username']); ?></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                                    <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
+                                    <li><a class="dropdown-item" href="orders.php">My Orders</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                                </ul>
+                            </div>
+                        <?php else: ?>
+                            <a href="signin.php" class="btn btn-outline-primary me-2">Sign In</a>
+                            <a href="signup.php" class="btn btn-primary">Sign Up</a>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </nav>

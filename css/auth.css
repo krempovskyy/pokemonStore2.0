@@ -1,0 +1,153 @@
+/* Auth Pages Styles */
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #8860d0 0%, #5c4d8c 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 500px;
+    margin: auto;
+}
+
+.auth-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.auth-logo {
+    height: 80px;
+    width: auto;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.text-muted {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Form Styles */
+.form-label {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.input-group {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    color: #6c757d;
+}
+
+.form-control {
+    border: 1px solid #ced4da;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+}
+
+.form-control:focus {
+    border-color: #8860d0;
+    box-shadow: 0 0 0 0.2rem rgba(136, 96, 208, 0.25);
+}
+
+.toggle-password {
+    border: 1px solid #ced4da;
+    border-left: none;
+    background: #f8f9fa;
+    color: #6c757d;
+}
+
+.toggle-password:hover {
+    background: #e9ecef;
+    color: #333;
+}
+
+/* Checkbox Styles */
+.form-check-input {
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: #8860d0;
+    border-color: #8860d0;
+}
+
+.form-check-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Links */
+a {
+    color: #8860d0;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #6a48a6;
+}
+
+.forgot-password {
+    font-size: 0.9rem;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: #8860d0;
+    border-color: #8860d0;
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #6a48a6;
+    border-color: #6a48a6;
+}
+
+/* Validation Styles */
+.invalid-feedback {
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+.was-validated .form-control:invalid,
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.was-validated .form-control:invalid:focus,
+.form-control.is-invalid:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .auth-card {
+        padding: 1.5rem;
+    }
+
+    .auth-logo {
+        height: 60px;
+    }
+} 

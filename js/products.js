@@ -204,137 +204,116 @@ backToTopBtn.addEventListener('click', () => {
 
 // Quick View functionality
 function showQuickView(product) {
+    // Update modal content
     const modal = document.getElementById('quickViewModal');
+    const modalTitle = modal.querySelector('.modal-title');
+    const productTitle = modal.querySelector('.product-title');
+    const productPrice = modal.querySelector('.product-price');
+    const productCategory = modal.querySelector('.category-value');
+    const productDescription = modal.querySelector('.product-description p');
+    const descriptionContainer = modal.querySelector('.product-description');
+    const sizeSelect = modal.querySelector('#modalSizeSelect');
     
-    // Check if modal is already open
-    let modalInstance = bootstrap.Modal.getInstance(modal);
+    // Clear previous size options
+    sizeSelect.innerHTML = '<option value="">Select Size</option>';
     
-    // If modal is already open, dispose of it
-    if (modalInstance) {
-        modalInstance.dispose();
+    // Add size options based on product category
+    let sizes = [];
+    if (product.category === 'Women' || product.category === 'Men') {
+        sizes = ['XS', 'S', 'M', 'L', 'XL'];
+    } else if (product.category === 'Unisex') {
+        sizes = ['S', 'M', 'L', 'XL', 'XXL'];
     }
     
-    // Create new modal instance
-    modalInstance = new bootstrap.Modal(modal);
+    sizes.forEach(size => {
+        const option = document.createElement('option');
+        option.value = size;
+        option.textContent = size;
+        sizeSelect.appendChild(option);
+    });
     
-    // Update modal content
-    modal.querySelector('.modal-title').textContent = product.name;
+    // Show/hide size selector based on product type
+    const sizeSelector = modal.querySelector('.size-selector');
+    if (product.category === 'Women' || product.category === 'Men' || product.category === 'Unisex') {
+        sizeSelector.style.display = 'block';
+    } else {
+        sizeSelector.style.display = 'none';
+    }
+
+    modalTitle.textContent = product.name;
+    productTitle.textContent = product.name;
+    productPrice.textContent = `$${parseFloat(product.price).toFixed(2)}`;
+    productCategory.textContent = product.category || 'N/A';
+
+    // Update description if available
+    if (product.description) {
+        productDescription.textContent = product.description;
+        descriptionContainer.style.display = 'block';
+    } else {
+        descriptionContainer.style.display = 'none';
+    }
+
+    // Update main image with loading state
+    const mainImageContainer = modal.querySelector('.quick-view-image');
+    const mainImage = mainImageContainer.querySelector('img');
+    const loadingSpinner = mainImageContainer.querySelector('.loading-spinner');
     
-    // Setup gallery
-    const imageContainer = modal.querySelector('.quick-view-image');
-    const thumbnailList = modal.querySelector('.thumbnail-list');
+    mainImage.style.opacity = '0';
+    loadingSpinner.style.display = 'block';
     
-    // Clear existing thumbnails
-    thumbnailList.innerHTML = '';
-    
-    // Create main image
-    imageContainer.innerHTML = `
-        <div class="loading-spinner"></div>
-        <img src="images/${product.gallery ? product.gallery[0] : product.image}" 
-             alt="${product.name}" 
-             style="opacity: 0">
-    `;
+    const newImage = new Image();
+    newImage.onload = function() {
+        mainImage.src = product.image;
+        mainImage.alt = product.name;
+        mainImage.style.opacity = '1';
+        loadingSpinner.style.display = 'none';
+    };
+    newImage.src = product.image;
 
     // Create thumbnails
-    if (product.gallery) {
-        product.gallery.forEach((img, index) => {
-            const thumbnail = document.createElement('div');
-            thumbnail.className = `thumbnail-item ${index === 0 ? 'active' : ''}`;
-            thumbnail.innerHTML = `<img src="images/${img}" alt="Product view ${index + 1}">`;
-            
-            // Add click handler
-            thumbnail.addEventListener('click', () => {
-                // Update main image
-                imageContainer.innerHTML = `
-                    <div class="loading-spinner"></div>
-                    <img src="images/${img}" 
-                         alt="${product.name}" 
-                         style="opacity: 0">
-                `;
-                
-                // Handle main image loading
-                const mainImg = imageContainer.querySelector('img');
-                const spinner = imageContainer.querySelector('.loading-spinner');
-                
-                mainImg.onload = () => {
-                    spinner.style.display = 'none';
-                    mainImg.style.opacity = '1';
-                };
-                
-                // Update active state
-                thumbnailList.querySelectorAll('.thumbnail-item').forEach(thumb => {
-                    thumb.classList.remove('active');
-                });
-                thumbnail.classList.add('active');
-            });
-            
-            thumbnailList.appendChild(thumbnail);
-        });
-    }
+    const thumbnailList = modal.querySelector('.thumbnail-list');
+    thumbnailList.innerHTML = ''; // Clear existing thumbnails
+    
+    // Add main product image as first thumbnail
+    const mainThumbnail = document.createElement('div');
+    mainThumbnail.className = 'thumbnail-item active';
+    mainThumbnail.innerHTML = `<img src="${product.image}" alt="${product.name}">`;
+    mainThumbnail.onclick = function() {
+        updateMainImage(product.image);
+        updateActiveThumbnail(this);
+    };
+    thumbnailList.appendChild(mainThumbnail);
 
-    // Handle main image loading
-    const mainImg = imageContainer.querySelector('img');
-    const spinner = imageContainer.querySelector('.loading-spinner');
-    
-    mainImg.onload = () => {
-        spinner.style.display = 'none';
-        mainImg.style.opacity = '1';
-    };
-    
-    mainImg.onerror = () => {
-        spinner.style.display = 'none';
-        imageContainer.innerHTML = `
-            <div class="text-center text-muted">
-                <i class="fas fa-image fa-3x mb-2"></i>
-                <p>Image not available</p>
-            </div>
-        `;
-    };
-    
-    // Update product info
-    modal.querySelector('.quick-view-info .product-title').textContent = product.name;
-    modal.querySelector('.quick-view-info .product-price').textContent = `$${product.price}`;
-    
-    // Update description
-    const description = product.description || 'No description available.';
-    modal.querySelector('.product-description p').textContent = description;
-    
-    // Update add to cart button
-    const addToCartBtn = modal.querySelector('.add-to-cart-btn');
-    addToCartBtn.onclick = () => addToCart(addToCartBtn, product.price);
-    
-    // Update category - check if category exists first
-    const categoryValue = modal.querySelector('.category-value');
-    if (categoryValue) {
-        if (product.category) {
-            categoryValue.textContent = product.category;
-        } else {
-            // Fallback nếu không có category
-            categoryValue.textContent = 'Unknown';
-        }
-    }
-    
+    // Store the current product for the add to cart functionality
+    modal.dataset.currentProduct = JSON.stringify(product);
+
     // Show modal
-    modalInstance.show();
-    
-    // Clean up when modal is hidden
-    modal.addEventListener('hidden.bs.modal', function () {
-        modalInstance.dispose();
-    }, { once: true });
+    const bootstrapModal = new bootstrap.Modal(modal);
+    bootstrapModal.show();
+}
 
-    // Add keyboard navigation for gallery
-    if (product.gallery && product.gallery.length > 1) {
-        modal.addEventListener('keydown', function(e) {
-            const currentIndex = Array.from(thumbnailList.children)
-                .findIndex(item => item.classList.contains('active'));
-            
-            if (e.key === 'ArrowLeft' && currentIndex > 0) {
-                thumbnailList.children[currentIndex - 1].click();
-            } else if (e.key === 'ArrowRight' && currentIndex < product.gallery.length - 1) {
-                thumbnailList.children[currentIndex + 1].click();
-            }
-        });
-    }
+function updateMainImage(src) {
+    const mainImageContainer = document.querySelector('.quick-view-image');
+    const mainImage = mainImageContainer.querySelector('img');
+    const loadingSpinner = mainImageContainer.querySelector('.loading-spinner');
+    
+    mainImage.style.opacity = '0';
+    loadingSpinner.style.display = 'block';
+    
+    const newImage = new Image();
+    newImage.onload = function() {
+        mainImage.src = src;
+        mainImage.style.opacity = '1';
+        loadingSpinner.style.display = 'none';
+    };
+    newImage.src = src;
+}
+
+function updateActiveThumbnail(clickedThumbnail) {
+    document.querySelectorAll('.thumbnail-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    clickedThumbnail.classList.add('active');
 }
 
 // Close modal when clicking outside

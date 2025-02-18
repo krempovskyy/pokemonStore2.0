@@ -10,37 +10,26 @@
 
 /* Filters Section */
 .filters-section {
-    background: white;
+    background: #fff;
     padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-    margin-bottom: 2rem;
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    flex-wrap: wrap;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
 }
 
 .search-box {
-    flex: 1;
-    min-width: 300px;
     position: relative;
 }
 
 .search-box i {
     position: absolute;
-    left: 1rem;
+    left: 10px;
     top: 50%;
     transform: translateY(-50%);
-    color: #666;
+    color: #6c757d;
 }
-
 .search-box input {
-    width: 100%;
-    padding: 0.8rem 1rem 0.8rem 2.5rem;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    font-size: 0.95rem;
+    padding-left: 30px;
 }
 
 .filter-options {
@@ -74,28 +63,18 @@
 
 .action-buttons {
     display: flex;
-    gap: 0.5rem;
+    gap: 5px;
 }
 
 .action-buttons .btn {
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0.25rem 0.5rem;
 }
 
 /* Pagination Section */
 .pagination-section {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 2rem;
-    background: white;
-    padding: 1rem 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    justify-content: center;
+    margin-top: 1.5rem;
 }
 
 .items-per-page {
@@ -148,8 +127,7 @@
 
 /* Status Badges */
 .badge {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    padding: 0.5em 0.75em;
     font-weight: 500;
 }
 
@@ -197,13 +175,17 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-    .filters-section {
-        flex-direction: column;
-        align-items: stretch;
+    .filters-section .row {
+        gap: 1rem;
     }
-
-    .filter-options {
-        flex-wrap: wrap;
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .table-responsive {
+        margin: 0 -1.5rem;
     }
 
     .pagination-section {
@@ -254,4 +236,70 @@
 .products-table td:nth-child(4) {  /* Product Name column */
     white-space: normal;  /* Allow product names to wrap */
     min-width: 200px;     /* Minimum width for product names */
+}
+
+/* Products Management Styles */
+
+/* Products Grid */
+.products-grid {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+
+.product-thumbnail {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.table th {
+    font-weight: 600;
+    color: #495057;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Modal Styles */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    border-radius: 0 0 12px 12px;
+}
+
+/* Form Styles */
+.form-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+/* Animation */
+.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    transition: transform 0.2s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
 } 

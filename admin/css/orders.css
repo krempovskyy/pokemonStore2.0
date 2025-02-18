@@ -1,0 +1,267 @@
+/* Orders Management Styles */
+
+/* Filters Section */
+.filters-section {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-box input {
+    padding-left: 35px;
+}
+
+/* Orders Section */
+.orders-section {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+
+.table th {
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Customer Info */
+.customer-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.customer-name {
+    font-weight: 500;
+    color: #212529;
+}
+
+.customer-email {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Order Date */
+.order-date {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-date .date {
+    font-weight: 500;
+}
+
+.order-date .time {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Order Products */
+.order-products {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.product-count {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Status Badges */
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+.badge.bg-warning {
+    color: #000;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-buttons .btn {
+    padding: 0.25rem 0.5rem;
+}
+
+/* Order Details Modal */
+.order-info h6 {
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+.order-info p {
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+}
+
+.order-items h6 {
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+/* Timeline */
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.timeline-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 0.5rem;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-point {
+    position: absolute;
+    left: -1.75rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.timeline-content h6 {
+    margin-bottom: 0.5rem;
+    color: #212529;
+}
+
+.timeline-content p {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Edit Order Modal */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    border-radius: 0 0 12px 12px;
+}
+
+
+.filters-section,
+.products-table,
+.pagination-section {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Pagination */
+.pagination-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.pagination {
+    margin: 0;
+    gap: 0.3rem;
+}
+
+.pagination .page-item .page-link {
+    border: none;
+    padding: 0.5rem 0.75rem;
+    color: #6c757d;
+    border-radius: 6px;
+    min-width: 36px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #f8f9fa;
+    color: #8860d0;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #8860d0;
+    color: white;
+    box-shadow: 0 2px 6px rgba(161, 13, 253, 0.25);
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+    background-color: transparent;
+    cursor: not-allowed;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .filters-section .row {
+        gap: 1rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .table-responsive {
+        margin: 0 -1.5rem;
+    }
+    
+    .customer-info, .order-date {
+        white-space: normal;
+    }
+}
+
+/* Animation */
+.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    transition: transform 0.2s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+} 

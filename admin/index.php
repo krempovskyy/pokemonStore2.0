@@ -95,7 +95,7 @@ $currentPage = 'dashboard';
                 <div class="recent-orders">
                     <div class="section-header">
                         <h2>Recent Orders</h2>
-                        <a href="orders.php" class="btn btn-primary">
+                        <a href="/admin/orders" class="btn btn-primary">
                             View All
                             <i class="fas fa-arrow-right"></i>
                         </a>
