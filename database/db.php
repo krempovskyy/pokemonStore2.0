@@ -1,8 +1,8 @@
 <?php
 $servername = "db";
-$username = "pokemonStore";
-$password = "passwordPS";
-$dbname = "pokemonStore";
+$username = "root";
+$password = "password9";
+$dbname = "pokemonstore";
 
 // creating connection
 $conn = new mysqli($servername, $username, $password, $dbname);
