@@ -1,38 +1,29 @@
 <?php
 
-require 'db.php';
+// Check if the 'submit' button in the form was clicked
+if (isset($_POST['submit'])) {
+    // Retrieve data from the form and store it in variables
+    $name = $_POST['name'];     // name
+    $email = $_POST['email'];     // email
+    $message = $_POST['message'];       // message
+    
+    // Include the database connection file
+    include 'db.php';
 
-//check if form is submitted
-if ($_server["REQUEST_METHOD"] == "POST") {
-    $name = $conn->htmlspecialchars($_POST['name']);
-    $email =  $conn->filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    $message =  $conn->htmlspecialchars($_POST['message']);
+    // Define an SQL query to insert data into the 'studentsinfo' table
+    $sql = "INSERT INTO contact_messages (name, email, message)
+            VALUES ('$name', '$email', '$message')";
 
-//insert into database
-$sql = "INSERT INTO contact_messages (name, email, message) VALUES ('$name', '$email', '$message')";
-
-try {
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        ':name' => $name,
-        ':email' => $email,
-        ':message' => $message
-    ]);
-
-    echo "Thank you! Your message has been sent.";
-    } catch (PDOException $e){
-        echo "Error:" . $e->getMessage();
+    // Execute the SQL query using the database connection
+    if ($conn->query($sql) === TRUE) {
+        // If the query was successful, display a success message
+        echo "New record added";
+    } else {
+        // If there was an error in the query, display an error message
+        echo "Error: " . $sql . "<br>" . $conn->error;
     }
 
-
-
-//if ($conn->query($sql) === TRUE) {
-  //  echo "<script>alert('Message Sent Successfully!'); window.location.href='contact.php';</script>";
-//} else {
-  //  echo "Error: " .$sql ."<br>" .$conn->error;
-//} 
+    // Close the database connection
+    $conn->close();
 }
-
-    //closing the connection 
-//$conn->close();
 ?>
