@@ -5,42 +5,57 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 81:80
+      - "81:80"
     volumes:
-      - ./src:/var/www/html/
-    restart : always
-    networks:
-      - lan
-      
-  db: # mysql database server
-    image: mysql:8.0.34
-    container_name: pokemonstore
-    restart: always #this restarts the service upon any configuration changes
-    environment: # to use and access MySQL server,we neet to set up an authentication environment
-      MYSQL_ROOT_PASSWORD: password9
-    ports:
-      - "6034:3306"   #6034 in the the local machine and 3306 in the container
-    volumes: # it persists updates made to the database
-      - dbdata:/var/lib/mysql
-      - ./pokemonstore.sql:/docker-eentrypoint-initdb.d/pokemonstore.sql # load sql file at startup
-    networks:
-      - lan
-
-  phpmyadmin: #another service to manage database server
+      - ../:/var/www/html/
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_ROOT_PASSWORD=password9
+      - MYSQL_DATABASE=pokemonstore
     depends_on:
       - db
-    image: phpmyadmin/phpmyadmin
-    container_name: pokemonstorephpmyadmin
-    restart: always
+    networks:
+      - pokemonstore_net
+      
+  db:
+    image: mysql:8.0
+    container_name: pokemonstore_db
+    environment:
+      MYSQL_ROOT_PASSWORD: password9
+      MYSQL_DATABASE: pokemonstore
+      TZ: Europe/Helsinki
     ports:
-      - '82:80'
+      - "6034:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./pokemonstore.sql:/docker-entrypoint-initdb.d/pokemonstore.sql
+    command: --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --default-time-zone=Europe/Helsinki
+    networks:
+      - pokemonstore_net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pokemonstore_phpmyadmin
+    depends_on:
+      - db
+    ports:
+      - "82:80"
     environment:
       PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: password9
+      MYSQL_ROOT_PASSWORD: password9
+      TZ: Europe/Helsinki
     networks:
-      - lan 
-      
+      - pokemonstore_net
+
 volumes:
-  dbdata:
+  mysql_data:
+
 networks:
-  lan:
+  pokemonstore_net:
+    driver: bridge
   
