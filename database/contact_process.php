@@ -1,29 +1,39 @@
 <?php
 
 // Check if the 'submit' button in the form was clicked
-if (isset($_POST['submit'])) {
+if ($_server["request_method"] == "post") {
+
     // Retrieve data from the form and store it in variables
-    $name = $_POST['name'];     // name
-    $email = $_POST['email'];     // email
-    $message = $_POST['message'];       // message
+    $name = trim($_POST['name']);     // name
+    $email = trim($_POST['email']);     // email
+    $message = trim($_POST['message']);       // message
     
     // Include the database connection file
     include 'db.php';
 
     // Define an SQL query to insert data into the 'studentsinfo' table
     $sql = "INSERT INTO contact_messages (name, email, message)
-            VALUES ('$name', '$email', '$message')";
+            VALUES (?,?,?)";
 
-    // Execute the SQL query using the database connection
-    if ($conn->query($sql) === TRUE) {
-        // If the query was successful, display a success message
-        echo "New record added";
+    //prepare the statement
+    if ($stmt = $conn->prepare($sql)) {
+
+        //bind paramenters to the prepared stattement
+        $stmt->bind_param("sss", $name, $email);
+
+        //ececute the statement
+        if( $stmt->execute() ) {
+            //success message 
+            echo"New record added successfully!";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+        //close statement
+        $conn->close();
     } else {
-        // If there was an error in the query, display an error message
-        echo "Error: " . $sql . "<br>" . $conn->error;
+        // if someone access the script without submitting the form 
+        echo "Invalid Request!";
     }
+    ?>
 
-    // Close the database connection
-    $conn->close();
-}
-?>
+    
