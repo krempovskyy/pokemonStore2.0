@@ -34,6 +34,7 @@ if ($_server["request_method"] == "post") {
         // if someone access the script without submitting the form 
         echo "Invalid Request!";
     }
+}
     ?>
 
     
