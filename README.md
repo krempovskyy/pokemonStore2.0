@@ -73,8 +73,6 @@ scripts/products.js - Filter & Quick Review functionality
 
 4.	Feature 4 – Madushani / Dmytro - Shopping  Cart
 
-    > Users can add/ remove items from their cart
-
     > Order Summary
 
 5.	Feature 5 - Vinh Nguyen / Lien Pham - Search & Filters

@@ -1,38 +1,40 @@
 <?php
 
-require 'db.php';
+// Check if the 'submit' button in the form was clicked
+if ($_server["request_method"] == "post") {
 
-//check if form is submitted
-if ($_server["REQUEST_METHOD"] == "POST") {
-    $name = $conn->htmlspecialchars($_POST['name']);
-    $email =  $conn->filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    $message =  $conn->htmlspecialchars($_POST['message']);
+    // Retrieve data from the form and store it in variables
+    $name = trim($_POST['name']);     // name
+    $email = trim($_POST['email']);     // email
+    $message = trim($_POST['message']);       // message
+    
+    // Include the database connection file
+    include 'db.php';
 
-//insert into database
-$sql = "INSERT INTO contact_messages (name, email, message) VALUES ('$name', '$email', '$message')";
+    // Define an SQL query to insert data into the 'studentsinfo' table
+    $sql = "INSERT INTO contact_messages (name, email, message)
+            VALUES (?,?,?)";
 
-try {
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([
-        ':name' => $name,
-        ':email' => $email,
-        ':message' => $message
-    ]);
+    //prepare the statement
+    if ($stmt = $conn->prepare($sql)) {
 
-    echo "Thank you! Your message has been sent.";
-    } catch (PDOException $e){
-        echo "Error:" . $e->getMessage();
+        //bind paramenters to the prepared stattement
+        $stmt->bind_param("sss", $name, $email);
+
+        //ececute the statement
+        if( $stmt->execute() ) {
+            //success message 
+            echo"New record added successfully!";
+        } else {
+            echo "Error: " . $stmt->error;
+        }
+        //close statement
+        $conn->close();
+    } else {
+        // if someone access the script without submitting the form 
+        echo "Invalid Request!";
     }
-
-
-
-//if ($conn->query($sql) === TRUE) {
-  //  echo "<script>alert('Message Sent Successfully!'); window.location.href='contact.php';</script>";
-//} else {
-  //  echo "Error: " .$sql ."<br>" .$conn->error;
-//} 
 }
+    ?>
 
-    //closing the connection 
-//$conn->close();
-?>
+    

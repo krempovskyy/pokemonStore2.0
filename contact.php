@@ -62,7 +62,7 @@ include 'includes/header.php';
                         <label for="message" class="form-label">Message</label>
                         <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
                     </div>
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button type="submit" name="submit" class="btn btn-primary w-100">
                         <i class="fas fa-paper-plane me-2"></i>Send Message
                     </button>
                 </form>
