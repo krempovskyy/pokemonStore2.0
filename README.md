@@ -117,7 +117,7 @@ List of forms include in the project
 |---------------      | -----------    | ---------------                  | ---------------------
 | Registration        | Dmytro         | Allow users to create accounts   | E-mail & password validation 
 | Login form          | Dmytro         | User authentication              | Required fields and password encryption 
-| Product upload form | Vinh           | Admin adds new products          | Image validation and required fields 
+| Product upload form | Vinh/ Lien     | Admin adds new products          | Image validation and required fields 
 | Order Summary form  | Madu/Dmytro    | Summary of the shopping cart     |
 | Contact form        | Madu           | User submit inquiries            | Required fields and email validation 
 
@@ -129,9 +129,9 @@ Database tables that will be created
 |**Table name**        | **Created by**   | **Link to GitHub**           | **Link to Shell**
 |---------------       | -----------      | ---------------              | ---------------------
 | Users                |                  |                              |
-| Products / Toys      |                  |                              |
-| Products / Clothes   |                  |                              |
-6| Cart                 |                  |                              |
+| Products / Toys      |      Lien       |                              |
+| Products / Clothes   |      Lien        |                              |
+| Cart                 |                  |                              |
 | Contact              |                  |                              |
 
  
