@@ -10,11 +10,10 @@
 
 /* Filters Section */
 .filters-section {
-    background: #fff;
-    padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-bottom: 1.5rem;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin: 1rem 0;
 }
 
 .search-box {
@@ -23,13 +22,14 @@
 
 .search-box i {
     position: absolute;
-    left: 10px;
+    left: 1rem;
     top: 50%;
     transform: translateY(-50%);
     color: #6c757d;
 }
+
 .search-box input {
-    padding-left: 30px;
+    padding-left: 2.5rem;
 }
 
 .filter-options {
@@ -45,6 +45,12 @@
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.05);
     overflow-x: auto; /* Add horizontal scroll for small screens */
+    margin-top: 1rem;
+}
+
+.products-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
 }
 
 .product-img {
@@ -63,7 +69,7 @@
 
 .action-buttons {
     display: flex;
-    gap: 5px;
+    gap: 0.5rem;
 }
 
 .action-buttons .btn {
@@ -93,8 +99,12 @@
 }
 
 .pagination {
-    margin: 0;
-    gap: 0.3rem;
+    margin-top: 1rem;
+    justify-content: center;
+}
+
+.pagination .page-link {
+    padding: 0.5rem 0.75rem;
 }
 
 .pagination .page-item .page-link {
@@ -175,17 +185,21 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-    .filters-section .row {
-        gap: 1rem;
+    .filters-section .row > div {
+        margin-bottom: 1rem;
     }
     
     .action-buttons {
         flex-direction: column;
-        gap: 0.25rem;
     }
     
-    .table-responsive {
-        margin: 0 -1.5rem;
+    .products-table {
+        font-size: 0.875rem;
+    }
+    
+    .product-thumbnail {
+        width: 40px;
+        height: 40px;
     }
 
     .pagination-section {
@@ -250,8 +264,8 @@
 }
 
 .product-thumbnail {
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 50px;
     object-fit: cover;
     border-radius: 4px;
 }
@@ -302,4 +316,128 @@
 
 .modal.show .modal-dialog {
     transform: scale(1);
+}
+
+/* Stock Badge */
+.stock-badge {
+    padding: 0.15em 0.4em;
+    font-size: 0.65rem;
+    line-height: 1.2;
+    border-radius: 4px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+    display: inline-block;
+    border: 1px solid transparent;
+}
+
+.stock-badge.in-stock {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.stock-badge.low-stock {
+    background-color: #fff3cd;
+    color: #856404;
+    border-color: #ffeeba;
+}
+
+.stock-badge.out-of-stock {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+/* Status Badge */
+.status-badge {
+    padding: 0.5em 1em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+.status-badge.pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.status-badge.processing {
+    background-color: #cce5ff;
+    color: #004085;
+    border: 1px solid #b8daff;
+}
+
+.status-badge.shipped {
+    background-color: #e0cffc;
+    color: #6610f2;
+    border: 1px solid #d4bff9;
+}
+
+.status-badge.delivered {
+    background-color: #28a745 ;
+    color: #ffff;
+    border: 1px solid #c3e6cb;
+}
+
+.status-badge.cancelled {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Size Display */
+.size-display {
+    padding: 0.15em 0.4em;
+    font-size: 0.65rem;
+    line-height: 1.2;
+    border-radius: 4px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    text-transform: capitalize;
+    display: inline-block;
+    border: 1px solid transparent;
+    background-color: #e9ecef;
+    color: #495057;
+    border-color: #ddd;
+}
+
+.size-display.in-stock {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+.size-display.low-stock {
+    background-color: #fff3cd;
+    color: #856404;
+    border-color: #ffeeba;
+}
+
+.size-display.out-of-stock {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+/* Loading State */
+.spinner-border {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin: 2rem auto;
+}
+
+/* Add Product Modal */
+.modal-body {
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
 } 

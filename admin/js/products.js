@@ -1,38 +1,14 @@
-// Wait for DOM and Bootstrap to be fully loaded
-window.addEventListener('load', function() {
-    // Sample data - in production this would come from a database
-    let products = [
-        {
-            id: 1,
-            name: 'Pikachu Plush',
-            category: 'plush',
-            price: 29.99,
-            stock: 50,
-            status: 'instock',
-            image: '/images/pikachu-cos-mario.jpg',
-            description: 'A cute Pikachu plush toy wearing Mario costume'
-        },
-        {
-            id: 2,
-            name: 'Charizard Figure',
-            category: 'figure',
-            price: 49.99,
-            stock: 5,
-            status: 'lowstock',
-            image: '/images/charizard-family.jpg',
-            description: 'Detailed Charizard figure with family'
-        },
-        {
-            id: 3,
-            name: 'Mewtwo Plush',
-            category: 'plush',
-            price: 34.99,
-            stock: 0,
-            status: 'outofstock',
-            image: '/images/mewtwo.jpg',
-            description: 'Legendary Mewtwo plush toy'
-        }
-    ];
+// Global state
+let currentPage = 1;
+let currentLimit = 10;
+let currentSearch = '';
+let currentCategory = '';
+let currentStock = '';
+let currentSort = 'newest';
+
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log('DOM Content Loaded');
 
     // Initialize tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -40,63 +16,117 @@ window.addEventListener('load', function() {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    // Initialize event listeners
+    // Initialize all event listeners
     initializeEventListeners();
     
-    // Initial render
-    renderProducts(products);
+    // Initial load
+    await loadProducts();
+});
+
+// Initialize event listeners for dynamic elements
+function initializeEventListeners() {
+    console.log('Initializing event listeners');
+
+    // Category change handler
+    document.getElementById('productCategory').addEventListener('change', function() {
+        const category = this.value;
+        const stockInput = document.getElementById('stockInputContainer');
+        const sizeSection = document.getElementById('sizeManagementSection');
+        
+        // Reset all sections
+        stockInput.style.display = 'none';
+        sizeSection.style.display = 'none';
+        
+        if (category.includes('clothing')) {
+            // For clothing items, show size management
+            sizeSection.style.display = 'block';
+            // Reset all size quantities
+            const sizeInputs = document.querySelectorAll('.size-quantity');
+            sizeInputs.forEach(input => input.value = 0);
+        } else {
+            // For non-clothing items (including accessories), show stock input
+            stockInput.style.display = 'block';
+            document.querySelector('[name="stock"]').value = 0;
+        }
+    });
+
+    // Size quantity change handler to update total stock
+    const sizeQuantityInputs = document.querySelectorAll('.size-quantity');
+    if (sizeQuantityInputs.length) {
+        sizeQuantityInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (document.getElementById('productCategory').value.includes('clothing')) {
+                    const total = Array.from(sizeQuantityInputs)
+                        .reduce((sum, input) => sum + (parseInt(input.value) || 0), 0);
+                    document.querySelector('input[name="stock"]').value = total;
+                }
+            });
+        });
+    }
 
     // Search functionality
     const searchInput = document.querySelector('.search-box input');
     if (searchInput) {
-        searchInput.addEventListener('input', debounce(function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            const filteredProducts = products.filter(product => 
-                product.name.toLowerCase().includes(searchTerm) ||
-                product.category.toLowerCase().includes(searchTerm) ||
-                product.price.toString().includes(searchTerm) ||
-                product.stock.toString().includes(searchTerm)
-            );
-            renderProducts(filteredProducts);
+        searchInput.addEventListener('input', debounce(async function(e) {
+            currentSearch = e.target.value;
+            currentPage = 1; // Reset to first page on search
+            await loadProducts();
         }, 300));
     }
 
     // Filter change handlers
     const filters = document.querySelectorAll('.form-select');
     filters.forEach(filter => {
-        filter.addEventListener('change', function() {
-            applyFilters();
+        filter.addEventListener('change', async function() {
+            console.log('Filter changed:', this.id, 'Value:', this.value);
+            const filterType = this.getAttribute('data-filter-type');
+            
+            switch(filterType) {
+                case 'category':
+                    currentCategory = this.value;
+                    console.log('Category filter updated to:', currentCategory);
+                    break;
+                case 'stock':
+                    currentStock = this.value;
+                    console.log('Stock filter updated to:', currentStock);
+                    break;
+                case 'sort':
+                    currentSort = this.value;
+                    console.log('Sort filter updated to:', currentSort);
+                    break;
+            }
+            
+            currentPage = 1; // Reset to first page on filter change
+            await loadProducts();
         });
     });
 
     // Add Product Form Handler
     const addProductForm = document.getElementById('addProductForm');
     if (addProductForm) {
-        addProductForm.addEventListener('submit', function(e) {
+        addProductForm.addEventListener('submit', async function(e) {
             e.preventDefault();
-            handleProductSubmit(this);
+            await handleProductSubmit(this);
         });
     }
 
-    // Initialize event listeners for dynamic elements
-    function initializeEventListeners() {
         // Delete product handler
-        document.addEventListener('click', function(e) {
+    document.addEventListener('click', async function(e) {
             if (e.target.closest('.btn-danger')) {
                 e.preventDefault();
                 const productId = parseInt(e.target.closest('tr').dataset.productId);
                 if (confirm('Are you sure you want to delete this product?')) {
-                    deleteProduct(productId);
+                await deleteProduct(productId);
                 }
             }
         });
 
         // Edit product handler
-        document.addEventListener('click', function(e) {
+    document.addEventListener('click', async function(e) {
             if (e.target.closest('.btn-info')) {
                 e.preventDefault();
                 const productId = parseInt(e.target.closest('tr').dataset.productId);
-                editProduct(productId);
+            await editProduct(productId);
             }
         });
 
@@ -110,64 +140,170 @@ window.addEventListener('load', function() {
                 document.querySelector('#addProductModal .btn-primary').textContent = 'Add Product';
             });
         }
+
+    // Pagination handler - Using event delegation
+    document.addEventListener('click', async function(e) {
+        const pageLink = e.target.closest('.page-link');
+        if (pageLink) {
+            e.preventDefault();
+            console.log('Pagination element clicked:', e.target);
+            console.log('Page link element:', pageLink);
+            
+            if (!pageLink.parentElement.classList.contains('disabled')) {
+                const page = pageLink.dataset.page;
+                console.log('Page data:', page);
+                
+                if (page) {
+                    currentPage = parseInt(page);
+                    console.log('Loading page:', currentPage);
+                    await loadProducts();
+                }
+            } else {
+                console.log('Pagination link is disabled');
+            }
+        }
+    });
+}
+
+// Load products from API
+async function loadProducts() {
+    try {
+        console.log('Loading products with filters:', {
+            page: currentPage,
+            limit: currentLimit,
+            search: currentSearch,
+            category: currentCategory,
+            stock: currentStock,
+            sort: currentSort
+        });
+
+        const queryParams = new URLSearchParams({
+            page: currentPage,
+            limit: currentLimit,
+            search: currentSearch,
+            category: currentCategory,
+            stock: currentStock,
+            sort: currentSort
+        });
+
+        const response = await fetch(`/admin/api/products.php?${queryParams}`);
+        
+        if (!response.ok) {
+            console.error('API response not ok:', response.status, response.statusText);
+            throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+        console.log('API Response:', result);
+        
+        if (result.success) {
+            if (!result.data || !result.data.products) {
+                console.error('Invalid API response structure:', result);
+                throw new Error('Invalid API response structure');
+            }
+
+            // Process products and ensure sizes are properly handled
+            const processedProducts = result.data.products.map(product => {
+                if (product.category.includes('clothing')) {
+                    try {
+                        if (typeof product.sizes === 'string') {
+                            product.sizes = JSON.parse(product.sizes);
+                        } else if (!product.sizes) {
+                            product.sizes = {};
+                        }
+                    } catch (e) {
+                        console.error(`Error parsing sizes for product ${product.id}:`, e);
+                        product.sizes = {};
+                    }
+                }
+                return product;
+            });
+            
+            renderProducts(processedProducts);
+            updatePagination(result.data.pagination);
+        } else {
+            console.error('API returned error:', result.error);
+            showNotification('Error', result.error || 'Failed to load products', 'error');
+        }
+    } catch (error) {
+        console.error('Error in loadProducts:', error);
+        showNotification('Error', 'Failed to load products. Please try again.', 'error');
+        }
     }
     
     // Render products table
-    function renderProducts(productsToRender = products) {
+function renderProducts(products) {
+    console.log('Starting to render products:', products);
         const tbody = document.querySelector('.products-table tbody');
         if (!tbody) {
-            console.error('Could not find table body element with class .products-table tbody');
+        console.error('Products table tbody not found');
             return;
         }
-        
-        console.log('Rendering products:', productsToRender);
         tbody.innerHTML = '';
         
-        if (productsToRender.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="7" class="text-center">No products found</td>
-                </tr>
-            `;
-            return;
-        }
-        
-        productsToRender.forEach(product => {
-            const statusClass = {
-                'instock': 'bg-success',
-                'lowstock': 'bg-warning',
-                'outofstock': 'bg-danger'
-            };
-            
-            const statusText = {
-                'instock': 'In Stock',
-                'lowstock': 'Low Stock',
-                'outofstock': 'Out of Stock'
-            };
+    products.forEach(product => {
+        console.log(`Rendering product ${product.id}:`, {
+            name: product.name,
+            category: product.category,
+            sizes: product.sizes
+        });
 
-            const tr = document.createElement('tr');
-            tr.dataset.productId = product.id;
-            tr.innerHTML = `
-                <td>
-                    <img src="${product.image}" alt="${product.name}" class="product-thumbnail">
-                </td>
+        let sizeDisplay = '';
+        let stockQuantity = 0;
+        
+        if (product.category.includes('clothing')) {
+            console.log(`Processing sizes for clothing product ${product.id}:`, product.sizes);
+            try {
+                const sizes = product.sizes;
+                if (sizes) {
+                    if (sizes.ONE_SIZE) {
+                        sizeDisplay = `ONE SIZE: ${sizes.ONE_SIZE.quantity}`;
+                        stockQuantity = sizes.ONE_SIZE.quantity;
+                    } else {
+                        const sizeEntries = Object.entries(sizes);
+                        if (sizeEntries.length > 0) {
+                            sizeDisplay = sizeEntries
+                                .map(([size, data]) => `${size}: ${data.quantity}`)
+                                .join('<br>');
+                            stockQuantity = sizeEntries.reduce((total, [_, data]) => total + data.quantity, 0);
+                        }
+                    }
+                }
+                console.log(`Generated size display for product ${product.id}:`, sizeDisplay);
+            } catch (e) {
+                console.error(`Error processing sizes for product ${product.id}:`, e);
+                sizeDisplay = 'Error loading sizes';
+            }
+        } else {
+            stockQuantity = product.stock_quantity;
+            sizeDisplay = product.stock_quantity;
+        }
+
+        const row = `
+            <tr data-product-id="${product.id}">
+                <td><img src="${product.image}" alt="${product.name}" class="product-thumbnail"></td>
                 <td>${product.name}</td>
-                <td>${product.category.charAt(0).toUpperCase() + product.category.slice(1)}</td>
+                <td>${formatCategory(product.category)}</td>
                 <td>$${parseFloat(product.price).toFixed(2)}</td>
-                <td>${product.stock}</td>
-                <td><span class="badge ${statusClass[product.status]}">${statusText[product.status]}</span></td>
+                <td>${sizeDisplay}</td>
+                <td>
+                    <span class="status-badge ${getStockStatus(stockQuantity)}">
+                        ${determineStockStatus(stockQuantity)}
+                    </span>
+                </td>
                 <td>
                     <div class="action-buttons">
-                        <button class="btn btn-sm btn-info" title="Edit">
+                        <button class="btn btn-sm btn-primary" onclick="editProduct(${product.id})">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="btn btn-sm btn-danger" title="Delete">
+                        <button class="btn btn-sm btn-danger" onclick="deleteProduct(${product.id})">
                             <i class="fas fa-trash"></i>
                         </button>
                     </div>
                 </td>
+            </tr>
             `;
-            tbody.appendChild(tr);
+        tbody.insertAdjacentHTML('beforeend', row);
         });
 
         // Reinitialize tooltips
@@ -175,164 +311,64 @@ window.addEventListener('load', function() {
         tooltips.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     }
 
-    // Delete Product Function
-    function deleteProduct(productId) {
-        const index = products.findIndex(p => p.id === productId);
-        if (index !== -1) {
-            products.splice(index, 1);
-            renderProducts();
-            showNotification('Product deleted successfully!', 'success');
-        }
-    }
-
-    // Edit Product Function
-    function editProduct(productId) {
-        const product = products.find(p => p.id === productId);
-        if (product) {
-            const form = document.getElementById('addProductForm');
-            form.dataset.editId = productId;
-            
-            // Populate form fields
-            form.querySelector('input[name="productName"]').value = product.name;
-            form.querySelector('select[name="category"]').value = product.category;
-            form.querySelector('input[name="price"]').value = product.price;
-            form.querySelector('input[name="stock"]').value = product.stock;
-            form.querySelector('textarea[name="description"]').value = product.description || '';
-            
-            // Update modal title
-            document.querySelector('#addProductModal .modal-title').textContent = 'Edit Product';
-            document.querySelector('#addProductModal .btn-primary').textContent = 'Update Product';
-            
-            const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
-            modal.show();
-        }
-    }
-
-    // Handle Product Form Submit
-    async function handleProductSubmit(form) {
-        const formData = new FormData(form);
-        const productData = {
-            name: formData.get('productName'),
-            category: formData.get('category'),
-            price: parseFloat(formData.get('price')),
-            stock: parseInt(formData.get('stock')),
-            description: formData.get('description')
-        };
-
-        try {
-            // Validate product data
-            const errors = await validateProductData(productData, form);
-            if (errors.length > 0) {
-                showNotification('Validation errors', errors, 'error');
+// Update pagination controls
+function updatePagination({ currentPage, totalPages, totalItems, limit }) {
+    console.log('Updating pagination with:', { currentPage, totalPages, totalItems, limit });
+    const paginationContainer = document.querySelector('.pagination-section nav');
+    if (!paginationContainer) {
+        console.error('Pagination container not found');
                 return;
             }
 
-            // Determine stock status
-            productData.status = determineStockStatus(productData.stock);
+    const pagination = document.createElement('ul');
+    pagination.className = 'pagination';
 
-            // Handle image
-            const imageFile = form.querySelector('input[type="file"]').files[0];
-            if (imageFile) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    productData.image = e.target.result;
-                    saveProduct(productData, form);
-                };
-                reader.readAsDataURL(imageFile);
-            } else {
-                // If editing and no new image selected, keep existing image
-                if (form.dataset.editId) {
-                    const existingProduct = products.find(p => p.id === parseInt(form.dataset.editId));
-                    if (existingProduct) {
-                        productData.image = existingProduct.image;
-                        saveProduct(productData, form);
-                    } else {
-                        showNotification('Error', ['Product not found'], 'error');
-                    }
-                } else {
-                    showNotification('Error', ['Please select a product image'], 'error');
-                }
-            }
-        } catch (error) {
-            console.error('Error handling product submission:', error);
-            showNotification('Error', ['Failed to process product submission'], 'error');
-        }
+    // Previous button
+    const prevPage = Math.max(1, currentPage - 1);
+    pagination.innerHTML = `
+        <li class="page-item ${currentPage <= 1 ? 'disabled' : ''}">
+            <a class="page-link" href="#" data-page="${prevPage}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+    `;
+
+    // Page numbers
+    for (let i = 1; i <= totalPages; i++) {
+        pagination.innerHTML += `
+            <li class="page-item ${i === parseInt(currentPage) ? 'active' : ''}">
+                <a class="page-link" href="#" data-page="${i}">${i}</a>
+            </li>
+        `;
     }
 
-    // Save Product
-    function saveProduct(productData, form) {
-        if (form.dataset.editId) {
-            // Update existing product
-            const id = parseInt(form.dataset.editId);
-            const index = products.findIndex(p => p.id === id);
-            if (index !== -1) {
-                products[index] = { ...products[index], ...productData };
-                showNotification('Product updated successfully!', 'success');
-            }
-        } else {
-            // Add new product
-            productData.id = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
-            products.push(productData);
-            showNotification('Product added successfully!', 'success');
-        }
+    // Next button
+    const nextPage = Math.min(totalPages, currentPage + 1);
+    pagination.innerHTML += `
+        <li class="page-item ${currentPage >= totalPages ? 'disabled' : ''}">
+            <a class="page-link" href="#" data-page="${nextPage}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    `;
 
-        // Reset form and close modal
-        form.reset();
-        delete form.dataset.editId;
-        document.querySelector('#addProductModal .modal-title').textContent = 'Add New Product';
-        document.querySelector('#addProductModal .btn-primary').textContent = 'Add Product';
-        bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+    console.log('Generated pagination HTML:', pagination.innerHTML);
+    paginationContainer.innerHTML = '';
+    paginationContainer.appendChild(pagination);
+}
 
-        // Refresh products table
-        renderProducts();
-    }
+// Helper functions
+function formatCategory(category) {
+    return category.split('-').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+}
 
-    // Apply filters
-    function applyFilters() {
-        const categoryFilter = document.getElementById('categoryFilter').value;
-        const stockFilter = document.getElementById('stockFilter').value;
-        const sortBy = document.getElementById('sortBy').value;
-        
-        let filteredProducts = [...products];
-        
-        // Apply category filter
-        if (categoryFilter) {
-            filteredProducts = filteredProducts.filter(p => p.category === categoryFilter);
-        }
-        
-        // Apply stock filter
-        if (stockFilter) {
-            filteredProducts = filteredProducts.filter(p => p.status === stockFilter);
-        }
-
-        // Apply sorting
-        switch(sortBy) {
-            case 'price-high':
-                filteredProducts.sort((a, b) => b.price - a.price);
-                break;
-            case 'price-low':
-                filteredProducts.sort((a, b) => a.price - b.price);
-                break;
-            case 'newest':
-                filteredProducts.sort((a, b) => b.id - a.id);
-                break;
-            case 'oldest':
-                filteredProducts.sort((a, b) => a.id - b.id);
-                break;
-        }
-        
-        renderProducts(filteredProducts);
-    }
-
-    // Reset modal when closed
-    document.getElementById('addProductModal').addEventListener('hidden.bs.modal', function() {
-        const form = document.getElementById('addProductForm');
-        form.reset();
-        delete form.dataset.editId;
-        document.querySelector('#addProductModal .modal-title').textContent = 'Add New Product';
-        document.querySelector('#addProductModal .btn-primary').textContent = 'Add Product';
-    });
-});
+function getStockStatus(quantity) {
+    if (quantity <= 0) return 'cancelled';
+    if (quantity <= 10) return 'pending';
+    return 'delivered';
+}
 
 // Validation constants
 const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -421,9 +457,9 @@ function validateProductData(data, form) {
 }
 
 function determineStockStatus(stockQuantity) {
-    if (stockQuantity <= 0) return 'outofstock';
-    if (stockQuantity <= 10) return 'lowstock';
-    return 'instock';
+    if (stockQuantity <= 0) return 'Out of Stock';
+    if (stockQuantity <= 10) return 'Low Stock';
+    return 'In Stock';
 }
 
 function showNotification(title, messages = [], type = 'success') {
@@ -570,4 +606,331 @@ window.removeImage = function() {
     if (preview) {
         preview.remove();
     }
-}; 
+};
+
+// Delete Product Function
+async function deleteProduct(productId) {
+    try {
+        if (!confirm('Are you sure you want to delete this product?')) {
+            return;
+        }
+
+        const response = await fetch(`/admin/api/products.php?id=${productId}`, {
+            method: 'DELETE'
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Failed to delete product');
+        }
+
+        if (result.success) {
+            showNotification('Success', 'Product deleted successfully', 'success');
+            await loadProducts(); // Reload the products list
+        } else {
+            throw new Error(result.error || 'Failed to delete product');
+        }
+    } catch (error) {
+        console.error('Error deleting product:', error);
+        showNotification('Error', error.message || 'Failed to delete product', 'error');
+    }
+}
+
+// Edit Product Function
+async function editProduct(productId) {
+    console.log('Editing product:', productId);
+    try {
+        const response = await fetch(`/admin/api/products.php?id=${productId}`);
+        const data = await response.json();
+        
+        if (data.success) {
+            const product = data.data;
+            console.log('Product data received:', product);
+
+            // Show modal first
+            const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
+            modal.show();
+
+            // Get form elements after modal is shown
+            const form = document.getElementById('addProductForm');
+            if (!form) {
+                throw new Error('Edit form not found');
+            }
+
+            // Update modal title and button
+            document.querySelector('#addProductModal .modal-title').textContent = 'Edit Product';
+            document.querySelector('#addProductModal .btn-primary').textContent = 'Update Product';
+
+            // Set form to edit mode
+            form.dataset.editId = product.id;
+
+            // Fill form data
+            form.querySelector('[name="productName"]').value = product.name;
+            form.querySelector('[name="price"]').value = product.price;
+            form.querySelector('[name="description"]').value = product.description;
+
+            // Show current product image
+            const imagePreview = document.createElement('div');
+            imagePreview.className = 'image-preview mt-2';
+            imagePreview.innerHTML = `
+                <img src="${product.image}" alt="Current Image" style="max-width: 200px; max-height: 200px; object-fit: contain;">
+                <p class="text-muted small mt-1">Current image. Upload a new one to change it.</p>
+            `;
+            
+            const existingPreview = form.querySelector('.image-preview');
+            if (existingPreview) {
+                existingPreview.remove();
+            }
+            
+            const imageInput = form.querySelector('input[name="image"]');
+            if (imageInput) {
+                imageInput.value = '';
+                imageInput.parentNode.appendChild(imagePreview);
+            }
+
+            // Handle category and size management
+            const categorySelect = form.querySelector('#productCategory');
+            const stockInput = form.querySelector('#stockInputContainer');
+            const sizeSection = form.querySelector('#sizeManagementSection');
+
+            if (categorySelect) {
+                categorySelect.value = product.category;
+                console.log('Setting category:', product.category);
+                
+                // Reset all sections first
+                stockInput.style.display = 'none';
+                sizeSection.style.display = 'none';
+                console.log('Reset sections - stockInput and sizeSection hidden');
+
+                try {
+                    let sizes = product.sizes;
+                    console.log('Original sizes data:', sizes);
+                    
+                    if (typeof sizes === 'string') {
+                        console.log('Parsing sizes string:', sizes);
+                        sizes = JSON.parse(sizes);
+                        console.log('Parsed sizes:', sizes);
+                    }
+
+                    // Reset all size quantities first
+                    const sizeInputs = form.querySelectorAll('.size-quantity');
+                    console.log('Found size inputs:', sizeInputs.length);
+                    sizeInputs.forEach(input => {
+                        input.value = 0;
+                        console.log('Reset size input:', input.name, 'to 0');
+                    });
+
+                    if (product.category.includes('clothing')) {
+                        console.log('Product is clothing category');
+                        
+                        // Check if it's ONE_SIZE product
+                        const isOneSize = sizes.ONE_SIZE !== undefined;
+                        console.log('Is ONE_SIZE product?', isOneSize);
+                        console.log('Sizes object:', sizes);
+                        
+                        if (isOneSize) {
+                            console.log('Handling ONE_SIZE case');
+                            stockInput.style.display = 'block';
+                            sizeSection.style.display = 'none';
+                            const stockQuantityInput = form.querySelector('[name="stock"]');
+                            if (stockQuantityInput) {
+                                const quantity = sizes.ONE_SIZE.quantity || 0;
+                                console.log('Setting ONE_SIZE quantity:', quantity);
+                                stockQuantityInput.value = quantity;
+                            }
+                        } else {
+                            console.log('Handling regular sizes');
+                            stockInput.style.display = 'none';
+                            sizeSection.style.display = 'block';
+                            
+                            // Map size keys to indices
+                            const sizeToIndex = { 'S': 0, 'M': 1, 'L': 2, 'XL': 3 };
+                            
+                            // Process each size
+                            Object.entries(sizes).forEach(([size, data]) => {
+                                console.log('Processing size:', size, 'with data:', data);
+                                const index = sizeToIndex[size];
+                                if (index !== undefined) {
+                                    const input = form.querySelector(`input[name="sizes[${index}][quantity]"]`);
+                                    console.log('Found input for size', size, ':', input ? 'yes' : 'no');
+                                    if (input) {
+                                        input.value = data.quantity || 0;
+                                        console.log('Set quantity for size', size, 'to', data.quantity || 0);
+                                    }
+                                }
+                            });
+                        }
+                    } else {
+                        console.log('Product is not clothing category');
+                        stockInput.style.display = 'block';
+                        sizeSection.style.display = 'none';
+                        const stockQuantityInput = form.querySelector('[name="stock"]');
+                        if (stockQuantityInput) {
+                            console.log('Setting non-clothing stock quantity:', product.stock_quantity || 0);
+                            stockQuantityInput.value = product.stock_quantity || 0;
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error setting sizes:', e);
+                    console.error('Error details:', {
+                        sizes: product.sizes,
+                        category: product.category,
+                        stock: product.stock_quantity
+                    });
+                    showNotification('Error', 'Failed to load product sizes', 'error');
+                }
+            }
+        } else {
+            throw new Error(data.error || 'Failed to load product data');
+        }
+    } catch (error) {
+        console.error('Error fetching product data:', error);
+        showNotification('Error', error.message || 'Failed to load product data', 'error');
+    }
+}
+
+// Handle Product Form Submit
+async function handleProductSubmit(form) {
+    try {
+        const formData = new FormData(form);
+        const productData = {
+            name: formData.get('productName'),
+            category: formData.get('category'),
+            price: parseFloat(formData.get('price')),
+            stock: parseInt(formData.get('stock')),
+            description: formData.get('description')
+        };
+
+        // Handle sizes for clothing items
+        if (productData.category.includes('clothing')) {
+            const sizes = [];
+            const sizeInputs = form.querySelectorAll('.size-row');
+            let totalStock = 0;
+            
+            // Check if size management section is visible
+            if (document.getElementById('sizeManagementSection').style.display !== 'none') {
+                sizeInputs.forEach((row, index) => {
+                    const quantity = parseInt(row.querySelector('.size-quantity').value) || 0;
+                    const size = row.querySelector('input[name^="sizes"][name$="[size]"]').value;
+                    sizes.push({ size, quantity });
+                    totalStock += quantity;
+                });
+            } else {
+                // Handle ONE_SIZE case
+                const stockQuantity = parseInt(form.querySelector('[name="stock"]').value) || 0;
+                sizes.push({ size: 'ONE_SIZE', quantity: stockQuantity });
+                totalStock = stockQuantity;
+            }
+            
+            productData.sizes = sizes;
+            productData.stock = totalStock;
+        } else {
+            productData.stock = parseInt(form.querySelector('[name="stock"]').value) || 0;
+        }
+
+        // If editing, add product ID
+        if (form.dataset.editId) {
+            productData.id = parseInt(form.dataset.editId);
+        }
+
+        // Validate data
+        const errors = await validateProductData(productData, form);
+        if (errors.length > 0) {
+            showNotification('Validation Error', errors, 'error');
+            return;
+        }
+
+        // Handle image
+        const imageFile = form.querySelector('input[type="file"]').files[0];
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                productData.image = e.target.result;
+                await saveProduct(productData, form);
+            };
+            reader.readAsDataURL(imageFile);
+        } else if (form.dataset.editId) {
+            // If editing and no new image selected, proceed without image
+            await saveProduct(productData, form);
+        } else {
+            showNotification('Error', 'Please select a product image', 'error');
+        }
+    } catch (error) {
+        console.error('Error handling product submission:', error);
+        showNotification('Error', error.message || 'Failed to save product', 'error');
+    }
+}
+
+// Save Product
+async function saveProduct(productData, form) {
+    try {
+        const response = await fetch('/admin/api/products.php', {
+            method: productData.id ? 'PUT' : 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productData)
+        });
+
+        const result = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(result.error || 'Failed to save product');
+        }
+
+        if (result.success) {
+            // Close modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+            modal.hide();
+            
+            // Reset form
+            form.reset();
+            form.removeAttribute('data-edit-id');
+            const imagePreview = form.querySelector('.image-preview');
+            if (imagePreview) {
+                imagePreview.remove();
+            }
+            
+            // Show success message and reload products
+            showNotification('Success', productData.id ? 'Product updated successfully' : 'Product added successfully', 'success');
+            await loadProducts();
+        } else {
+            throw new Error(result.error || 'Failed to save product');
+        }
+    } catch (error) {
+        console.error('Error saving product:', error);
+        showNotification('Error', error.message || 'Failed to save product', 'error');
+    }
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    // Initial load
+    loadProducts();
+
+    // Search input
+    const searchInput = document.querySelector('.search-box input');
+    let searchTimeout;
+    searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            currentPage = 1;
+            loadProducts();
+        }, 500);
+    });
+
+    // Filters
+    ['categoryFilter', 'stockFilter', 'sortBy'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+            currentPage = 1;
+            loadProducts();
+        });
+    });
+
+    // Add product form
+    document.getElementById('addProductForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // TODO: Implement add product functionality
+    });
+}); 

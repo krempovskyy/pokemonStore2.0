@@ -49,7 +49,7 @@ $currentPage = 'orders';
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-select" id="statusFilter">
+                            <select class="form-select" id="statusFilter" data-filter-type="status">
                                 <option value="">All Status</option>
                                 <option value="pending">Pending</option>
                                 <option value="processing">Processing</option>
@@ -59,7 +59,7 @@ $currentPage = 'orders';
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-select" id="dateFilter">
+                            <select class="form-select" id="dateFilter" data-filter-type="date">
                                 <option value="">All Time</option>
                                 <option value="today">Today</option>
                                 <option value="yesterday">Yesterday</option>
@@ -69,7 +69,7 @@ $currentPage = 'orders';
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-select" id="sortBy">
+                            <select class="form-select" id="sortBy" data-filter-type="sort">
                                 <option value="newest">Newest First</option>
                                 <option value="oldest">Oldest First</option>
                                 <option value="highest">Highest Amount</option>
@@ -91,6 +91,7 @@ $currentPage = 'orders';
                                     <th>Products</th>
                                     <th>Total</th>
                                     <th>Status</th>
+                                    <th>Payment</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -225,72 +226,69 @@ $currentPage = 'orders';
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editOrderForm" class="needs-validation" novalidate>
-                        <input type="hidden" name="orderId">
+                    <form id="editOrderForm">
+                        <input type="hidden" id="orderId" name="orderId">
                         
                         <!-- Customer Information -->
-                        <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label class="form-label">Customer Name</label>
-                                <input type="text" name="customerName" class="form-control" required minlength="2">
-                                <div class="invalid-feedback">
-                                    Name must be at least 2 characters long
+                        <div class="mb-3">
+                            <h6>Customer Information</h6>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="form-label">Name</label>
+                                    <input type="text" id="customerName" name="customerName" class="form-control" readonly>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Email</label>
-                                <input type="email" name="customerEmail" class="form-control" required>
-                                <div class="invalid-feedback">
-                                    Please enter a valid email address
+                                <div class="col-md-4">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" id="customerEmail" name="customerEmail" class="form-control" readonly>
                                 </div>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Phone</label>
-                                <input type="tel" name="customerPhone" class="form-control" required pattern="^\+?[\d\s-]{10,}$">
-                                <div class="invalid-feedback">
-                                    Please enter a valid phone number
+                                <div class="col-md-4">
+                                    <label class="form-label">Phone</label>
+                                    <input type="text" id="customerPhone" name="customerPhone" class="form-control" readonly>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Order Details -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Order Status</label>
-                                <select name="orderStatus" class="form-select" required>
-                                    <option value="">Select Status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="processing">Processing</option>
-                                    <option value="shipped">Shipped</option>
-                                    <option value="delivered">Delivered</option>
-                                    <option value="cancelled">Cancelled</option>
-                                </select>
-                                <div class="invalid-feedback">
-                                    Please select an order status
+                        <!-- Order Status -->
+                        <div class="mb-3">
+                            <h6>Order Status</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Order Status</label>
+                                    <select id="orderStatus" name="orderStatus" class="form-select">
+                                        <option value="pending">Pending</option>
+                                        <option value="processing">Processing</option>
+                                        <option value="shipped">Shipped</option>
+                                        <option value="delivered">Delivered</option>
+                                        <option value="cancelled">Cancelled</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Payment Status</label>
+                                    <select id="paymentStatus" name="paymentStatus" class="form-select">
+                                        <option value="pending">Pending</option>
+                                        <option value="paid">Paid</option>
+                                        <option value="failed">Failed</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Shipping Address</label>
-                                <textarea name="shippingAddress" class="form-control" required minlength="10" rows="2"></textarea>
-                                <div class="invalid-feedback">
-                                    Shipping address must be at least 10 characters long
-                                </div>
-                            </div>
+                        </div>
+
+                        <!-- Shipping Address -->
+                        <div class="mb-3">
+                            <h6>Shipping Address</h6>
+                            <textarea id="shippingAddress" name="shippingAddress" class="form-control" rows="3"></textarea>
                         </div>
 
                         <!-- Order Items -->
                         <div class="mb-3">
-                            <label class="form-label">Order Items</label>
+                            <h6>Order Items</h6>
                             <div id="orderItems">
-                                <!-- Items will be populated dynamically -->
-                            </div>
-                            <div class="invalid-feedback">
-                                Order must have at least one item
+                                <!-- Order items will be loaded here dynamically -->
                             </div>
                         </div>
 
-                        <!-- Order Total -->
-                        <div class="row mb-3">
+                        <!-- Order Totals -->
+                        <div class="row">
                             <div class="col-md-6 offset-md-6">
                                 <table class="table table-sm">
                                     <tr>
@@ -307,7 +305,7 @@ $currentPage = 'orders';
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="submit" form="editOrderForm" class="btn btn-primary">Update Order</button>
                 </div>
             </div>

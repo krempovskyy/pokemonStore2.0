@@ -44,18 +44,18 @@ $currentPage = 'products';
                             </div>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-select" id="categoryFilter">
+                            <select class="form-select" id="categoryFilter" data-filter-type="category">
                                 <option value="">All Categories</option>
                                 <option value="plush">Plush Toys</option>
                                 <option value="cards">Pokemon Cards</option>
                                 <option value="accessories">Accessories</option>
-                                <option value="accessories">Men's Clothing</option>
-                                <option value="accessories">Women's Clothing</option>
-                                <option value="accessories">Unisex Clothing</option>
+                                <option value="clothing-men">Men's Clothing</option>
+                                <option value="clothing-women">Women's Clothing</option>
+                                <option value="clothing-unisex">Unisex Clothing</option>
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-select" id="stockFilter">
+                            <select class="form-select" id="stockFilter" data-filter-type="stock">
                                 <option value="">Stock Status</option>
                                 <option value="instock">In Stock</option>
                                 <option value="lowstock">Low Stock</option>
@@ -63,7 +63,7 @@ $currentPage = 'products';
                             </select>
                         </div>
                         <div class="col-md-2">
-                            <select class="form-select" id="sortBy">
+                            <select class="form-select" id="sortBy" data-filter-type="sort">
                                 <option value="newest">Newest First</option>
                                 <option value="oldest">Oldest First</option>
                                 <option value="price-high">Price: High to Low</option>
@@ -152,11 +152,59 @@ $currentPage = 'products';
                                 <label class="form-label">Price</label>
                                 <input type="number" name="price" class="form-control" step="0.01" required>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" id="stockInputContainer">
                                 <label class="form-label">Stock Quantity</label>
                                 <input type="number" name="stock" class="form-control" required>
                             </div>
                         </div>
+
+                        <!-- Size Management Section -->
+                        <div class="mb-3" id="sizeManagementSection" style="display: none;">
+                            <label class="form-label">Size Management</label>
+                            <div class="size-inputs">
+                                <div class="row mb-2">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Size</label>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Quantity</label>
+                                    </div>
+                                </div>
+                                <div class="size-row row mb-2">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="sizes[0][size]" value="S" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control size-quantity" name="sizes[0][quantity]" min="0" value="0">
+                                    </div>
+                                </div>
+                                <div class="size-row row mb-2">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="sizes[1][size]" value="M" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control size-quantity" name="sizes[1][quantity]" min="0" value="0">
+                                    </div>
+                                </div>
+                                <div class="size-row row mb-2">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="sizes[2][size]" value="L" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control size-quantity" name="sizes[2][quantity]" min="0" value="0">
+                                    </div>
+                                </div>
+                                <div class="size-row row mb-2">
+                                    <div class="col-md-6">
+                                        <input type="text" class="form-control" name="sizes[3][size]" value="XL" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" class="form-control size-quantity" name="sizes[3][quantity]" min="0" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label class="form-label">Description</label>
                             <textarea name="description" class="form-control" rows="3" required></textarea>

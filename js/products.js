@@ -1,17 +1,111 @@
+let currentProductData = null;
+
 // Constants
-const ANIMATION_DURATION = 200;
+const ANIMATION_DURATION = 300;
 const FILTER_DELAY = 50;
 
 // Elements
 const priceRange = document.getElementById('priceRange');
 const selectedPrice = document.querySelector('.selected-price');
 const filterCheckboxes = {
-    pokemon: document.getElementById('pokemon'),
-    figure: document.getElementById('figure'),
-    menType: document.getElementById('Mtype'),
-    womenType: document.getElementById('Wtype')
+    plush: document.getElementById('plush'),
+    cards: document.getElementById('cards')
 };
 const productCards = document.querySelectorAll('.product-card');
+
+// Add CSS for animations
+const style = document.createElement('style');
+style.textContent = `
+    .product-card-container {
+        transition: all ${ANIMATION_DURATION}ms ease-in-out;
+    }
+    .product-card-container.hiding {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    .product-card-container.showing {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    /* Quick View Modal Styles */
+    .product-stats {
+        margin: 1.5rem 0;
+        padding: 1.25rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .stat-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .stat-item:first-child {
+        padding-top: 0;
+    }
+
+    .stat-label {
+        font-weight: 500;
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+
+    .stat-value {
+        font-weight: 600;
+        padding: 0.35rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .stock-status.text-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .stock-status.text-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .quantity-value {
+        background: #e9ecef;
+        color: #495057;
+        border: 1px solid #dee2e6;
+    }
+
+    .quantity-value.text-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .quantity-value.text-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    /* Add hover effect */
+    .stat-value:hover {
+        transform: translateY(-1px);
+        transition: transform 0.2s ease;
+    }
+`;
+document.head.appendChild(style);
 
 // Initialize slider
 function initializeSlider() {
@@ -36,80 +130,185 @@ function handleSliderInput(e) {
 
 // Update slider UI
 function updateSliderUI(value) {
-    if (!priceRange || !selectedPrice) return;
-
-    // Update price text with animation
+    if (!selectedPrice) return;
     selectedPrice.textContent = `$${value}`;
-    selectedPrice.classList.add('price-updated');
-    setTimeout(() => selectedPrice.classList.remove('price-updated'), ANIMATION_DURATION);
+}
 
-    // Update slider background
-    const percentage = (value - priceRange.min) / (priceRange.max - priceRange.min) * 100;
-    priceRange.style.setProperty('--value', `${percentage}%`);
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM Content Loaded');
+    initializeSlider();
+    initializeQuickView();
+    initializeFilters();
+});
+
+// Initialize filters
+function initializeFilters() {
+    // Add event listeners for checkboxes
+    Object.values(filterCheckboxes).forEach(checkbox => {
+        if (checkbox) {
+            console.log('Adding listener to checkbox:', checkbox.id);
+            checkbox.addEventListener('change', () => {
+                console.log('Checkbox changed:', checkbox.id, 'Checked:', checkbox.checked);
+                filterProducts();
+            });
+        }
+    });
+}
+
+// Initialize quick view
+function initializeQuickView() {
+    console.log('=== Initializing Quick View ===');
+    
+    // Handle quick view button clicks
+    const buttons = document.querySelectorAll('.quick-view-btn');
+    console.log('Found quick view buttons:', buttons.length);
+
+    buttons.forEach((btn, index) => {
+        btn.addEventListener('click', handleQuickView);
+    });
+
+    // Handle overlay clicks
+    const overlays = document.querySelectorAll('.quick-view');
+    console.log('Found quick view overlays:', overlays.length);
+
+    overlays.forEach((overlay, index) => {
+        overlay.addEventListener('click', handleQuickView);
+    });
+}
+
+// Handler function for both button and overlay clicks
+function handleQuickView(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    console.log('Quick view triggered by:', e.currentTarget.className);
+    const card = this.closest('.product-card');
+    
+    if (card) {
+        try {
+            const rawData = card.dataset.product;
+            console.log('Raw product data:', rawData);
+            
+            const productData = JSON.parse(rawData);
+            currentProductData = productData;
+            console.log('Parsed product data:', {
+                id: productData.id,
+                name: productData.name,
+                price: productData.price,
+                category: productData.category,
+                stock_quantity: productData.stock_quantity,
+                type: typeof productData.stock_quantity
+            });
+            
+            showQuickView(productData);
+        } catch (error) {
+            console.error('Error processing product data:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack
+            });
+        }
+    } else {
+        console.error('Could not find product card element');
+    }
 }
 
 // Filter products
 function filterProducts() {
-    if (!priceRange) return;
+    console.log('=== Starting Filter Products ===');
+    if (!priceRange) {
+        console.log('Price range element not found');
+        return;
+    }
 
     const maxPrice = parseInt(priceRange.value);
     const filters = {
-        pokemon: filterCheckboxes.pokemon?.checked,
-        figure: filterCheckboxes.figure?.checked,
-        men: filterCheckboxes.menType?.checked,
-        women: filterCheckboxes.womenType?.checked
+        plush: filterCheckboxes.plush?.checked || false,
+        cards: filterCheckboxes.cards?.checked || false
     };
+
+    console.log('Active Filters:', {
+        maxPrice,
+        plushChecked: filters.plush,
+        cardsChecked: filters.cards
+    });
 
     let visibleProducts = 0;
     
-    // Use requestAnimationFrame to optimize performance
-    requestAnimationFrame(() => {
-        productCards.forEach(card => {
-            const price = parseInt(card.querySelector('.product-price').textContent.replace('$', ''));
-            const badge = card.querySelector('.product-badge').textContent;
+    // First pass: Start animations
+    productCards.forEach((card, index) => {
+        try {
+            const productData = JSON.parse(card.dataset.product);
+            const price = parseFloat(productData.price);
+            const category = productData.category;
             const cardContainer = card.closest('.col-12');
-
-            const isVisible = checkVisibility(price, maxPrice, badge, filters);
             
-            if (isVisible) {
-                cardContainer.style.display = 'block';
-                card.classList.remove('filtered-out');
-                visibleProducts++;
-            } else {
-                card.classList.add('filtered-out');
-                cardContainer.style.display = 'none';
-            }
-        });
+            // Ensure container has our animation class
+            cardContainer.classList.add('product-card-container');
 
-        updateEmptyState(visibleProducts);
+            const isVisible = checkVisibility(price, maxPrice, category, filters);
+            
+            // Stagger the animations
+            setTimeout(() => {
+                if (isVisible) {
+                    cardContainer.classList.remove('hiding');
+                    cardContainer.classList.add('showing');
+                    visibleProducts++;
+                } else {
+                    cardContainer.classList.remove('showing');
+                    cardContainer.classList.add('hiding');
+                }
+            }, index * FILTER_DELAY);
+
+            // Update display property after animation
+            setTimeout(() => {
+                if (isVisible) {
+                    cardContainer.style.display = '';
+                } else {
+                    cardContainer.style.display = 'none';
+                }
+            }, ANIMATION_DURATION + (index * FILTER_DELAY));
+        } catch (error) {
+            console.error('Error processing product card:', error);
+        }
     });
+
+    // Update empty state after all animations complete
+    setTimeout(() => {
+        updateEmptyState(visibleProducts);
+    }, ANIMATION_DURATION + (productCards.length * FILTER_DELAY));
 }
 
 // Check product visibility based on filters
-function checkVisibility(price, maxPrice, badge, filters) {
+function checkVisibility(price, maxPrice, category, filters) {
+    console.log('\nChecking visibility for:', { price, category });
+    console.log('Against filters:', { maxPrice, filters });
+
     // Price check
-    if (price > maxPrice) return false;
+    if (price > maxPrice) {
+        console.log('Failed price check:', price, '>', maxPrice);
+        return false;
+    }
+    console.log('Passed price check');
 
-    // Category check (for toys)
-    if (filters.pokemon || filters.figure) {
-        if (!((filters.pokemon && badge === 'POKEMON') || 
-              (filters.figure && badge === 'FIGURE'))) {
-            return false;
-        }
+    // Category check - only apply if at least one category is selected
+    const categoryFiltersActive = filters.plush || filters.cards;
+    console.log('Category filters active:', categoryFiltersActive);
+    
+    if (categoryFiltersActive) {
+        const categoryMatch = (filters.plush && category === 'plush') || 
+                            (filters.cards && category === 'cards');
+        console.log('Category match result:', {
+            category,
+            plushMatch: filters.plush && category === 'plush',
+            cardsMatch: filters.cards && category === 'cards',
+            finalMatch: categoryMatch
+        });
+        return categoryMatch;
     }
 
-    // Gender check (for clothes)
-    if (filters.men || filters.women) {
-        const isUnisex = badge === 'Unisex';
-        const isMen = badge === 'Men';
-        const isWomen = badge === 'Women';
-
-        if (!((filters.men && (isMen || isUnisex)) || 
-              (filters.women && (isWomen || isUnisex)))) {
-            return false;
-        }
-    }
-
+    console.log('No category filters active, product is visible');
     return true;
 }
 
@@ -171,21 +370,6 @@ function animateSliderReset(start, end) {
     animate();
 }
 
-// Initialize on page load
-window.addEventListener('load', () => {
-    initializeSlider();
-    addTouchFeedback();
-    
-    // Add event listeners for checkboxes with shorter debounce
-    Object.values(filterCheckboxes).forEach(checkbox => {
-        if (checkbox) {
-            checkbox.addEventListener('change', () => {
-                filterProducts(); // Remove debounce for immediate response
-            });
-        }
-    });
-});
-
 // Back to top functionality
 const backToTopBtn = document.getElementById('backToTop');
 
@@ -203,88 +387,114 @@ backToTopBtn.addEventListener('click', () => {
 
 // Quick View functionality
 function showQuickView(product) {
-    // Update modal content
+    console.log('Showing quick view for product:', {
+        id: product.id,
+        name: product.name,
+        stock_quantity: product.stock_quantity
+    });
+
     const modal = document.getElementById('quickViewModal');
+    if (!modal) {
+        console.error('Quick view modal not found');
+        return;
+    }
+
+    // Update modal title and product info
     const modalTitle = modal.querySelector('.modal-title');
     const productTitle = modal.querySelector('.product-title');
     const productPrice = modal.querySelector('.product-price');
-    const productCategory = modal.querySelector('.category-value');
     const productDescription = modal.querySelector('.product-description p');
-    const descriptionContainer = modal.querySelector('.product-description');
-    const sizeSelect = modal.querySelector('#modalSizeSelect');
-    
-    // Clear previous size options
-    sizeSelect.innerHTML = '<option value="">Select Size</option>';
-    
-    // Add size options based on product category
-    let sizes = [];
-    if (product.category === 'Women' || product.category === 'Men') {
-        sizes = ['XS', 'S', 'M', 'L', 'XL'];
-    } else if (product.category === 'Unisex') {
-        sizes = ['S', 'M', 'L', 'XL', 'XXL'];
-    }
-    
-    sizes.forEach(size => {
-        const option = document.createElement('option');
-        option.value = size;
-        option.textContent = size;
-        sizeSelect.appendChild(option);
+    const productCategory = modal.querySelector('.category-value');
+    const stockStatus = modal.querySelector('.stock-status');
+    const quantityValue = modal.querySelector('.quantity-value');
+    const addToCartBtn = modal.querySelector('.add-to-cart-btn');
+
+    console.log('Modal elements found:', {
+        modalTitle: !!modalTitle,
+        productTitle: !!productTitle,
+        productPrice: !!productPrice,
+        productDescription: !!productDescription,
+        productCategory: !!productCategory,
+        stockStatus: !!stockStatus,
+        quantityValue: !!quantityValue,
+        addToCartBtn: !!addToCartBtn
     });
-    
-    // Show/hide size selector based on product type
-    const sizeSelector = modal.querySelector('.size-selector');
-    if (product.category === 'Women' || product.category === 'Men' || product.category === 'Unisex') {
-        sizeSelector.style.display = 'block';
-    } else {
-        sizeSelector.style.display = 'none';
+
+    // Update text content with null checks
+    if (modalTitle) modalTitle.textContent = product.name;
+    if (productTitle) productTitle.textContent = product.name;
+    if (productPrice) productPrice.textContent = `$${product.price.toFixed(2)}`;
+    if (productDescription) productDescription.textContent = product.description;
+    if (productCategory) productCategory.textContent = product.category;
+
+    // Update stock status and quantity
+    const inStock = product.stock_quantity > 0;
+    const status = inStock ? 'In Stock' : 'Out of Stock';
+    const statusClass = inStock ? 'text-success' : 'text-danger';
+
+    console.log('Stock information:', {
+        quantity: product.stock_quantity,
+        inStock,
+        status,
+        statusClass
+    });
+
+    if (stockStatus) {
+        stockStatus.textContent = status;
+        stockStatus.className = `stat-value stock-status ${statusClass}`;
     }
 
-    modalTitle.textContent = product.name;
-    productTitle.textContent = product.name;
-    productPrice.textContent = `$${parseFloat(product.price).toFixed(2)}`;
-    productCategory.textContent = product.category || 'N/A';
+    if (quantityValue) {
+        quantityValue.textContent = product.stock_quantity;
+        quantityValue.className = `stat-value quantity-value ${statusClass}`;
+    }
 
-    // Update description if available
-    if (product.description) {
-        productDescription.textContent = product.description;
-        descriptionContainer.style.display = 'block';
-    } else {
-        descriptionContainer.style.display = 'none';
+    // Update add to cart button
+    if (addToCartBtn) {
+        addToCartBtn.disabled = !inStock;
+        addToCartBtn.innerHTML = inStock 
+            ? '<i class="fas fa-shopping-cart"></i><span class="btn-text">ADD TO CART</span>'
+            : '<span class="btn-text">OUT OF STOCK</span>';
     }
 
     // Update main image with loading state
     const mainImageContainer = modal.querySelector('.quick-view-image');
-    const mainImage = mainImageContainer.querySelector('img');
-    const loadingSpinner = mainImageContainer.querySelector('.loading-spinner');
+    const mainImage = mainImageContainer?.querySelector('img');
+    const loadingSpinner = mainImageContainer?.querySelector('.loading-spinner');
     
-    mainImage.style.opacity = '0';
-    loadingSpinner.style.display = 'block';
-    
-    const newImage = new Image();
-    newImage.onload = function() {
-        mainImage.src = product.image;
-        mainImage.alt = product.name;
-        mainImage.style.opacity = '1';
-        loadingSpinner.style.display = 'none';
-    };
-    newImage.src = product.image;
+    if (mainImage && loadingSpinner) {
+        mainImage.style.opacity = '0';
+        loadingSpinner.style.display = 'block';
+        
+        const newImage = new Image();
+        newImage.onload = function() {
+            mainImage.src = product.image;
+            mainImage.alt = product.name;
+            mainImage.style.opacity = '1';
+            loadingSpinner.style.display = 'none';
+        };
+        newImage.src = product.image;
+    }
 
     // Create thumbnails
     const thumbnailList = modal.querySelector('.thumbnail-list');
-    thumbnailList.innerHTML = ''; // Clear existing thumbnails
-    
-    // Add main product image as first thumbnail
-    const mainThumbnail = document.createElement('div');
-    mainThumbnail.className = 'thumbnail-item active';
-    mainThumbnail.innerHTML = `<img src="${product.image}" alt="${product.name}">`;
-    mainThumbnail.onclick = function() {
-        updateMainImage(product.image);
-        updateActiveThumbnail(this);
-    };
-    thumbnailList.appendChild(mainThumbnail);
+    if (thumbnailList) {
+        thumbnailList.innerHTML = ''; // Clear existing thumbnails
+        
+        // Add main product image as first thumbnail
+        const mainThumbnail = document.createElement('div');
+        mainThumbnail.className = 'thumbnail-item active';
+        mainThumbnail.innerHTML = `<img src="${product.image}" alt="${product.name}">`;
+        mainThumbnail.onclick = function() {
+            updateMainImage(product.image);
+            updateActiveThumbnail(this);
+        };
+        thumbnailList.appendChild(mainThumbnail);
+    }
 
     // Store the current product for the add to cart functionality
     modal.dataset.currentProduct = JSON.stringify(product);
+    currentProductData = product; // Ensure currentProductData is always updated
 
     // Show modal
     const bootstrapModal = new bootstrap.Modal(modal);
@@ -293,19 +503,23 @@ function showQuickView(product) {
 
 function updateMainImage(src) {
     const mainImageContainer = document.querySelector('.quick-view-image');
+    if (!mainImageContainer) return;
+
     const mainImage = mainImageContainer.querySelector('img');
     const loadingSpinner = mainImageContainer.querySelector('.loading-spinner');
     
-    mainImage.style.opacity = '0';
-    loadingSpinner.style.display = 'block';
-    
-    const newImage = new Image();
-    newImage.onload = function() {
-        mainImage.src = src;
-        mainImage.style.opacity = '1';
-        loadingSpinner.style.display = 'none';
-    };
-    newImage.src = src;
+    if (mainImage && loadingSpinner) {
+        mainImage.style.opacity = '0';
+        loadingSpinner.style.display = 'block';
+        
+        const newImage = new Image();
+        newImage.onload = function() {
+            mainImage.src = src;
+            mainImage.style.opacity = '1';
+            loadingSpinner.style.display = 'none';
+        };
+        newImage.src = src;
+    }
 }
 
 function updateActiveThumbnail(clickedThumbnail) {
@@ -338,8 +552,12 @@ document.querySelectorAll('.product-card').forEach(card => {
         
         // Just open quick view if tap is short (under 200ms)
         if (touchDuration < 200) {
-            const productData = JSON.parse(this.getAttribute('onclick').split('(')[1].split(')')[0]);
-            showQuickView(productData);
+            try {
+                const productData = JSON.parse(this.dataset.product);
+                showQuickView(productData);
+            } catch (error) {
+                console.error('Error processing product data on touch:', error);
+            }
         }
     });
 });

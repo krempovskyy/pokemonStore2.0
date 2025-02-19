@@ -39,11 +39,11 @@ const LOCKOUT_TIME = 15 * 60 * 1000; // 15 minutes
 let lockoutUntil = parseInt(localStorage.getItem('lockoutUntil') || '0');
 
 // Form Submit Handler
-document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+document.getElementById('loginForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const loginBtn = this.querySelector('.login-btn');
-    const username = sanitizeInput(this.querySelector('input[name="username"]').value);
+    const email = sanitizeInput(this.querySelector('input[name="username"]').value);
     const password = this.querySelector('input[name="password"]').value;
     
     // Check if account is locked
@@ -54,7 +54,7 @@ document.getElementById('loginForm')?.addEventListener('submit', function(e) {
     }
     
     // Validate inputs
-    if (!username || !password) {
+    if (!email || !password) {
         showNotification('Please fill in all fields', 'error');
         return;
     }
@@ -68,12 +68,19 @@ document.getElementById('loginForm')?.addEventListener('submit', function(e) {
     
     loginBtn.classList.add('loading');
     
-    // Simulate API call with CSRF token
-    const csrfToken = Math.random().toString(36).substring(7);
-    setTimeout(() => {
-        if (username === ADMIN_CREDENTIALS.username && 
-            password === ADMIN_CREDENTIALS.password) {
-            
+    try {
+        const response = await fetch('/admin/api/login.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ email, password }),
+            credentials: 'same-origin'
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
             // Reset login attempts on successful login
             loginAttempts = 0;
             localStorage.removeItem('loginAttempts');
@@ -83,9 +90,9 @@ document.getElementById('loginForm')?.addEventListener('submit', function(e) {
             const loginTime = Date.now();
             const sessionData = {
                 adminLoggedIn: true,
-                adminUsername: username,
+                adminEmail: data.data.email,
                 loginTime: loginTime,
-                sessionId: csrfToken,
+                sessionId: data.data.sessionId,
                 expiresAt: loginTime + SESSION_TIMEOUT
             };
             
@@ -111,10 +118,14 @@ document.getElementById('loginForm')?.addEventListener('submit', function(e) {
                 showNotification(`Too many failed attempts. Account locked for 15 minutes.`, 'error');
             } else {
                 const attemptsLeft = MAX_LOGIN_ATTEMPTS - loginAttempts;
-                showNotification(`Invalid username or password! ${attemptsLeft} attempts remaining.`, 'error');
+                showNotification(`${data.error || 'Login failed'}! ${attemptsLeft} attempts remaining.`, 'error');
             }
         }
-    }, 1000);
+    } catch (error) {
+        console.error('Login error:', error);
+        loginBtn.classList.remove('loading');
+        showNotification('An error occurred during login. Please try again.', 'error');
+    }
 });
 
 // Enhanced login status check
@@ -222,64 +233,27 @@ function showNotification(message, type = 'success') {
     }, 5000);
 }
 
-// Improved password toggle functionality
-function initializePasswordToggle() {
+// Initialize password toggle
+document.addEventListener('DOMContentLoaded', function() {
     const toggleBtn = document.querySelector('.toggle-password');
     const passwordInput = document.querySelector('input[name="password"]');
     
     if (toggleBtn && passwordInput) {
-        // Style the toggle button
-        toggleBtn.style.cssText = `
-            border: none;
-            background: none;
-            color: #6c757d;
-            transition: all 0.2s ease;
-            padding: 0 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        `;
-        
-        // Add hover effect
-        toggleBtn.addEventListener('mouseenter', () => {
-            toggleBtn.style.color = '#495057';
+        toggleBtn.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
         });
-        
-        toggleBtn.addEventListener('mouseleave', () => {
-            toggleBtn.style.color = '#6c757d';
-        });
-        
-        // Toggle password visibility with animation
-        toggleBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const icon = this.querySelector('i');
-            
-            if (passwordInput.type === 'password') {
-                passwordInput.type = 'text';
-                icon.classList.remove('fa-eye');
-                icon.classList.add('fa-eye-slash');
-                this.setAttribute('title', 'Hide password');
-            } else {
-                passwordInput.type = 'password';
-                icon.classList.remove('fa-eye-slash');
-                icon.classList.add('fa-eye');
-                this.setAttribute('title', 'Show password');
             }
-            
-            // Keep focus on password input
-            passwordInput.focus();
-        });
-    }
-}
+});
 
 // Initialize
 document.addEventListener('DOMContentLoaded', function() {
     // Clear any existing notifications
     document.querySelectorAll('.notification').forEach(n => n.remove());
     
-    // Initialize password toggle
-    initializePasswordToggle();
-    
     // Check login status
     checkLoginStatus();
 });
+

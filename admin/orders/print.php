@@ -1,211 +1,213 @@
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../../logs/php_errors.log');
+
+error_log("Print.php started - Request received for order print");
+error_log("GET parameters: " . print_r($_GET, true));
+
 include '../includes/auth.php';
-checkAuth();
 
-// TODO: Get order ID from URL parameter
-$orderId = isset($_GET['id']) ? $_GET['id'] : null;
+try {
+    error_log("Checking authentication...");
+    checkAuth();
+    error_log("Authentication check passed");
 
-// TODO: Fetch order details from database
-$order = [
-    'id' => 'ORD-2024-001',
-    'date' => '2024-02-20 15:30:00',
-    'customer' => [
-        'name' => 'John Doe',
-        'email' => 'john@example.com',
-        'phone' => '(555) 123-4567',
-        'address' => [
-            'street' => '123 Pokemon Street',
-            'city' => 'Pallet Town',
-            'state' => 'KT',
-            'zip' => '12345',
-            'country' => 'United States'
-        ]
-    ],
-    'items' => [
-        [
-            'name' => 'Pikachu Plush Toy',
-            'quantity' => 2,
-            'price' => 24.99,
-            'total' => 49.98
-        ],
-        [
-            'name' => 'Pokemon Trading Cards Pack',
-            'quantity' => 1,
-            'price' => 39.99,
-            'total' => 39.99
-        ]
-    ],
-    'subtotal' => 89.97,
-    'shipping' => 5.99,
-    'total' => 95.96,
-    'status' => 'Processing'
-];
+    // Get order ID from query string
+    $orderId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+    error_log("Order ID from request: " . $orderId);
+
+    if (!$orderId) {
+        error_log("Error: No order ID provided");
+        die('Order ID is required');
+    }
+
+    // Get database connection
+    error_log("Getting database connection...");
+    $pdo = getDBConnection();
+    if (!$pdo) {
+        error_log("Error: Failed to get database connection");
+        die('Database connection failed');
+    }
+    error_log("Database connection successful");
+
+    // Get order details with customer information
+    error_log("Fetching order details for order ID: " . $orderId);
+    $stmt = $pdo->prepare("
+        SELECT o.*, CONCAT(u.first_name, ' ', u.last_name) as customer_name, u.email as customer_email, u.phone as customer_phone
+        FROM orders o
+        JOIN users u ON o.user_id = u.id
+        WHERE o.id = ?
+    ");
+    $stmt->execute([$orderId]);
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    error_log("Order query executed. Result: " . ($order ? "Order found" : "Order not found"));
+    error_log("Order data: " . print_r($order, true));
+
+    if (!$order) {
+        error_log("Error: Order not found for ID: " . $orderId);
+        die('Order not found');
+    }
+
+    // Get order items
+    error_log("Fetching order items...");
+    $stmt = $pdo->prepare("
+        SELECT oi.*, p.name as product_name, p.image as product_image
+        FROM order_items oi
+        JOIN products p ON oi.product_id = p.id
+        WHERE oi.order_id = ?
+    ");
+    $stmt->execute([$orderId]);
+    $orderItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    error_log("Order items found: " . count($orderItems));
+    error_log("Order items data: " . print_r($orderItems, true));
+
+    // Format date
+    function formatDate($date) {
+        return date('M d, Y h:i A', strtotime($date));
+    }
+
+    // Format currency
+    function formatCurrency($amount) {
+        return '$' . number_format($amount, 2);
+    }
+
+    error_log("Starting to render HTML template...");
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Invoice #<?php echo $order['id']; ?> - Pokemon Store</title>
+    <title>Order Invoice #<?php echo htmlspecialchars($order['order_number']); ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        @media print {
-            @page {
-                size: A4;
-                margin: 10mm;
-            }
-            body {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .no-print {
-                display: none !important;
-            }
-        }
-        
         body {
-            background: #fff;
-            font-size: 14px;
-            line-height: 1.5;
+            background: #f8f9fa;
+            padding: 20px;
         }
-        
         .invoice-container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 2rem;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        
-        .invoice-header {
-            border-bottom: 2px solid #dee2e6;
-            padding-bottom: 1rem;
-            margin-bottom: 2rem;
-        }
-        
         .company-logo {
-            max-height: 60px;
-            width: auto;
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
         }
-        
+        .invoice-header {
+            margin-bottom: 40px;
+        }
         .invoice-title {
-            font-size: 2rem;
             color: #333;
-            margin: 0;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
-        
-        .invoice-details {
-            margin-bottom: 2rem;
-        }
-        
-        .customer-details, .shipping-details {
-            margin-bottom: 2rem;
-        }
-        
-        .section-title {
-            color: #666;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .table th {
-            background-color: #f8f9fa;
-        }
-        
-        .table-totals {
-            width: 100%;
-            max-width: 400px;
-            margin-left: auto;
-            margin-top: 2rem;
-        }
-        
-        .table-totals td {
-            padding: 0.5rem;
-        }
-        
-        .table-totals td:last-child {
-            text-align: right;
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
             font-weight: 500;
         }
-        
-        .grand-total {
-            font-size: 1.2rem;
-            font-weight: bold;
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-processing { background: #cce5ff; color: #004085; }
+        .status-shipped { background: #d1ecf1; color: #0c5460; }
+        .status-delivered { background: #d4edda; color: #155724; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .customer-info {
+            margin-bottom: 40px;
         }
-        
-        .footer {
-            margin-top: 3rem;
-            padding-top: 1rem;
-            border-top: 1px solid #eee;
+        .table th {
+            background: #f8f9fa;
+        }
+        .total-section {
+            margin-top: 20px;
+        }
+        .thank-you {
+            margin-top: 40px;
             text-align: center;
             color: #666;
         }
-
         .print-button {
             position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1000;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
-        .status-badge {
-            font-size: 0.9rem;
-            padding: 0.5em 1em;
-            border-radius: 20px;
+        .print-button:hover {
+            background: #0056b3;
         }
-        
-        .status-processing {
-            background-color: #fff3cd;
-            color: #856404;
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .invoice-container {
+                box-shadow: none;
+                padding: 20px;
+            }
+            .print-button {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <button onclick="window.print()" class="btn btn-primary print-button no-print">
-        <i class="fas fa-print"></i> Print Invoice
-    </button>
-
+    <?php error_log("Starting to render invoice content..."); ?>
     <div class="invoice-container">
         <div class="invoice-header">
-            <div class="row align-items-center">
+            <div class="row">
                 <div class="col-6">
-                    <img src="/images/logo.png" alt="Pokemon Store" class="company-logo">
+                    <img src="/images/logo.png" alt="Pokemon Store Logo" class="company-logo">
+                    <div class="company-info">
+                        <p>Pokemon Store</p>
+                        <p>123 Pokemon Street</p>
+                        <p>Pallet Town, KT 12345</p>
+                        <p>United States</p>
+                    </div>
                 </div>
                 <div class="col-6 text-end">
-                    <h1 class="invoice-title">INVOICE</h1>
-                    <p class="mb-0">#<?php echo $order['id']; ?></p>
-                    <span class="status-badge status-<?php echo strtolower($order['status']); ?>">
-                        <?php echo $order['status']; ?>
-                    </span>
+                    <h1 class="invoice-title">Invoice</h1>
+                    <p><strong>Order #:</strong> <?php echo htmlspecialchars($order['order_number']); ?></p>
+                    <p><strong>Date:</strong> <?php echo formatDate($order['created_at']); ?></p>
+                    <p>
+                        <span class="status-badge status-<?php echo $order['status']; ?>">
+                            <?php echo ucfirst($order['status']); ?>
+                        </span>
+                    </p>
                 </div>
             </div>
         </div>
 
-        <div class="invoice-details row">
-            <div class="col-sm-6">
-                <div class="customer-details">
-                    <h5 class="section-title">Bill To</h5>
-                    <p class="mb-1"><strong><?php echo $order['customer']['name']; ?></strong></p>
-                    <p class="mb-1"><?php echo $order['customer']['email']; ?></p>
-                    <p class="mb-1"><?php echo $order['customer']['phone']; ?></p>
+        <div class="customer-info">
+            <div class="row">
+                <div class="col-6">
+                    <h5>Bill To:</h5>
+                    <p><strong>Name:</strong> <?php echo htmlspecialchars($order['customer_name']); ?></p>
+                    <p><strong>Email:</strong> <?php echo htmlspecialchars($order['customer_email']); ?></p>
+                    <p><strong>Phone:</strong> <?php echo htmlspecialchars($order['customer_phone']); ?></p>
                 </div>
-            </div>
-            <div class="col-sm-6">
-                <div class="shipping-details">
-                    <h5 class="section-title">Ship To</h5>
-                    <p class="mb-1"><?php echo $order['customer']['address']['street']; ?></p>
-                    <p class="mb-1">
-                        <?php echo $order['customer']['address']['city']; ?>,
-                        <?php echo $order['customer']['address']['state']; ?>
-                        <?php echo $order['customer']['address']['zip']; ?>
-                    </p>
-                    <p class="mb-1"><?php echo $order['customer']['address']['country']; ?></p>
+                <div class="col-6">
+                    <h5>Ship To:</h5>
+                    <p><?php echo nl2br(htmlspecialchars($order['shipping_address'])); ?></p>
                 </div>
             </div>
         </div>
 
         <div class="order-items">
-            <h5 class="section-title">Order Items</h5>
-            <table class="table table-bordered">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Item</th>
@@ -215,44 +217,56 @@ $order = [
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($order['items'] as $item): ?>
-                    <tr>
-                        <td><?php echo $item['name']; ?></td>
-                        <td class="text-center"><?php echo $item['quantity']; ?></td>
-                        <td class="text-end">$<?php echo number_format($item['price'], 2); ?></td>
-                        <td class="text-end">$<?php echo number_format($item['total'], 2); ?></td>
-                    </tr>
+                    <?php foreach ($orderItems as $item): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($item['product_name']); ?></td>
+                            <td class="text-center"><?php echo $item['quantity']; ?></td>
+                            <td class="text-end"><?php echo formatCurrency($item['price']); ?></td>
+                            <td class="text-end"><?php echo formatCurrency($item['price'] * $item['quantity']); ?></td>
+                        </tr>
                     <?php endforeach; ?>
                 </tbody>
-            </table>
-
-            <table class="table-totals">
-                <tr>
-                    <td>Subtotal:</td>
-                    <td>$<?php echo number_format($order['subtotal'], 2); ?></td>
-                </tr>
-                <tr>
-                    <td>Shipping:</td>
-                    <td>$<?php echo number_format($order['shipping'], 2); ?></td>
-                </tr>
-                <tr class="grand-total">
-                    <td>Total:</td>
-                    <td>$<?php echo number_format($order['total'], 2); ?></td>
-                </tr>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Subtotal:</strong></td>
+                        <td class="text-end"><?php echo formatCurrency($order['subtotal']); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Shipping Fee:</strong></td>
+                        <td class="text-end"><?php echo formatCurrency($order['shipping_fee']); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                        <td class="text-end"><strong><?php echo formatCurrency($order['total_amount']); ?></strong></td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
 
-        <div class="footer">
-            <p class="mb-0">Thank you for shopping with Pokemon Store!</p>
-            <p class="mb-0">For any questions, please contact us at support@pokemonstore.com</p>
+        <div class="payment-info">
+            <p><strong>Payment Method:</strong> <?php echo ucfirst(str_replace('_', ' ', $order['payment_method'])); ?></p>
+            <p><strong>Payment Status:</strong> <?php echo ucfirst($order['payment_status']); ?></p>
+        </div>
+
+        <div class="thank-you">
+            <h5>Thank you for your business!</h5>
+            <p>If you have any questions about this invoice, please contact us:</p>
+            <p>Email: support@pokemon-store.com | Phone: (555) 123-4567</p>
         </div>
     </div>
 
-    <script>
-        // Auto print when the page loads (optional)
-        // window.onload = function() {
-        //     window.print();
-        // };
-    </script>
+    <button class="print-button" onclick="window.print()">
+        <i class="fas fa-print"></i> Print Invoice
+    </button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+    <?php error_log("Finished rendering invoice template"); ?>
 </body>
-</html> 
+</html>
+<?php
+} catch (Exception $e) {
+    error_log("Critical error in print.php: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
+    die('An error occurred while generating the invoice. Please check the error logs.');
+}
+?> 

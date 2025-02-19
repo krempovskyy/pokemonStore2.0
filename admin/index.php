@@ -4,6 +4,113 @@ checkAuth();
 
 // Set current page for active menu item
 $currentPage = 'dashboard';
+
+// Get database connection
+$pdo = getDBConnection();
+
+// Get statistics
+$stats = [
+    'orders' => 0,
+    'revenue' => 0,
+    'customers' => 0,
+    'products' => 0
+];
+
+try {
+    // Total Orders
+    $stmt = $pdo->query("SELECT COUNT(*) FROM orders");
+    $stats['orders'] = $stmt->fetchColumn();
+
+    // Total Revenue
+    $stmt = $pdo->query("SELECT SUM(total_amount) FROM orders WHERE status != 'cancelled'");
+    $stats['revenue'] = $stmt->fetchColumn() ?: 0;
+
+    // Total Customers
+    $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'customer' AND status = 'active'");
+    $stats['customers'] = $stmt->fetchColumn();
+
+    // Total Products
+    $stmt = $pdo->query("SELECT COUNT(*) FROM products");
+    $stats['products'] = $stmt->fetchColumn();
+
+    // Get recent orders
+    $stmt = $pdo->query("
+        SELECT o.*, 
+               CONCAT(u.first_name, ' ', u.last_name) as customer_name,
+               GROUP_CONCAT(CONCAT(oi.quantity, 'x ', p.name) SEPARATOR ', ') as product_list
+        FROM orders o
+        JOIN users u ON o.user_id = u.id
+        JOIN order_items oi ON o.id = oi.order_id
+        JOIN products p ON oi.product_id = p.id
+        GROUP BY o.id
+        ORDER BY o.created_at DESC
+        LIMIT 5
+    ");
+    $recentOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    error_log("Dashboard error: " . $e->getMessage());
+}
+
+// Calculate trends (comparing with last month)
+$trends = [
+    'orders' => 0,
+    'revenue' => 0,
+    'customers' => 0,
+    'products' => 0
+];
+
+try {
+    // Orders trend
+    $stmt = $pdo->query("
+        SELECT 
+            (SELECT COUNT(*) FROM orders WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as current_month,
+            (SELECT COUNT(*) FROM orders WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH) 
+             AND created_at < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as last_month
+    ");
+    $orderCounts = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($orderCounts['last_month'] > 0) {
+        $trends['orders'] = (($orderCounts['current_month'] - $orderCounts['last_month']) / $orderCounts['last_month']) * 100;
+    }
+
+    // Revenue trend
+    $stmt = $pdo->query("
+        SELECT 
+            (SELECT SUM(total_amount) FROM orders WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) 
+             AND status != 'cancelled') as current_month,
+            (SELECT SUM(total_amount) FROM orders WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH) 
+             AND created_at < DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND status != 'cancelled') as last_month
+    ");
+    $revenueCounts = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($revenueCounts['last_month'] > 0) {
+        $trends['revenue'] = (($revenueCounts['current_month'] - $revenueCounts['last_month']) / $revenueCounts['last_month']) * 100;
+    }
+
+    // Customers trend
+    $stmt = $pdo->query("
+        SELECT 
+            (SELECT COUNT(*) FROM users WHERE role = 'customer' AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as current_month,
+            (SELECT COUNT(*) FROM users WHERE role = 'customer' AND created_at >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH) 
+             AND created_at < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as last_month
+    ");
+    $customerCounts = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($customerCounts['last_month'] > 0) {
+        $trends['customers'] = (($customerCounts['current_month'] - $customerCounts['last_month']) / $customerCounts['last_month']) * 100;
+    }
+
+    // Products trend
+    $stmt = $pdo->query("
+        SELECT 
+            (SELECT COUNT(*) FROM products WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as current_month,
+            (SELECT COUNT(*) FROM products WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH) 
+             AND created_at < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as last_month
+    ");
+    $productCounts = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($productCounts['last_month'] > 0) {
+        $trends['products'] = (($productCounts['current_month'] - $productCounts['last_month']) / $productCounts['last_month']) * 100;
+    }
+} catch (PDOException $e) {
+    error_log("Dashboard trends error: " . $e->getMessage());
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,9 +151,10 @@ $currentPage = 'dashboard';
                         </div>
                         <div class="stats-info">
                             <h3>Total Orders</h3>
-                            <p class="stats-number">150</p>
-                            <span class="stats-trend positive">
-                                <i class="fas fa-arrow-up"></i> 12.5%
+                            <p class="stats-number"><?php echo number_format($stats['orders']); ?></p>
+                            <span class="stats-trend <?php echo $trends['orders'] >= 0 ? 'positive' : 'negative'; ?>">
+                                <i class="fas fa-arrow-<?php echo $trends['orders'] >= 0 ? 'up' : 'down'; ?>"></i>
+                                <?php echo abs(round($trends['orders'], 1)); ?>%
                             </span>
                         </div>
                     </div>
@@ -57,9 +165,10 @@ $currentPage = 'dashboard';
                         </div>
                         <div class="stats-info">
                             <h3>Revenue</h3>
-                            <p class="stats-number">$15,890</p>
-                            <span class="stats-trend positive">
-                                <i class="fas fa-arrow-up"></i> 8.2%
+                            <p class="stats-number">$<?php echo number_format($stats['revenue'], 2); ?></p>
+                            <span class="stats-trend <?php echo $trends['revenue'] >= 0 ? 'positive' : 'negative'; ?>">
+                                <i class="fas fa-arrow-<?php echo $trends['revenue'] >= 0 ? 'up' : 'down'; ?>"></i>
+                                <?php echo abs(round($trends['revenue'], 1)); ?>%
                             </span>
                         </div>
                     </div>
@@ -70,9 +179,10 @@ $currentPage = 'dashboard';
                         </div>
                         <div class="stats-info">
                             <h3>Customers</h3>
-                            <p class="stats-number">1,250</p>
-                            <span class="stats-trend positive">
-                                <i class="fas fa-arrow-up"></i> 5.3%
+                            <p class="stats-number"><?php echo number_format($stats['customers']); ?></p>
+                            <span class="stats-trend <?php echo $trends['customers'] >= 0 ? 'positive' : 'negative'; ?>">
+                                <i class="fas fa-arrow-<?php echo $trends['customers'] >= 0 ? 'up' : 'down'; ?>"></i>
+                                <?php echo abs(round($trends['customers'], 1)); ?>%
                             </span>
                         </div>
                     </div>
@@ -83,9 +193,10 @@ $currentPage = 'dashboard';
                         </div>
                         <div class="stats-info">
                             <h3>Products</h3>
-                            <p class="stats-number">486</p>
-                            <span class="stats-trend negative">
-                                <i class="fas fa-arrow-down"></i> 2.1%
+                            <p class="stats-number"><?php echo number_format($stats['products']); ?></p>
+                            <span class="stats-trend <?php echo $trends['products'] >= 0 ? 'positive' : 'negative'; ?>">
+                                <i class="fas fa-arrow-<?php echo $trends['products'] >= 0 ? 'up' : 'down'; ?>"></i>
+                                <?php echo abs(round($trends['products'], 1)); ?>%
                             </span>
                         </div>
                     </div>
@@ -113,16 +224,35 @@ $currentPage = 'dashboard';
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Sample data -->
+                                <?php if (empty($recentOrders)): ?>
                                 <tr>
-                                    <td>#ORD-2024</td>
-                                    <td>John Doe</td>
-                                    <td>Pikachu Plush, Pokemon Cards</td>
-                                    <td>$89.99</td>
-                                    <td><span class="badge bg-success">Completed</span></td>
-                                    <td>2024-01-20</td>
+                                    <td colspan="6" class="text-center">No recent orders found</td>
                                 </tr>
-                                <!-- Add more rows as needed -->
+                                <?php else: ?>
+                                <?php foreach ($recentOrders as $order): ?>
+                                <tr>
+                                    <td>#<?php echo htmlspecialchars($order['order_number']); ?></td>
+                                    <td><?php echo htmlspecialchars($order['customer_name']); ?></td>
+                                    <td><?php echo htmlspecialchars($order['product_list']); ?></td>
+                                    <td>$<?php echo number_format($order['total_amount'], 2); ?></td>
+                                    <td>
+                                        <span class="badge bg-<?php 
+                                            echo match($order['status']) {
+                                                'pending' => 'warning',
+                                                'processing' => 'info',
+                                                'shipped' => 'primary',
+                                                'delivered' => 'success',
+                                                'cancelled' => 'danger',
+                                                default => 'secondary'
+                                            };
+                                        ?>">
+                                            <?php echo ucfirst($order['status']); ?>
+                                        </span>
+                                    </td>
+                                    <td><?php echo date('Y-m-d H:i', strtotime($order['created_at'])); ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>

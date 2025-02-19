@@ -163,8 +163,8 @@ END//
 DELIMITER ;
 
 -- Insert admin user
-INSERT INTO users (id,first_name, last_name, email, phone, password, address, role) 
-VALUES (1, 'Admin', 'User', 'admin@pokemonstore.com', '1234567890', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '123 Admin Street', 'admin');
+-- INSERT INTO users (id,first_name, last_name, email, phone, password, address, role) 
+-- VALUES (1, 'Admin', 'User', 'admin@pokemonstore.com', '1234567890', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '123 Admin Street', 'admin');
 
 COMMIT;
 

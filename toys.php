@@ -2,135 +2,73 @@
 $title = "Pokemon Store - Toys & Cards";
 $md = "Explore our collection of Pokemon toys, figures, and plushies";
 include 'includes/header.php';
+include 'includes/db.php';
 
-// Define products array first
-$products = [
-    [
-        'id' => 1001,
-        'name' => 'Hamburger Snorlax',
-        'price' => 109,
-        'category' => 'Plushie',
-        'image' => 'images/snorlax-burger.jpg',
-        'gallery' => [
-            'images/snorlax-burger.jpg',
-            'images/pikachu-cos-mario.jpg',
-            'images/charizard-family.jpg'
-        ],
-        'description' => 'Adorable Snorlax figure enjoying a delicious hamburger. Perfect for Pokemon fans who love this sleepy Pokemon\'s eating habits!'
-    ],
-    [
-        'id' => 1002,
-        'name' => 'Pikachu Cos Mario',
-        'price' => 89,
-        'category' => 'Figure',
-        'image' => 'images/pikachu-cos-mario.jpg',
-        'gallery' => [
-            'images/pikachu-cos-mario.jpg'
-        ],
-        'description' => 'Cute Pikachu dressed as Mario! A unique crossover figure combining Pokemon and Super Mario universes.'
-    ],
-    [
-        'id' => 1003,
-        'name' => 'Charizard Family',
-        'price' => 149,
-        'category' => 'Figure',
-        'image' => 'images/charizard-family.jpg',
-        'gallery' => [
-            'images/charizard-family.jpg'
-        ],
-        'description' => 'Beautiful diorama featuring Charizard and its evolution line. Shows the majestic fire Pokemon in all its forms.'
-    ],
-    [
-        'id' => 1004,
-        'name' => 'Eevee',
-        'price' => 79,
-        'category' => 'Plushie',
-        'image' => 'images/eevee.jpg',
-        'gallery' => [
-            'images/eevee.jpg'
-        ]
-    ],
-    [
-        'id' => 1005,
-        'name' => 'Mewtwo',
-        'price' => 299,
-        'category' => 'Figure',
-        'image' => 'images/mewtwo.jpg',
-        'gallery' => [
-            'images/mewtwo.jpg'
-        ]
-    ],
-    [
-        'id' => 1006,
-        'name' => 'Gengar',
-        'price' => 95,
-        'category' => 'Plushie',
-        'image' => 'images/gengar.jpg',
-        'gallery' => [
-            'images/gengar.jpg'
-        ]
-    ],
-    [
-        'id' => 1007,
-        'name' => 'Bulbasaur Family',
-        'price' => 69,
-        'category' => 'Figure',
-        'image' => 'images/bulbasaur-family.jpg',
-        'gallery' => [
-            'images/bulbasaur-family.jpg'
-        ]
-    ],
-    [
-        'id' => 1008,
-        'name' => 'Squirtle',
-        'price' => 85,
-        'category' => 'Plushie',
-        'image' => 'images/squirtle.jpg',
-        'gallery' => [
-            'images/squirtle.jpg'
-        ]
-    ],
-    [
-        'id' => 1009,
-        'name' => 'Gyarados',
-        'price' => 199,
-        'category' => 'Figure',
-        'image' => 'images/Gyarados.jpg',
-        'gallery' => [
-            'images/Gyarados.jpg'
-        ]
-    ],
-    [
-        'id' => 1010,
-        'name' => 'Dragonite',
-        'price' => 99,
-        'category' => 'Plushie',
-        'image' => 'images/Dragonite.jpg',
-        'gallery' => [
-            'images/Dragonite.jpg'
-        ]
-    ],
-    [
-        'id' => 1011,
-        'name' => 'Rayquaza',
-        'price' => 249,
-        'category' => 'Figure',
-        'image' => 'images/Rayquaza.jpg',
-        'gallery' => [
-            'images/Rayquaza.jpg'
-        ]
-    ],
-    [
-        'id' => 1012,
-        'name' => 'Mimikyu',
-        'price' => 89,
-        'category' => 'Plushie',
-        'image' => 'images/Mimikyu.jpg',
-        'gallery' => [
-            'images/Mimikyu.jpg'
-        ]
-    ]
-];
+// Enable error logging
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/logs/php_errors.log');
+
+error_log("Starting toys.php page load");
+
+// Get database connection
+$pdo = getDBConnection();
+if (!$pdo) {
+    error_log("Failed to connect to database");
+} else {
+    error_log("Successfully connected to database");
+}
+
+// Get products from database
+$products = [];
+try {
+    $query = "
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    ";
+    error_log("Executing query: " . $query);
+    
+    $stmt = $pdo->prepare($query);
+    $stmt->execute();
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    error_log("Query executed. Found " . count($products) . " products");
+    if (empty($products)) {
+        // Let's check what categories exist in the database
+        $categoryQuery = "SELECT DISTINCT category FROM products";
+        $categoryStmt = $pdo->query($categoryQuery);
+        $categories = $categoryStmt->fetchAll(PDO::FETCH_COLUMN);
+        error_log("Available categories in database: " . implode(", ", $categories));
+        
+        // Check total number of products
+        $countQuery = "SELECT COUNT(*) FROM products";
+        $countStmt = $pdo->query($countQuery);
+        $totalProducts = $countStmt->fetchColumn();
+        error_log("Total products in database: " . $totalProducts);
+        
+        // Check active products
+        $activeQuery = "SELECT COUNT(*) FROM products WHERE status = 'in_stock'";
+        $activeStmt = $pdo->query($activeQuery);
+        $activeProducts = $activeStmt->fetchColumn();
+        error_log("Total in_stock products: " . $activeProducts);
+    } else {
+        error_log("Sample product data: " . print_r($products[0], true));
+    }
+
+    // Process gallery images
+    foreach ($products as &$product) {
+        $product['gallery'] = [$product['image']];
+        error_log("Product ID {$product['id']} using main image for gallery");
+    }
+} catch (PDOException $e) {
+    error_log("Database error: " . $e->getMessage());
+    error_log("SQL State: " . $e->getCode());
+    $products = []; // Empty array if error occurs
+}
 ?>
 
 <link href="css/style.css" rel="stylesheet">
@@ -138,6 +76,7 @@ $products = [
 <link href="css/modal.css" rel="stylesheet">
 <script src="js/cart-manager.js" defer></script>
 <script src="js/cart.js" defer></script>
+<script src="js/products.js" defer></script>
 
 <main>
     <div class="container">
@@ -153,20 +92,16 @@ $products = [
                     <h2 class="filter-title">FILTER</h2>
                     <div class="filter-underline"></div>
                     
-                    <!-- Brand Filter -->
+                    <!-- Category Filter -->
                     <div class="filter-group">
                         <h3>CATEGORY</h3>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="figure">
-                            <label class="form-check-label" for="figure">Figure</label>
+                            <input class="form-check-input" type="checkbox" value="plush" id="plush">
+                            <label class="form-check-label" for="plush">Plush Toys</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="plushie">
-                            <label class="form-check-label" for="plushie">Plushie</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="card">
-                            <label class="form-check-label" for="card">Card</label>
+                            <input class="form-check-input" type="checkbox" value="cards" id="cards">
+                            <label class="form-check-label" for="cards">Pokemon Cards</label>
                         </div>
                     </div>
                     
@@ -203,35 +138,60 @@ $products = [
             <div class="col-lg-9">
                 <div class="products-grid">
                     <div class="row g-4">
-                        <?php
-                        // Loop through products
-                        foreach ($products as $product) {
-                            // Properly encode the product data
-                            $productJson = htmlspecialchars(json_encode($product), ENT_QUOTES, 'UTF-8');
-                            
-                            echo '<div class="col-12 col-md-6 col-lg-4">
-                                    <div class="product-card" data-product="' . $productJson . '">
-                                        <div class="product-badge">' . htmlspecialchars($product['category']) . '</div>
+                        <?php if (empty($products)): ?>
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    No products found.
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($products as $product): 
+                                // Create product data for JavaScript
+                                $productData = [
+                                    'id' => $product['id'],
+                                    'name' => $product['name'],
+                                    'price' => (float)$product['price'],
+                                    'category' => $product['category'],
+                                    'image' => $product['image'],
+                                    'gallery' => $product['gallery'],
+                                    'description' => $product['description'],
+                                    'stock_quantity' => (int)$product['stock_quantity']
+                                ];
+                                
+                                // Encode product data for HTML attribute
+                                $productJson = htmlspecialchars(json_encode($productData), ENT_QUOTES, 'UTF-8');
+                            ?>
+                                <div class="col-12 col-md-6 col-lg-4">
+                                    <div class="product-card" data-product="<?php echo $productJson; ?>">
+                                        <div class="product-badge"><?php echo htmlspecialchars($product['category']); ?></div>
                                         <div class="img-container">
-                                            <img src="' . htmlspecialchars($product['image']) . '" alt="' . htmlspecialchars($product['name']) . '">
+                                            <img src="<?php echo htmlspecialchars($product['image']); ?>" 
+                                                 alt="<?php echo htmlspecialchars($product['name']); ?>">
                                             <div class="quick-view">
-                                                <button class="quick-view-btn" aria-label="Quick view ' . htmlspecialchars($product['name']) . '">
+                                                <button class="quick-view-btn" 
+                                                        aria-label="Quick view <?php echo htmlspecialchars($product['name']); ?>">
                                                     <i class="fas fa-eye" aria-hidden="true"></i> Quick View
                                                 </button>
                                             </div>
                                         </div>
                                         <div class="product-info">
-                                            <h3 class="product-title">' . htmlspecialchars($product['name']) . '</h3>
-                                            <p class="product-price">$'. number_format($product['price'], 2) . '</p>
-                                            <button class="add-to-cart-btn">
-                                                <span class="btn-text">ADD TO CART</span>
-                                                <span class="loading-spinner d-none"></span>
-                                            </button>
+                                            <h3 class="product-title"><?php echo htmlspecialchars($product['name']); ?></h3>
+                                            <p class="product-price">$<?php echo number_format($product['price'], 2); ?></p>
+                                            <?php if ($product['stock_quantity'] > 0): ?>
+                                                <button class="add-to-cart-btn">
+                                                    <span class="btn-text">ADD TO CART</span>
+                                                    <span class="loading-spinner d-none"></span>
+                                                </button>
+                                            <?php else: ?>
+                                                <button class="add-to-cart-btn out-of-stock" disabled>
+                                                    <span class="btn-text">OUT OF STOCK</span>
+                                                </button>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
-                                </div>';
-                        }
-                        ?>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -273,11 +233,15 @@ $products = [
                             <div class="product-stats">
                                 <div class="stat-item">
                                     <div class="stat-label">Stock Status</div>
-                                    <div class="stat-value in-stock">In Stock</div>
+                                    <div class="stat-value stock-status"></div>
                                 </div>
                                 <div class="stat-item">
                                     <div class="stat-label">Category</div>
                                     <div class="stat-value category-value"></div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-label">Quantity in Stock</div>
+                                    <div class="stat-value quantity-value"></div>
                                 </div>
                             </div>
                             <button class="add-to-cart-btn">
@@ -295,12 +259,4 @@ $products = [
 
 <button id="backToTop" class="back-to-top-btn">↑</button>
 
-<!-- Remove duplicate script loading -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <?php include 'includes/footer.php'; ?>
-
-<!-- Move all scripts to the end -->
-<script src="js/cart-manager.js"></script>
-<script src="js/cart.js"></script>
-<script src="js/products.js"></script>

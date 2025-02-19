@@ -45,12 +45,12 @@
                         <div class="form-group mb-3">
                             <div class="input-group">
                                 <span class="input-group-text">
-                                    <i class="fas fa-user"></i>
+                                    <i class="fas fa-envelope"></i>
                                 </span>
-                                <input type="text" 
+                                <input type="email" 
                                        class="form-control" 
                                        name="username" 
-                                       placeholder="Username" 
+                                       placeholder="Email" 
                                        required>
                             </div>
                         </div>
@@ -91,8 +91,6 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Validation JS -->
-    <script src="/admin/js/validation.js"></script>
     <!-- Custom JS -->
     <script src="/admin/js/admin.js"></script>
 </body>
