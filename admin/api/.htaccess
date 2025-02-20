@@ -7,11 +7,13 @@ Deny from all
     Order Allow,Deny
     Allow from all
 
-    # Require authentication check
+    # Require authentication check except for login
     RewriteEngine On
     RewriteBase /admin/api/
 
-    # Check for session
+    # Skip session check for login and OPTIONS requests
+    RewriteCond %{REQUEST_METHOD} !OPTIONS
+    RewriteCond %{REQUEST_URI} !login\.php$ [NC]
     RewriteCond %{HTTP_COOKIE} !PHPSESSID [NC]
     RewriteRule .* - [F]
 </FilesMatch>
@@ -25,6 +27,8 @@ Options -Indexes
     Header set X-Frame-Options "DENY"
     Header set X-XSS-Protection "1; mode=block"
     Header always set Content-Type "application/json; charset=utf-8"
+    Header always set Access-Control-Allow-Origin "http://localhost:81"
     Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
     Header always set Access-Control-Allow-Headers "Authorization, Content-Type"
+    Header always set Access-Control-Allow-Credentials "true"
 </IfModule> 

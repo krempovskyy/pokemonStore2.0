@@ -14,5 +14,12 @@
 
 <!-- Bootstrap JS and Popper.js -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Cart Manager -->
+<script src="js/cart-manager.js"></script>
+
+<!-- Products JS -->
+<script src="js/products.js"></script>
+
 </body>
 </html>

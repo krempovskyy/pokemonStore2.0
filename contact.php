@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ContactUs</title>
-    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-</head>
 <?php
-// include the header file 
+session_start();
 $title = "Contact Us - Pokemon Store";
 $md = "Contact us for any questions or support";
 include 'includes/header.php';
 ?>
 
-<link rel="stylesheet" href="contactStyle.css">
 <link href="css/contactStyle.css" rel="stylesheet">
 
 <main class="container py-5">
@@ -49,7 +39,7 @@ include 'includes/header.php';
         <div class="col-lg-6">
             <div class="contact-form-section">
                 <h2 class="section-title mb-4">Send Us a Message</h2>
-                <form id="contactForm" action="database/contact_process.php" method="POST" class="contact-form" onsubmit="return validateForm()">
+                <form id="contactForm" class="contact-form">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" id="name" name="name" class="form-control" required>
@@ -59,11 +49,16 @@ include 'includes/header.php';
                         <input type="email" id="email" name="email" class="form-control" required>
                     </div>
                     <div class="mb-3">
+                        <label for="subject" class="form-label">Subject</label>
+                        <input type="text" id="subject" name="subject" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="message" class="form-label">Message</label>
                         <textarea id="message" name="message" class="form-control" rows="5" required></textarea>
                     </div>
-                    <button type="submit" name="submit" class="btn btn-primary w-100">
+                    <button type="submit" class="btn btn-primary w-100">
                         <i class="fas fa-paper-plane me-2"></i>Send Message
+                        <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"></span>
                     </button>
                 </form>
             </div>
@@ -71,12 +66,70 @@ include 'includes/header.php';
     </div>
 </main>
 
-<!-- Add cart manager scripts -->
-<script src="js/cart-manager.js"></script>
-<script src="js/cart.js"></script>
-<script src="js/contact.js"></script>
+<!-- Add SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<?php
-// include the footer file 
-include 'includes/footer.php';
-?>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contactForm');
+    const submitButton = contactForm.querySelector('button[type="submit"]');
+    const spinner = submitButton.querySelector('.spinner-border');
+
+    contactForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        // Show loading state
+        submitButton.disabled = true;
+        spinner.classList.remove('d-none');
+
+        try {
+            const formData = new FormData(contactForm);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                subject: formData.get('subject'),
+                message: formData.get('message')
+            };
+
+            const response = await fetch('includes/api/contact_process.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Show success message
+                await Swal.fire({
+                    title: 'Success!',
+                    text: 'Your message has been sent successfully.',
+                    icon: 'success',
+                    confirmButtonColor: '#8860d0'
+                });
+
+                // Reset form
+                contactForm.reset();
+            } else {
+                throw new Error(result.message || 'Failed to send message');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            await Swal.fire({
+                title: 'Error!',
+                text: error.message || 'An error occurred while sending your message. Please try again.',
+                icon: 'error',
+                confirmButtonColor: '#8860d0'
+            });
+        } finally {
+            // Reset button state
+            submitButton.disabled = false;
+            spinner.classList.add('d-none');
+        }
+    });
+});
+</script>
+
+<?php include 'includes/footer.php'; ?>

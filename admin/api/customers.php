@@ -28,14 +28,14 @@ try {
 
     // Verify admin authentication
     if (!verifyAdminSession()) {
-        header('HTTP/1.1 401 Unauthorized');
+        http_response_code(401);
         echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
         exit();
     }
 
     // Database connection
-    $pdo = getDBConnection();
-    if (!$pdo) {
+    $conn = getDBConnection();
+    if (!$conn) {
         throw new Exception('Database connection failed');
     }
 
@@ -46,58 +46,94 @@ try {
             if (isset($_GET['id'])) {
                 $customerId = (int)$_GET['id'];
                 
-                // Get customer details
-                $stmt = $pdo->prepare("
+                $stmt = mysqli_prepare($conn, "
                     SELECT u.*, 
-                           (SELECT COUNT(*) FROM orders WHERE user_id = u.id) as total_orders,
-                           (SELECT MAX(created_at) FROM orders WHERE user_id = u.id) as last_order_date,
-                           (SELECT SUM(total_amount) FROM orders WHERE user_id = u.id) as total_spent
-                    FROM users u 
+                           COUNT(DISTINCT o.id) as total_orders,
+                           COALESCE(SUM(o.total_amount), 0) as total_spent,
+                           MAX(o.created_at) as last_order_date
+                    FROM users u
+                    LEFT JOIN orders o ON u.id = o.user_id
                     WHERE u.id = ? AND u.role = 'customer'
+                    GROUP BY u.id
                 ");
-                $stmt->execute([$customerId]);
-                $customer = $stmt->fetch(PDO::FETCH_ASSOC);
+                mysqli_stmt_bind_param($stmt, "i", $customerId);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                $customer = mysqli_fetch_assoc($result);
                 
-                if ($customer) {
-                    echo json_encode(['success' => true, 'data' => $customer]);
-                } else {
+                if (!$customer) {
                     http_response_code(404);
                     echo json_encode(['error' => 'Customer not found']);
+                    break;
                 }
+                
+                // Get recent orders
+                $stmt = mysqli_prepare($conn, "
+                    SELECT o.*, COUNT(oi.id) as total_items
+                    FROM orders o
+                    LEFT JOIN order_items oi ON o.id = oi.order_id
+                    WHERE o.user_id = ?
+                    GROUP BY o.id
+                    ORDER BY o.created_at DESC
+                    LIMIT 5
+                ");
+                mysqli_stmt_bind_param($stmt, "i", $customerId);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                
+                $customer['recent_orders'] = [];
+                while ($order = mysqli_fetch_assoc($result)) {
+                    $customer['recent_orders'][] = $order;
+                }
+                
+                echo json_encode(['success' => true, 'data' => $customer]);
                 break;
             }
 
-            // Get query parameters
+            // Get query parameters for listing customers
             $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
             $limit = isset($_GET['limit']) ? max(1, min(50, (int)$_GET['limit'])) : 10;
-            $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-            $status = isset($_GET['status']) ? trim($_GET['status']) : '';
-            $sort = isset($_GET['sort']) ? trim($_GET['sort']) : 'newest';
+            $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET['search'])) : '';
+            $status = isset($_GET['status']) ? mysqli_real_escape_string($conn, trim($_GET['status'])) : '';
+            $sort = isset($_GET['sort']) ? mysqli_real_escape_string($conn, trim($_GET['sort'])) : 'newest';
 
             // Calculate offset
             $offset = ($page - 1) * $limit;
 
             // Build base query
             $baseQuery = "
-                FROM users u 
+                FROM users u
+                LEFT JOIN (
+                    SELECT user_id, 
+                           COUNT(DISTINCT id) as total_orders,
+                           COALESCE(SUM(total_amount), 0) as total_spent,
+                           MAX(created_at) as last_order_date
+                    FROM orders
+                    GROUP BY user_id
+                ) o ON u.id = o.user_id
                 WHERE u.role = 'customer'
             ";
+            
             $whereConditions = [];
             $queryParams = [];
+            $paramTypes = "";
 
             // Add search condition
             if ($search !== '') {
-                $whereConditions[] = "(CONCAT(u.first_name, ' ', u.last_name) LIKE ? OR u.email LIKE ? OR u.phone LIKE ?)";
-                $searchTerm = "%{$search}%";
-                $queryParams[] = $searchTerm;
-                $queryParams[] = $searchTerm;
-                $queryParams[] = $searchTerm;
+                $whereConditions[] = "(u.first_name LIKE ? OR u.last_name LIKE ? OR u.email LIKE ? OR u.phone LIKE ?)";
+                $searchPattern = "%{$search}%";
+                $queryParams[] = $searchPattern;
+                $queryParams[] = $searchPattern;
+                $queryParams[] = $searchPattern;
+                $queryParams[] = $searchPattern;
+                $paramTypes .= "ssss";
             }
 
             // Add status filter
             if ($status !== '') {
                 $whereConditions[] = "u.status = ?";
                 $queryParams[] = $status;
+                $paramTypes .= "s";
             }
 
             // Combine where conditions
@@ -108,8 +144,9 @@ try {
             // Add sorting
             $orderBy = match($sort) {
                 'oldest' => "u.created_at ASC",
-                'name' => "u.first_name ASC",
-                'name-desc' => "u.first_name DESC",
+                'most_orders' => "total_orders DESC",
+                'highest_spent' => "total_spent DESC",
+                'name' => "u.first_name ASC, u.last_name ASC",
                 default => "u.created_at DESC"
             };
             $baseQuery .= " ORDER BY " . $orderBy;
@@ -117,9 +154,13 @@ try {
             try {
                 // Get total count
                 $countQuery = "SELECT COUNT(*) " . $baseQuery;
-                $stmt = $pdo->prepare($countQuery);
-                $stmt->execute($queryParams);
-                $totalCount = (int)$stmt->fetchColumn();
+                $stmt = mysqli_prepare($conn, $countQuery);
+                if (!empty($paramTypes)) {
+                    mysqli_stmt_bind_param($stmt, $paramTypes, ...$queryParams);
+                }
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                $totalCount = (int)mysqli_fetch_row($result)[0];
 
                 // Calculate total pages
                 $totalPages = max(1, ceil($totalCount / $limit));
@@ -134,14 +175,27 @@ try {
                 $query = "
                     SELECT 
                         u.*,
-                        (SELECT COUNT(*) FROM orders WHERE user_id = u.id) as total_orders,
-                        (SELECT MAX(created_at) FROM orders WHERE user_id = u.id) as last_order_date,
-                        (SELECT SUM(total_amount) FROM orders WHERE user_id = u.id) as total_spent
-                    " . $baseQuery . " LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
+                        COALESCE(o.total_orders, 0) as total_orders,
+                        COALESCE(o.total_spent, 0) as total_spent,
+                        o.last_order_date
+                    " . $baseQuery . " LIMIT ? OFFSET ?";
                 
-                $stmt = $pdo->prepare($query);
-                $stmt->execute($queryParams);
-                $customers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $stmt = mysqli_prepare($conn, $query);
+                if (!empty($paramTypes)) {
+                    $paramTypes .= "ii";
+                    $queryParams[] = $limit;
+                    $queryParams[] = $offset;
+                    mysqli_stmt_bind_param($stmt, $paramTypes, ...$queryParams);
+                } else {
+                    mysqli_stmt_bind_param($stmt, "ii", $limit, $offset);
+                }
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                
+                $customers = [];
+                while ($customer = mysqli_fetch_assoc($result)) {
+                    $customers[] = $customer;
+                }
 
                 echo json_encode([
                     'success' => true,
@@ -155,7 +209,7 @@ try {
                         ]
                     ]
                 ]);
-            } catch (PDOException $e) {
+            } catch (Exception $e) {
                 error_log("Database error in customers query: " . $e->getMessage());
                 throw $e;
             }
@@ -171,182 +225,228 @@ try {
             $customerId = (int)$data['id'];
             
             // Validate customer exists
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE id = ? AND role = 'customer'");
-            $stmt->execute([$customerId]);
-            if (!$stmt->fetch()) {
+            $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE id = ? AND role = 'customer'");
+            mysqli_stmt_bind_param($stmt, "i", $customerId);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            if (!mysqli_fetch_assoc($result)) {
                 http_response_code(404);
                 echo json_encode(['error' => 'Customer not found']);
                 break;
             }
 
             // Start transaction
-            $pdo->beginTransaction();
+            mysqli_begin_transaction($conn);
 
             try {
-                // Validate required fields
-                $requiredFields = ['first_name', 'last_name', 'email', 'phone', 'address', 'status'];
-                foreach ($requiredFields as $field) {
-                    if (!isset($data[$field]) || trim($data[$field]) === '') {
-                        throw new Exception("Missing required field: {$field}");
+                $updates = [];
+                $params = [];
+                $paramTypes = "";
+
+                // Update status
+                if (isset($data['status'])) {
+                    $validStatuses = ['active', 'inactive', 'blocked'];
+                    if (!in_array($data['status'], $validStatuses)) {
+                        throw new Exception('Invalid status');
                     }
+                    $updates[] = "status = ?";
+                    $params[] = $data['status'];
+                    $paramTypes .= "s";
                 }
 
-                // Check if email is unique (excluding current customer)
-                $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
-                $stmt->execute([$data['email'], $customerId]);
-                if ($stmt->fetch()) {
-                    throw new Exception('Email already exists');
+                // Update first name
+                if (isset($data['first_name']) && trim($data['first_name']) !== '') {
+                    $updates[] = "first_name = ?";
+                    $params[] = trim($data['first_name']);
+                    $paramTypes .= "s";
                 }
 
-                // Update customer
-                $stmt = $pdo->prepare("
-                    UPDATE users 
-                    SET first_name = ?, 
-                        last_name = ?, 
-                        email = ?, 
-                        phone = ?, 
-                        address = ?, 
-                        status = ?,
-                        updated_at = NOW()
-                    WHERE id = ?
-                ");
-                $stmt->execute([
-                    $data['first_name'],
-                    $data['last_name'],
-                    $data['email'],
-                    $data['phone'],
-                    $data['address'],
-                    $data['status'],
-                    $customerId
-                ]);
+                // Update last name
+                if (isset($data['last_name']) && trim($data['last_name']) !== '') {
+                    $updates[] = "last_name = ?";
+                    $params[] = trim($data['last_name']);
+                    $paramTypes .= "s";
+                }
 
-                // Commit transaction
-                $pdo->commit();
+                // Update email
+                if (isset($data['email']) && trim($data['email']) !== '') {
+                    if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                        throw new Exception('Invalid email format');
+                    }
+                    
+                    // Check if email already exists
+                    $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ? AND id != ?");
+                    mysqli_stmt_bind_param($stmt, "si", $data['email'], $customerId);
+                    mysqli_stmt_execute($stmt);
+                    $result = mysqli_stmt_get_result($stmt);
+                    if (mysqli_fetch_assoc($result)) {
+                        throw new Exception('Email already exists');
+                    }
+                    
+                    $updates[] = "email = ?";
+                    $params[] = trim($data['email']);
+                    $paramTypes .= "s";
+                }
 
-                // Get updated customer data
-                $stmt = $pdo->prepare("
-                    SELECT u.*, 
-                           (SELECT COUNT(*) FROM orders WHERE user_id = u.id) as total_orders,
-                           (SELECT MAX(created_at) FROM orders WHERE user_id = u.id) as last_order_date,
-                           (SELECT SUM(total_amount) FROM orders WHERE user_id = u.id) as total_spent
-                    FROM users u 
-                    WHERE u.id = ?
-                ");
-                $stmt->execute([$customerId]);
-                $customer = $stmt->fetch(PDO::FETCH_ASSOC);
+                // Update phone
+                if (isset($data['phone']) && trim($data['phone']) !== '') {
+                    $updates[] = "phone = ?";
+                    $params[] = trim($data['phone']);
+                    $paramTypes .= "s";
+                }
 
-                echo json_encode(['success' => true, 'data' => $customer]);
+                if (!empty($updates)) {
+                    $query = "UPDATE users SET " . implode(", ", $updates) . " WHERE id = ?";
+                    $params[] = $customerId;
+                    $paramTypes .= "i";
+                    
+                    $stmt = mysqli_prepare($conn, $query);
+                    mysqli_stmt_bind_param($stmt, $paramTypes, ...$params);
+                    mysqli_stmt_execute($stmt);
+                }
+
+                mysqli_commit($conn);
+                echo json_encode(['success' => true, 'message' => 'Customer updated successfully']);
             } catch (Exception $e) {
-                $pdo->rollBack();
+                mysqli_rollback($conn);
                 throw $e;
             }
             break;
 
         case 'POST':
-            $data = json_decode(file_get_contents('php://input'), true);
+            // Get JSON data from request body
+            $jsonData = file_get_contents('php://input');
+            $data = json_decode($jsonData, true);
             
             if (!$data) {
                 throw new Exception('Invalid request data');
             }
 
+            // Validate required fields
+            $requiredFields = ['first_name', 'last_name', 'email', 'phone', 'address', 'password'];
+            foreach ($requiredFields as $field) {
+                if (empty($data[$field])) {
+                    throw new Exception("Missing required field: {$field}");
+                }
+            }
+
+            // Validate email format
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                throw new Exception('Invalid email format');
+            }
+
+            // Check if email already exists
+            $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE email = ?");
+            mysqli_stmt_bind_param($stmt, "s", $data['email']);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            if (mysqli_fetch_assoc($result)) {
+                throw new Exception('Email already exists');
+            }
+
+            // Hash password
+            $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
+
             // Start transaction
-            $pdo->beginTransaction();
+            mysqli_begin_transaction($conn);
 
             try {
-                // Validate required fields
-                $requiredFields = ['first_name', 'last_name', 'email', 'phone', 'address', 'password'];
-                foreach ($requiredFields as $field) {
-                    if (!isset($data[$field]) || trim($data[$field]) === '') {
-                        throw new Exception("Missing required field: {$field}");
-                    }
-                }
-
-                // Check if email is unique
-                $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-                $stmt->execute([$data['email']]);
-                if ($stmt->fetch()) {
-                    throw new Exception('Email already exists');
-                }
-
-                // Hash password
-                $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
-
                 // Insert new customer
-                $stmt = $pdo->prepare("
-                    INSERT INTO users (
-                        first_name, last_name, email, phone, address, password, role, status, created_at, updated_at
-                    ) VALUES (?, ?, ?, ?, ?, ?, 'customer', 'active', NOW(), NOW())
-                ");
-                $stmt->execute([
+                $stmt = mysqli_prepare($conn, 
+                    "INSERT INTO users (first_name, last_name, email, phone, address, password, role, status) 
+                     VALUES (?, ?, ?, ?, ?, ?, 'customer', 'active')"
+                );
+                mysqli_stmt_bind_param($stmt, "ssssss", 
                     $data['first_name'],
                     $data['last_name'],
                     $data['email'],
                     $data['phone'],
                     $data['address'],
                     $hashedPassword
+                );
+                mysqli_stmt_execute($stmt);
+                $customerId = mysqli_insert_id($conn);
+
+                mysqli_commit($conn);
+                echo json_encode([
+                    'success' => true, 
+                    'message' => 'Customer added successfully',
+                    'data' => ['id' => $customerId]
                 ]);
-
-                $customerId = $pdo->lastInsertId();
-
-                // Commit transaction
-                $pdo->commit();
-
-                // Get new customer data
-                $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-                $stmt->execute([$customerId]);
-                $customer = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                echo json_encode(['success' => true, 'data' => $customer]);
             } catch (Exception $e) {
-                $pdo->rollBack();
+                mysqli_rollback($conn);
                 throw $e;
             }
             break;
 
         case 'DELETE':
+            // Get customer ID from query parameters
             if (!isset($_GET['id'])) {
-                throw new Exception('Customer ID is required');
+                throw new Exception('Customer ID is required for deletion');
             }
 
             $customerId = (int)$_GET['id'];
             
-            // Check if customer exists
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE id = ? AND role = 'customer'");
-            $stmt->execute([$customerId]);
-            if (!$stmt->fetch()) {
+            // Validate customer exists and is not an admin
+            $stmt = mysqli_prepare($conn, "SELECT id, role FROM users WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, "i", $customerId);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            $customer = mysqli_fetch_assoc($result);
+            
+            if (!$customer) {
                 http_response_code(404);
                 echo json_encode(['error' => 'Customer not found']);
                 break;
             }
 
+            if ($customer['role'] !== 'customer') {
+                throw new Exception('Cannot delete admin users');
+            }
+
             // Start transaction
-            $pdo->beginTransaction();
+            mysqli_begin_transaction($conn);
 
             try {
-                // Instead of deleting, set status to 'deleted'
-                $stmt = $pdo->prepare("UPDATE users SET status = 'deleted', updated_at = NOW() WHERE id = ?");
-                $stmt->execute([$customerId]);
+                // Delete customer's orders and order items first
+                $stmt = mysqli_prepare($conn, "DELETE FROM order_items WHERE order_id IN (SELECT id FROM orders WHERE user_id = ?)");
+                mysqli_stmt_bind_param($stmt, "i", $customerId);
+                mysqli_stmt_execute($stmt);
 
-                // Commit transaction
-                $pdo->commit();
+                $stmt = mysqli_prepare($conn, "DELETE FROM orders WHERE user_id = ?");
+                mysqli_stmt_bind_param($stmt, "i", $customerId);
+                mysqli_stmt_execute($stmt);
 
+                // Delete customer's cart items
+                $stmt = mysqli_prepare($conn, "DELETE FROM cart WHERE user_id = ?");
+                mysqli_stmt_bind_param($stmt, "i", $customerId);
+                mysqli_stmt_execute($stmt);
+
+                // Finally delete the customer
+                $stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id = ?");
+                mysqli_stmt_bind_param($stmt, "i", $customerId);
+                mysqli_stmt_execute($stmt);
+
+                mysqli_commit($conn);
                 echo json_encode(['success' => true, 'message' => 'Customer deleted successfully']);
             } catch (Exception $e) {
-                $pdo->rollBack();
+                mysqli_rollback($conn);
                 throw $e;
             }
             break;
 
         default:
-            throw new Exception('Method not allowed');
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+            break;
     }
-} catch (PDOException $e) {
-    error_log("Database error: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
 } catch (Exception $e) {
-    error_log("Application error: " . $e->getMessage());
+    error_log("Error in customers.php: " . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['error' => 'Application error', 'message' => $e->getMessage()]);
+    echo json_encode(['error' => 'Internal server error']);
+} finally {
+    if (isset($conn)) {
+        mysqli_close($conn);
+    }
 }
 ?>

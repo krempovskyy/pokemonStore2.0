@@ -1,0 +1,34 @@
+Database Initialization Order:
+
+1. 01-schema.sql
+   - Creates database and tables
+   - Sets up foreign key constraints
+
+2. 02-users.sql
+   - Inserts admin user
+   - Inserts test customers
+   - Required for orders and cart items
+
+3. 03-products.sql
+   - Inserts plush toys (IDs 1-5)
+   - Inserts Pokemon cards (IDs 6-10)
+   - Required for orders and cart items
+
+4. 04-clothing.sql
+   - Inserts men's clothing (IDs 11-14)
+   - Inserts women's clothing (IDs 15-17)
+   - Inserts unisex clothing (IDs 18-19)
+   - Inserts accessories (IDs 20-22)
+   - Required for orders and cart items
+
+5. 05-sample-orders.sql
+   - Inserts sample orders
+   - Inserts order items
+   - Inserts cart items
+   - Depends on users and products data
+
+6. 06-contact-messages.sql
+   - Inserts sample contact messages
+   - Independent of other tables
+
+Note: The scripts must be run in this exact order to maintain referential integrity. 

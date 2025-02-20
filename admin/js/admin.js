@@ -8,23 +8,13 @@ const ADMIN_CREDENTIALS = {
 const SESSION_TIMEOUT = 2 * 60 * 60 * 1000; // 2 hours
 
 // Validation functions
+function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
 function validatePassword(password) {
-    const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-    
-    const errors = [];
-    if (password.length < minLength) {
-        errors.push(`Password must be at least ${minLength} characters long`);
-    }
-    if (!hasUpperCase) errors.push('Password must contain at least one uppercase letter');
-    if (!hasLowerCase) errors.push('Password must contain at least one lowercase letter');
-    if (!hasNumbers) errors.push('Password must contain at least one number');
-    if (!hasSpecialChar) errors.push('Password must contain at least one special character');
-    
-    return errors;
+    return password.length >= 8;
 }
 
 function sanitizeInput(input) {
@@ -59,10 +49,15 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
         return;
     }
     
+    // Email validation
+    if (!validateEmail(email)) {
+        showNotification('Please enter a valid email address', 'error');
+        return;
+    }
+    
     // Password validation
-    const passwordErrors = validatePassword(password);
-    if (passwordErrors.length > 0) {
-        showNotification('Password requirements not met:\n' + passwordErrors.join('\n'), 'error');
+    if (!validatePassword(password)) {
+        showNotification('Password must be at least 8 characters long', 'error');
         return;
     }
     
@@ -75,27 +70,33 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ email, password }),
-            credentials: 'same-origin'
+            credentials: 'include'
         });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+            throw new TypeError("Response was not JSON");
+        }
+
         const data = await response.json();
         
-        if (response.ok && data.success) {
+        if (data.success) {
             // Reset login attempts on successful login
             loginAttempts = 0;
             localStorage.removeItem('loginAttempts');
             localStorage.removeItem('lockoutUntil');
             
-            // Save login state with additional security
-            const loginTime = Date.now();
+            // Store session data
             const sessionData = {
                 adminLoggedIn: true,
-                adminEmail: data.data.email,
-                loginTime: loginTime,
                 sessionId: data.data.sessionId,
-                expiresAt: loginTime + SESSION_TIMEOUT
+                email: data.data.email,
+                expiresAt: Date.now() + SESSION_TIMEOUT
             };
-            
             localStorage.setItem('adminSession', JSON.stringify(sessionData));
             
             showNotification('Login successful! Redirecting...', 'success');
@@ -103,28 +104,34 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
             // Redirect to dashboard or previous page
             const redirectTo = localStorage.getItem('redirectFrom') || '/admin/index.php';
             localStorage.removeItem('redirectFrom');
+            
+            // Reload the page to ensure session is properly set
+            window.location.reload();
+            
             setTimeout(() => {
                 window.location.href = redirectTo;
             }, 1000);
             
         } else {
-            loginBtn.classList.remove('loading');
-            loginAttempts++;
-            localStorage.setItem('loginAttempts', loginAttempts.toString());
-            
-            if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
-                lockoutUntil = Date.now() + LOCKOUT_TIME;
-                localStorage.setItem('lockoutUntil', lockoutUntil.toString());
-                showNotification(`Too many failed attempts. Account locked for 15 minutes.`, 'error');
-            } else {
-                const attemptsLeft = MAX_LOGIN_ATTEMPTS - loginAttempts;
-                showNotification(`${data.error || 'Login failed'}! ${attemptsLeft} attempts remaining.`, 'error');
-            }
+            throw new Error(data.error || 'Login failed');
         }
     } catch (error) {
         console.error('Login error:', error);
         loginBtn.classList.remove('loading');
-        showNotification('An error occurred during login. Please try again.', 'error');
+        
+        loginAttempts++;
+        localStorage.setItem('loginAttempts', loginAttempts.toString());
+        
+        if (loginAttempts >= MAX_LOGIN_ATTEMPTS) {
+            lockoutUntil = Date.now() + LOCKOUT_TIME;
+            localStorage.setItem('lockoutUntil', lockoutUntil.toString());
+            showNotification(`Too many failed attempts. Account locked for 15 minutes.`, 'error');
+        } else {
+            const attemptsLeft = MAX_LOGIN_ATTEMPTS - loginAttempts;
+            showNotification(`${error.message}. ${attemptsLeft} attempts remaining.`, 'error');
+        }
+    } finally {
+        loginBtn.classList.remove('loading');
     }
 });
 
@@ -245,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.querySelector('i').classList.toggle('fa-eye');
             this.querySelector('i').classList.toggle('fa-eye-slash');
         });
-            }
+    }
 });
 
 // Initialize

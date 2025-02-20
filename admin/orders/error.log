@@ -1,0 +1,6 @@
+[20-Feb-2025 20:30:44 Europe/Helsinki] Print.php started - Request received for order print
+[20-Feb-2025 20:30:44 Europe/Helsinki] GET parameters: Array
+(
+    [id] => 1
+)
+

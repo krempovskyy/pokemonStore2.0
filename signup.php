@@ -108,6 +108,23 @@ if (isset($_SESSION['user_id'])) {
                 </div>
 
                 <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </span>
+                        <textarea class="form-control" 
+                               name="address" 
+                               placeholder="Enter your address"
+                               required
+                               rows="2"></textarea>
+                        <div class="invalid-feedback">
+                            Please enter your address
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
                     <label class="form-label">Password</label>
                     <div class="input-group">
                         <span class="input-group-text">

@@ -55,21 +55,28 @@ function initializeSigninForm(form) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
 
-        // Simulate API call
+        // Send API request
         $.ajax({
-            url: 'database/signin_process.php', // Use the form's action URL
+            url: 'includes/api/signin_process.php',
             type: "POST",
-            data: data, // Serialize form data
+            data: JSON.stringify(data),
+            contentType: 'application/json',
             success: function (response) {
-                if (response == '1') {
+                if (response.success) {
                     showNotification('Success!', 'Signed in successfully. Redirecting...', 'success');
                     setTimeout(() => window.location.href = 'index.php', 1500);
                 } else {
-                    showNotification('Error!', response, 'error');
+                    showNotification('Error!', response.message || 'Login failed', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
                 }
             },
-            error: function () {
-                showNotification('Error!', 'Invalid email or password', 'error');
+            error: function (xhr) {
+                let errorMessage = 'Invalid email or password';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                showNotification('Error!', errorMessage, 'error');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
             }
@@ -102,13 +109,13 @@ function initializeSignupForm(form) {
 
         const formData = new FormData(form);
         const data = {
-            firstname: formData.get('firstName'),
-            lastname: formData.get('lastName'),
+            first_name: formData.get('firstName'),
+            last_name: formData.get('lastName'),
             email: formData.get('email'),
             phone: formData.get('phone'),
+            address: formData.get('address'),
             password: formData.get('password'),
-            confirmpassword: formData.get('confirmPassword'),
-            terms: formData.get('terms') === 'on'
+            confirm_password: formData.get('confirmPassword')
         };
 
         // Show loading state
@@ -117,22 +124,28 @@ function initializeSignupForm(form) {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating account...';
 
-        // Simulate API call
+        // Send API request
         $.ajax({
-            url: 'database/signupForm.php', // Use the form's action URL
+            url: 'includes/api/signup_process.php',
             type: "POST",
-            data: data, // Serialize form data
+            data: JSON.stringify(data),
+            contentType: 'application/json',
             success: function (response) {
-                if (response == '1') {
+                if (response.success) {
                     showNotification('Success!', 'Account created successfully. Redirecting...', 'success');
                     setTimeout(() => window.location.href = 'signin.php', 1500);
                 } else {
-                    showNotification('Error!', response, 'error');
+                    showNotification('Error!', response.message, 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
                 }
-
             },
-            error: function () {
-                showNotification('Error!', 'Email already exists', 'error');
+            error: function (xhr) {
+                let errorMessage = 'Registration failed. Please try again.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                showNotification('Error!', errorMessage, 'error');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
             }

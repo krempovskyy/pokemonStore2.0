@@ -1,6 +1,8 @@
 <?php
 session_start();
 require_once __DIR__ . '/includes/config/db.php';
+require_once __DIR__ . '/includes/helpers/image_helper.php';
+
 $title = "Pokemon Store - Toys & Cards";
 $md = "Explore our collection of Pokemon toys, figures, and plushies";
 include 'includes/header.php';
@@ -12,14 +14,6 @@ ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/logs/php_errors.log');
 
 error_log("Starting toys.php page load");
-
-// Get database connection
-$pdo = getDBConnection();
-if (!$pdo) {
-    error_log("Failed to connect to database");
-} else {
-    error_log("Successfully connected to database");
-}
 
 // Get products from database
 $products = [];
@@ -33,41 +27,49 @@ try {
     ";
     error_log("Executing query: " . $query);
     
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = executeQuery($query);
     
-    error_log("Query executed. Found " . count($products) . " products");
-    if (empty($products)) {
-        // Let's check what categories exist in the database
-        $categoryQuery = "SELECT DISTINCT category FROM products";
-        $categoryStmt = $pdo->query($categoryQuery);
-        $categories = $categoryStmt->fetchAll(PDO::FETCH_COLUMN);
-        error_log("Available categories in database: " . implode(", ", $categories));
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            // Get image URLs
+            $row['image'] = getProductImageUrl($row['image']);
+            $row['gallery'] = getGalleryUrls($row['gallery'], $row['image']);
+            $products[] = $row;
+        }
         
-        // Check total number of products
-        $countQuery = "SELECT COUNT(*) FROM products";
-        $countStmt = $pdo->query($countQuery);
-        $totalProducts = $countStmt->fetchColumn();
-        error_log("Total products in database: " . $totalProducts);
+        error_log("Query executed. Found " . count($products) . " products");
         
-        // Check active products
-        $activeQuery = "SELECT COUNT(*) FROM products WHERE status = 'in_stock'";
-        $activeStmt = $pdo->query($activeQuery);
-        $activeProducts = $activeStmt->fetchColumn();
-        error_log("Total in_stock products: " . $activeProducts);
+        if (empty($products)) {
+            // Let's check what categories exist in the database
+            $categoryQuery = "SELECT DISTINCT category FROM products";
+            $categoryResult = executeQuery($categoryQuery);
+            $categories = [];
+            if ($categoryResult) {
+                while ($row = $categoryResult->fetch_assoc()) {
+                    $categories[] = $row['category'];
+                }
+            }
+            error_log("Available categories in database: " . implode(", ", $categories));
+            
+            // Check total number of products
+            $countQuery = "SELECT COUNT(*) as total FROM products";
+            $countResult = executeQuery($countQuery);
+            $totalProducts = $countResult ? $countResult->fetch_assoc()['total'] : 0;
+            error_log("Total products in database: " . $totalProducts);
+            
+            // Check active products
+            $activeQuery = "SELECT COUNT(*) as total FROM products WHERE status = 'in_stock'";
+            $activeResult = executeQuery($activeQuery);
+            $activeProducts = $activeResult ? $activeResult->fetch_assoc()['total'] : 0;
+            error_log("Total in_stock products: " . $activeProducts);
+        } else {
+            error_log("Sample product data: " . print_r($products[0], true));
+        }
     } else {
-        error_log("Sample product data: " . print_r($products[0], true));
+        error_log("Failed to execute query");
     }
-
-    // Process gallery images
-    foreach ($products as &$product) {
-        $product['gallery'] = [$product['image']];
-        error_log("Product ID {$product['id']} using main image for gallery");
-    }
-} catch (PDOException $e) {
+} catch (Exception $e) {
     error_log("Database error: " . $e->getMessage());
-    error_log("SQL State: " . $e->getCode());
     $products = []; // Empty array if error occurs
 }
 ?>

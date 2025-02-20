@@ -1,4 +1,5 @@
 <?php
+session_start();
 $title = "Pokemon Store - Home";
 $md = "Welcome to Pokemon Store - Your one-stop shop for Pokemon merchandise";
 

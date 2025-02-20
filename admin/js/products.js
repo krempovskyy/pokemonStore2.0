@@ -264,139 +264,104 @@ window.removeImagePreview = function() {
 async function handleProductSubmit(form) {
     console.log('Starting form submission');
     try {
-        const isEdit = !!form.dataset.editId;
+        const productId = form.getAttribute('data-edit-id');
+        const isEdit = !!productId;
+        
+        console.log('Form submission details:', {
+            isEdit,
+            productId,
+            formData: new FormData(form)
+        });
+
+        // Create FormData for the request
         const formData = new FormData(form);
-        console.log('Form data created');
-
-        // Log all form data
-        for (let [key, value] of formData.entries()) {
-            console.log('Form field:', key, value);
+        
+        // Add product ID for edit mode
+        if (isEdit) {
+            formData.append('id', productId);
         }
 
-        // Basic validation
-        const name = formData.get('name');
-        const price = parseFloat(formData.get('price'));
+        // Handle sizes for clothing categories
         const category = formData.get('category');
-        const description = formData.get('description');
-        const image = formData.get('image');
-
-        // Validation for new products
-        if (!isEdit) {
-            if (!name || !price || !category || !description) {
-                throw new Error('Please fill in all required fields');
-            }
-            if (!image || !(image instanceof File) || image.size === 0) {
-                throw new Error('Please select an image for the new product');
-            }
-        } else {
-            // Validation for editing - only validate fields that are provided
-            if ((!name && name !== '') || (!price && price !== 0) || !category || (!description && description !== '')) {
-                throw new Error('Please fill in all required fields');
-            }
-        }
-
-        if (price && price <= 0) {
-            throw new Error('Price must be greater than 0');
-        }
-
-        // Handle stock based on category
-        let stock = 0;
-        let sizes = null;
-
         if (category.includes('clothing')) {
-            console.log('Processing clothing sizes');
-            const sizeData = {};
-            const sizeInputs = form.querySelectorAll('.size-quantity');
+            const sizes = {};
+            let totalStock = 0;
             
-            sizeInputs.forEach(input => {
-                const quantity = parseInt(input.value) || 0;
-                const size = input.closest('.size-row').querySelector('input[type="text"]').value;
-                sizeData[size] = { quantity };
-                stock += quantity;
+            form.querySelectorAll('.size-quantity').forEach(input => {
+                const size = input.dataset.size;
+                const quantity = parseInt(input.value || 0);
+                if (size) {
+                    sizes[size] = quantity;
+                    totalStock += quantity;
+                }
             });
             
-            sizes = JSON.stringify(sizeData);
-            console.log('Size data:', sizes);
+            formData.set('sizes', JSON.stringify(sizes));
+            formData.set('stock_quantity', totalStock.toString());
+            formData.set('status', totalStock > 0 ? 'in_stock' : 'out_of_stock');
         } else {
-            stock = parseInt(formData.get('stock')) || 0;
+            const stock = parseInt(formData.get('stock') || 0);
+            formData.set('stock_quantity', stock.toString());
+            formData.set('status', stock > 0 ? 'in_stock' : 'out_of_stock');
+            formData.delete('sizes');
         }
 
-        if (stock < 0) {
-            throw new Error('Stock quantity cannot be negative');
+        // Handle image
+        const imageInput = form.querySelector('input[name="image"]');
+        const currentImage = form.querySelector('.image-preview img');
+        
+        if (imageInput.files.length > 0) {
+            // New image selected
+            formData.set('image', imageInput.files[0]);
+        } else if (isEdit && currentImage) {
+            // Keep existing image
+            const currentImagePath = currentImage.getAttribute('src');
+            if (currentImagePath && !currentImagePath.includes('default-product.jpg')) {
+                formData.set('image_path', currentImagePath.replace(/^\/+/, ''));
+            }
         }
 
-        // Create data object
-        const productData = {
-            name: name,
-            category: category,
-            price: price.toFixed(2),
-            stock_quantity: stock,
-            description: description
-        };
-
-        if (sizes) {
-            productData.sizes = sizes;
+        // Log FormData contents for debugging
+        console.log('FormData contents:');
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
         }
 
+        // For PUT requests, we need to add a special parameter to handle FormData
         if (isEdit) {
-            productData.id = form.dataset.editId;
+            formData.append('_method', 'PUT');
         }
 
-        // For PUT requests, send as JSON
-        if (isEdit) {
-            const response = await fetch('/admin/api/products.php', {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(productData)
-            });
+        // Send request
+        const response = await fetch('/admin/api/products.php', {
+            method: 'POST', // Always use POST for FormData
+            body: formData
+        });
 
-            const result = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(result.error || result.message || 'Failed to update product');
-            }
-            
-            if (result.success) {
-                showNotification('Success', 'Product updated successfully');
-                const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
-                if (modal) modal.hide();
-                await loadProducts();
-            }
-        } else {
-            // For POST requests, use FormData
-            const submitData = new FormData();
-            Object.entries(productData).forEach(([key, value]) => {
-                submitData.append(key, value);
-            });
-            
-            // Only append image for new products
-            if (image instanceof File && image.size > 0) {
-                submitData.append('image', image);
-            }
-
-            const response = await fetch('/admin/api/products.php', {
-                method: 'POST',
-                body: submitData
-            });
-
-            const result = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(result.error || result.message || 'Failed to create product');
-            }
-            
-            if (result.success) {
-                showNotification('Success', 'Product added successfully');
-                const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
-                if (modal) modal.hide();
-                await loadProducts();
-            }
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({ message: `Server error: ${response.status}` }));
+            throw new Error(errorData.message || `Server error: ${response.status}`);
         }
+
+        const result = await response.json();
+        if (!result.success) {
+            throw new Error(result.message || 'Failed to save product');
+        }
+
+        // Hide modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+        if (modal) {
+            modal.hide();
+            await new Promise(resolve => setTimeout(resolve, 300));
+        }
+
+        // Show success message and reload products
+        showNotification('Success', isEdit ? 'Product updated successfully' : 'Product added successfully');
+        await loadProducts();
+
     } catch (error) {
         console.error('Error in handleProductSubmit:', error);
-        showNotification('Error', error.message || 'Failed to save product');
+        showNotification('Error', error.message || 'Failed to save product', 'error');
     }
 }
 
@@ -447,12 +412,34 @@ function initializeEventListeners() {
         const exportModal = new bootstrap.Modal(document.getElementById('exportOptionsModal'));
         exportModal.show();
     });
+
+    // Pagination click handler using event delegation
+    document.querySelector('.pagination-section')?.addEventListener('click', async function(e) {
+        const pageLink = e.target.closest('.page-link');
+        if (!pageLink || pageLink.parentElement.classList.contains('disabled')) return;
+        
+        e.preventDefault();
+        const page = parseInt(pageLink.dataset.page);
+        if (page && page !== currentPage) {
+            currentPage = page;
+            await loadProducts();
+        }
+    });
+
+    // Items per page change handler using event delegation
+    document.querySelector('.pagination-section')?.addEventListener('change', async function(e) {
+        if (e.target.id === 'itemsPerPage') {
+            currentLimit = parseInt(e.target.value);
+            currentPage = 1; // Reset to first page when changing items per page
+            await loadProducts();
+        }
+    });
 }
 
 // Load products from API
 async function loadProducts() {
     try {
-        console.log('Loading products with filters:', {
+        console.log('Loading products with params:', {
             page: currentPage,
             limit: currentLimit,
             search: currentSearch,
@@ -460,7 +447,7 @@ async function loadProducts() {
             stock: currentStock,
             sort: currentSort
         });
-
+        
         const queryParams = new URLSearchParams({
             page: currentPage,
             limit: currentLimit,
@@ -470,48 +457,34 @@ async function loadProducts() {
             sort: currentSort
         });
 
-        const response = await fetch(`/admin/api/products.php?${queryParams}`);
-        
+        const response = await fetch(`/admin/api/products.php?${queryParams}`, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
         if (!response.ok) {
             console.error('API response not ok:', response.status, response.statusText);
             throw new Error('Network response was not ok');
         }
 
-        const result = await response.json();
-        console.log('API Response:', result);
+        const data = await response.json();
         
-        if (result.success) {
-            if (!result.data || !result.data.products) {
-                console.error('Invalid API response structure:', result);
-                throw new Error('Invalid API response structure');
-            }
-
-            // Process products and ensure sizes are properly handled
-            const processedProducts = result.data.products.map(product => {
-                if (product.category.includes('clothing')) {
-                    try {
-                        if (typeof product.sizes === 'string') {
-                            product.sizes = JSON.parse(product.sizes);
-                        } else if (!product.sizes) {
-                            product.sizes = {};
-                        }
-                    } catch (e) {
-                        console.error(`Error parsing sizes for product ${product.id}:`, e);
-                        product.sizes = {};
-                    }
-                }
-                return product;
-            });
-            
-            renderProducts(processedProducts);
-            updatePagination(result.data.pagination);
-        } else {
-            console.error('API returned error:', result.error);
-            showNotification('Error', result.error || 'Failed to load products', 'error');
+        if (!data.success) {
+            throw new Error(data.message || 'Failed to load products');
         }
+
+        // Render products and update pagination
+        renderProducts(data.data.products);
+        updatePagination(data.data.pagination);
+        
+        return data;
     } catch (error) {
         console.error('Error in loadProducts:', error);
         showNotification('Error', 'Failed to load products. Please try again.', 'error');
+        throw error;
     }
 }
 
@@ -520,59 +493,59 @@ function renderProducts(products) {
     console.log('Starting to render products:', products);
     const tbody = document.querySelector('.products-table tbody');
     if (!tbody) {
-        console.error('Products table tbody not found');
+        console.error('Table body not found');
         return;
     }
+
     tbody.innerHTML = '';
-    
+
     products.forEach(product => {
         console.log(`Rendering product ${product.id}:`, {
             name: product.name,
-            category: product.category,
-            sizes: product.sizes
+            stock: product.stock_quantity,
+            status: product.status,
+            sizes: product.sizes,
+            image: product.image
         });
 
-        let sizeDisplay = '';
-        let stockQuantity = 0;
-        
+        // Handle stock quantity display
+        let stockDisplay = '';
+
         if (product.category.includes('clothing')) {
-            console.log(`Processing sizes for clothing product ${product.id}:`, product.sizes);
-            try {
-                const sizes = product.sizes;
-                if (sizes) {
-                    // Define size order
-                    const sizeOrder = ['S', 'M', 'L', 'XL'];
-                    const sizeEntries = Object.entries(sizes)
-                        .sort(([a], [b]) => sizeOrder.indexOf(a) - sizeOrder.indexOf(b));
-                    
-                    if (sizeEntries.length > 0) {
-                        sizeDisplay = sizeEntries
-                            .map(([size, data]) => `${size}: ${data.quantity}`)
-                            .join('<br>');
-                        stockQuantity = sizeEntries.reduce((total, [_, data]) => total + data.quantity, 0);
-                    }
-                }
-                console.log(`Generated size display for product ${product.id}:`, sizeDisplay);
-            } catch (e) {
-                console.error(`Error processing sizes for product ${product.id}:`, e);
-                sizeDisplay = 'Error loading sizes';
+            if (product.sizes && typeof product.sizes === 'object') {
+                // Create size display string with stock for each size
+                stockDisplay = Object.entries(product.sizes)
+                    .map(([size, qty]) => `${size}: ${qty}`)
+                    .join('<br>');
             }
         } else {
-            stockQuantity = product.stock_quantity;
-            sizeDisplay = product.stock_quantity;
+            stockDisplay = `${product.stock_quantity}`;
         }
+
+        // Handle image display
+        let imageUrl = '/Images/default-product.jpg';
+        if (product.image) {
+            // Ensure the image path starts with a forward slash
+            imageUrl = product.image.startsWith('/') ? product.image : '/' + product.image;
+        }
+        const imageAlt = product.name ? `${product.name} image` : 'Product image';
 
         const row = `
             <tr data-product-id="${product.id}">
                 <td>${product.id}</td>
-                <td><img src="${product.image}" alt="${product.name}" class="product-thumbnail"></td>
+                <td>
+                    <img src="${imageUrl}" 
+                         alt="${imageAlt}" 
+                         class="product-thumbnail"
+                         onerror="this.src='/Images/default-product.jpg'">
+                </td>
                 <td>${product.name}</td>
                 <td>${formatCategory(product.category)}</td>
                 <td>$${parseFloat(product.price).toFixed(2)}</td>
-                <td>${sizeDisplay}</td>
+                <td>${stockDisplay}</td>
                 <td>
-                    <span class="status-badge ${getStockStatus(stockQuantity)}">
-                        ${determineStockStatus(stockQuantity)}
+                    <span class="status-badge ${getStockStatus(product.status)}">
+                        ${determineStockStatus(product.status)}
                     </span>
                 </td>
                 <td>
@@ -604,8 +577,30 @@ function updatePagination({ currentPage, totalPages, totalItems, limit }) {
         return;
     }
 
+    // Create wrapper div for pagination info and controls
+    const paginationWrapper = document.createElement('div');
+    paginationWrapper.className = 'd-flex justify-content-between align-items-center flex-wrap gap-3';
+
+    // Add pagination info
+    const startItem = (currentPage - 1) * limit + 1;
+    const endItem = Math.min(currentPage * limit, totalItems);
+    const paginationInfo = document.createElement('div');
+    paginationInfo.className = 'pagination-info';
+    paginationInfo.innerHTML = `
+        <span class="text-muted">
+            Showing ${startItem}-${endItem} of ${totalItems} items
+        </span>
+        <select class="form-select form-select-sm d-inline-block ms-2" style="width: auto;" id="itemsPerPage">
+            <option value="10" ${limit === 10 ? 'selected' : ''}>10 per page</option>
+            <option value="20" ${limit === 20 ? 'selected' : ''}>20 per page</option>
+            <option value="50" ${limit === 50 ? 'selected' : ''}>50 per page</option>
+            <option value="100" ${limit === 100 ? 'selected' : ''}>100 per page</option>
+        </select>
+    `;
+
+    // Create pagination list
     const pagination = document.createElement('ul');
-    pagination.className = 'pagination';
+    pagination.className = 'pagination mb-0';
 
     // Previous button
     const prevPage = Math.max(1, currentPage - 1);
@@ -617,11 +612,52 @@ function updatePagination({ currentPage, totalPages, totalItems, limit }) {
         </li>
     `;
 
+    // Calculate page range to show
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+    
+    // Adjust if we're near the end
+    if (endPage - startPage < 4) {
+        startPage = Math.max(1, endPage - 4);
+    }
+
+    // First page and ellipsis if needed
+    if (startPage > 1) {
+        pagination.innerHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="1">1</a>
+            </li>
+        `;
+        if (startPage > 2) {
+            pagination.innerHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            `;
+        }
+    }
+
     // Page numbers
-    for (let i = 1; i <= totalPages; i++) {
+    for (let i = startPage; i <= endPage; i++) {
         pagination.innerHTML += `
             <li class="page-item ${i === parseInt(currentPage) ? 'active' : ''}">
                 <a class="page-link" href="#" data-page="${i}">${i}</a>
+            </li>
+        `;
+    }
+
+    // Last page and ellipsis if needed
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            pagination.innerHTML += `
+                <li class="page-item disabled">
+                    <span class="page-link">...</span>
+                </li>
+            `;
+        }
+        pagination.innerHTML += `
+            <li class="page-item">
+                <a class="page-link" href="#" data-page="${totalPages}">${totalPages}</a>
             </li>
         `;
     }
@@ -636,28 +672,59 @@ function updatePagination({ currentPage, totalPages, totalItems, limit }) {
         </li>
     `;
 
-    console.log('Generated pagination HTML:', pagination.innerHTML);
+    // Add components to wrapper
+    const paginationNav = document.createElement('div');
+    paginationNav.appendChild(pagination);
+    paginationWrapper.appendChild(paginationInfo);
+    paginationWrapper.appendChild(paginationNav);
+
+    // Clear and append to container
     paginationContainer.innerHTML = '';
-    paginationContainer.appendChild(pagination);
+    paginationContainer.appendChild(paginationWrapper);
 }
 
-// Helper functions
+// Format category display
 function formatCategory(category) {
-    return category.split('-').map(word => 
-        word.charAt(0).toUpperCase() + word.slice(1)
-    ).join(' ');
+    if (!category) return 'N/A';
+    
+    const categoryMap = {
+        'plush': 'Plush Toys',
+        'cards': 'Pokemon Cards',
+        'accessories': 'Accessories',
+        'clothing-men': "Men",
+        'clothing-women': "Women",
+        'clothing-unisex': 'Unisex'
+    };
+    
+    return categoryMap[category] || category;
 }
 
-function getStockStatus(quantity) {
-    if (quantity <= 0) return 'cancelled';
-    if (quantity <= 10) return 'pending';
-    return 'delivered';
+// Get stock status class
+function getStockStatus(status) {
+    switch (status) {
+        case 'out_of_stock':
+            return 'text-danger';
+        case 'low_stock':
+            return 'text-warning';
+        case 'in_stock':
+            return 'text-success';
+        default:
+            return 'text-muted';
+    }
 }
 
-function determineStockStatus(stockQuantity) {
-    if (stockQuantity <= 0) return 'Out of Stock';
-    if (stockQuantity <= 10) return 'Low Stock';
-    return 'In Stock';
+// Determine stock status text
+function determineStockStatus(status) {
+    switch (status) {
+        case 'out_of_stock':
+            return 'Out of Stock';
+        case 'low_stock':
+            return 'Low Stock';
+        case 'in_stock':
+            return 'In Stock';
+        default:
+            return 'Unknown';
+    }
 }
 
 function showNotification(title, messages = [], type = 'success') {
@@ -764,252 +831,138 @@ function debounce(func, wait) {
     };
 }
 
-// Delete Product Function
-async function deleteProduct(productId) {
-    try {
-        if (!confirm('Are you sure you want to delete this product?')) {
-            return;
-        }
-        
-        const response = await fetch(`/admin/api/products.php?id=${productId}`, {
-            method: 'DELETE'
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            throw new Error(result.error || 'Failed to delete product');
-        }
-
-        if (result.success) {
-            showNotification('Success', 'Product deleted successfully', 'success');
-            await loadProducts(); // Reload the products list
-        } else {
-            throw new Error(result.error || 'Failed to delete product');
-        }
-    } catch (error) {
-        console.error('Error deleting product:', error);
-        showNotification('Error', error.message || 'Failed to delete product', 'error');
-    }
-}
-
 // Edit Product Function
 async function editProduct(productId) {
     console.log('Editing product:', productId);
     try {
-        const response = await fetch(`/admin/api/products.php?id=${productId}`);
-        const data = await response.json();
-        
-        if (data.success) {
-            const product = data.data;
-            console.log('Product data received:', product);
-
-            // Show modal first
-            const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
-            modal.show();
-
-            // Get form elements after modal is shown
-            const form = document.getElementById('addProductForm');
-            if (!form) {
-                throw new Error('Edit form not found');
+        // Get product details by ID
+        const response = await fetch(`/admin/api/products.php?id=${productId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
             }
+        });
 
-            // Update modal title and button
-            document.querySelector('#addProductModal .modal-title').textContent = 'Edit Product';
-            document.querySelector('#addProductModal .btn-primary').textContent = 'Update Product';
+        if (!response.ok) {
+            throw new Error(`Failed to fetch product: ${response.status}`);
+        }
 
-            // Set form to edit mode
-            form.dataset.editId = product.id;
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.message || 'Failed to fetch product details');
+        }
 
-            // Fill form data
-            form.querySelector('[name="name"]').value = product.name;
-            form.querySelector('[name="price"]').value = product.price;
-            form.querySelector('[name="description"]').value = product.description;
+        const product = data.data;
+        console.log('Product data received:', product);
 
-            // Show current product image
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('addProductModal'));
+        modal.show();
+
+        // Get form elements
+        const form = document.getElementById('addProductForm');
+        if (!form) {
+            throw new Error('Edit form not found');
+        }
+
+        // Set form to edit mode with product ID
+        form.setAttribute('data-edit-id', product.id);
+
+        // Fill form data
+        form.querySelector('[name="name"]').value = product.name || '';
+        form.querySelector('[name="price"]').value = product.price || '';
+        form.querySelector('[name="description"]').value = product.description || '';
+        
+        // Set category and handle category-specific fields
+        const categorySelect = form.querySelector('[name="category"]');
+        categorySelect.value = product.category || '';
+        handleCategoryChange(product.category);
+
+        // Handle stock quantity based on category
+        const stockInput = form.querySelector('[name="stock"]');
+        const sizeInputs = form.querySelectorAll('.size-quantity');
+        
+        if (product.category.includes('clothing')) {
+            // For clothing, handle sizes
+            if (product.sizes) {
+                let sizes;
+                try {
+                    sizes = typeof product.sizes === 'string' ? JSON.parse(product.sizes) : product.sizes;
+                } catch (e) {
+                    console.error('Error parsing sizes:', e);
+                    sizes = {};
+                }
+                
+                sizeInputs.forEach(input => {
+                    const size = input.dataset.size;
+                    input.value = sizes[size] || 0;
+                });
+            } else {
+                sizeInputs.forEach(input => input.value = '0');
+            }
+        } else {
+            // For non-clothing items, use stock_quantity directly
+            stockInput.value = product.stock_quantity || 0;
+        }
+
+        // Show current product image
+        const imagePreviewContainer = form.querySelector('.image-preview-container');
+        if (imagePreviewContainer) {
+            let imageUrl = product.image || '/Images/default-product.jpg';
+            imageUrl = imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl;
+            
             const imagePreview = document.createElement('div');
             imagePreview.className = 'image-preview mt-2';
             imagePreview.innerHTML = `
-                <img src="${product.image}" alt="Current Image" style="max-width: 200px; max-height: 200px; object-fit: contain;">
+                <img src="${imageUrl}" 
+                     alt="Current Image" 
+                     style="max-width: 200px; max-height: 200px; object-fit: contain;"
+                     onerror="this.src='/Images/default-product.jpg'">
                 <p class="text-muted small mt-1">Current image. Upload a new one to change it.</p>
             `;
             
-            // Remove existing preview if any
-            const existingPreview = form.querySelector('.image-preview');
-            if (existingPreview) {
-                existingPreview.remove();
-            }
-            
-            // Find the image input and its container
-            const imageInput = form.querySelector('input[name="image"]');
-            if (imageInput) {
-                imageInput.value = ''; // Reset the file input
-                
-                // Find the appropriate container
-                const container = imageInput.closest('.mb-3') || imageInput.closest('.form-group') || imageInput.parentElement;
-                
-                if (container) {
-                    console.log('Found container for image preview:', container);
-                    container.appendChild(imagePreview);
-                } else {
-                    console.error('Could not find appropriate container for image preview');
-                    showNotification('Error', 'Could not display image preview', 'error');
-                }
-            } else {
-                console.error('Image input not found');
-                showNotification('Error', 'Could not find image input', 'error');
-            }
-
-            // Handle category and size management
-            const categorySelect = form.querySelector('#productCategory');
-            const stockInput = form.querySelector('#stockInputContainer');
-            const sizeSection = form.querySelector('#sizeManagementSection');
-
-            if (categorySelect) {
-                categorySelect.value = product.category;
-                console.log('Setting category:', product.category);
-                
-                // Reset all sections first
-                stockInput.style.display = 'none';
-                sizeSection.style.display = 'none';
-                console.log('Reset sections - stockInput and sizeSection hidden');
-
-                try {
-                    let sizes = product.sizes;
-                    console.log('Original sizes data:', sizes);
-                    
-                    if (typeof sizes === 'string') {
-                        console.log('Parsing sizes string:', sizes);
-                        sizes = JSON.parse(sizes);
-                        console.log('Parsed sizes:', sizes);
-                    }
-
-                    // Reset all size quantities first
-                    const sizeInputs = form.querySelectorAll('.size-quantity');
-                    console.log('Found size inputs:', sizeInputs.length);
-                    sizeInputs.forEach(input => {
-                        input.value = 0;
-                        console.log('Reset size input:', input.name, 'to 0');
-                    });
-
-                    if (product.category.includes('clothing')) {
-                        console.log('Product is clothing category');
-                        stockInput.style.display = 'none';
-                        sizeSection.style.display = 'block';
-                        
-                        // Map size keys to indices
-                        const sizeToIndex = { 'S': 0, 'M': 1, 'L': 2, 'XL': 3 };
-                        
-                        Object.entries(sizes).forEach(([size, data]) => {
-                            console.log('Processing size:', size, 'with data:', data);
-                            const index = sizeToIndex[size];
-                            if (index !== undefined) {
-                                const input = form.querySelector(`input[name="sizes[${index}][quantity]"]`);
-                                console.log('Found input for size', size, ':', input ? 'yes' : 'no');
-                                if (input) {
-                                    input.value = data.quantity || 0;
-                                    console.log('Set quantity for size', size, 'to', data.quantity || 0);
-                                }
-                            }
-                        });
-                    } else {
-                        console.log('Product is not clothing category');
-                        stockInput.style.display = 'block';
-                        sizeSection.style.display = 'none';
-                        const stockQuantityInput = form.querySelector('[name="stock"]');
-                        if (stockQuantityInput) {
-                            console.log('Setting non-clothing stock quantity:', product.stock_quantity || 0);
-                            stockQuantityInput.value = product.stock_quantity || 0;
-                        }
-                    }
-                } catch (e) {
-                    console.error('Error setting sizes:', e);
-                    console.error('Error details:', {
-                        sizes: product.sizes,
-                        category: product.category,
-                        stock: product.stock_quantity
-                    });
-                    showNotification('Error', 'Failed to load product sizes', 'error');
-                }
-            }
-        } else {
-            throw new Error(data.error || 'Failed to load product data');
+            imagePreviewContainer.innerHTML = '';
+            imagePreviewContainer.appendChild(imagePreview);
         }
+
     } catch (error) {
-        console.error('Error fetching product data:', error);
-        showNotification('Error', error.message || 'Failed to load product data', 'error');
+        console.error('Error in editProduct:', error);
+        showNotification('Error', error.message || 'Failed to edit product', 'error');
     }
 }
 
-// Save Product
-async function saveProduct(formData, form) {
+// Delete Product Function
+async function deleteProduct(productId) {
+    console.log('Deleting product:', productId);
+    
+    if (!confirm('Are you sure you want to delete this product?')) {
+        return;
+    }
+
     try {
-        console.log('Starting to save product');
-        
-        // Log all form data being sent
-        console.log('Form data being sent to server:');
-        for (let [key, value] of formData.entries()) {
-            if (value instanceof File) {
-                console.log(`${key}:`, `File: ${value.name} (${value.type}, ${value.size} bytes)`);
-            } else {
-                console.log(`${key}:`, value);
-            }
-        }
-
-        // Send request
-        const response = await fetch('/admin/api/products.php', {
-            method: form.dataset.editId ? 'PUT' : 'POST',
-            body: formData
+        const response = await fetch(`/admin/api/products.php`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id: productId })
         });
 
-        console.log('API Response status:', response.status);
-        console.log('Response headers:', {
-            type: response.headers.get('content-type'),
-            length: response.headers.get('content-length')
-        });
-        
-        // Check if response has content
-        const text = await response.text();
-        console.log('Raw response:', text);
-        
-        let result;
-        try {
-            result = text ? JSON.parse(text) : {};
-            console.log('Parsed API Response:', result);
-        } catch (e) {
-            console.error('Failed to parse response:', e);
-            throw new Error('Invalid server response format');
-        }
+        const data = await response.json();
         
         if (!response.ok) {
-            throw new Error(result.error || result.message || 'Failed to save product');
+            throw new Error(data.message || 'Failed to delete product');
         }
 
-        if (result.success) {
-            console.log('Product saved successfully');
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
-            if (modal) {
-                modal.hide();
-            }
-            
-            // Reset form
-            form.reset();
-            form.removeAttribute('data-edit-id');
-            const imagePreview = form.querySelector('.image-preview');
-            if (imagePreview) {
-                imagePreview.remove();
-            }
-            
-            // Show success message and reload products
-            showNotification('Success', form.dataset.editId ? 'Product updated successfully' : 'Product added successfully', 'success');
-            await loadProducts();
+        if (data.success) {
+            showNotification('Success', 'Product deleted successfully');
+            await loadProducts(); // Reload the products list
         } else {
-            throw new Error(result.error || result.message || 'Failed to save product');
+            throw new Error(data.message || 'Failed to delete product');
         }
     } catch (error) {
-        console.error('Error in saveProduct:', error);
-        showNotification('Error', error.message || 'Failed to save product', 'error');
+        console.error('Error in deleteProduct:', error);
+        showNotification('Error', error.message || 'Failed to delete product');
     }
 }
 
@@ -1084,7 +1037,7 @@ async function handleExport() {
                 },
                 'Stock': { v: totalStock, t: 'n', s: { alignment: { horizontal: 'center' } } },
                 'Status': {
-                    v: determineStockStatus(totalStock),
+                    v: determineStockStatus(product.status),
                     t: 's',
                     s: {
                         alignment: { horizontal: 'center' },

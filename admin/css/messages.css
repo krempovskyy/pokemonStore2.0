@@ -1,0 +1,635 @@
+/* Orders Management Styles */
+
+/* Filters Section */
+.filters-section {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-box input {
+    padding-left: 35px;
+}
+
+/* Orders Section */
+.orders-section {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+
+.table th {
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* Customer Info */
+.customer-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.customer-name {
+    font-weight: 500;
+    color: #212529;
+}
+
+.customer-email {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Order Date */
+.order-date {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-date .date {
+    font-weight: 500;
+}
+
+.order-date .time {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Order Products */
+.order-products {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.product-count {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Status Badges */
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+}
+
+.badge.bg-warning {
+    color: #000;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-buttons .btn {
+    padding: 0.25rem 0.5rem;
+}
+
+/* Order Details Modal */
+.order-info h6 {
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+.order-info p {
+    margin-bottom: 0.5rem;
+    color: #6c757d;
+}
+
+.order-items h6 {
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+/* Timeline */
+.timeline {
+    position: relative;
+    padding-left: 2rem;
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.timeline-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 0.5rem;
+    bottom: 0;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.timeline-point {
+    position: absolute;
+    left: -1.75rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+}
+
+.timeline-content {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+}
+
+.timeline-content h6 {
+    margin-bottom: 0.5rem;
+    color: #212529;
+}
+
+.timeline-content p {
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+/* Edit Order Modal */
+.modal-content {
+    border: none;
+    border-radius: 12px;
+}
+
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    border-radius: 12px 12px 0 0;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    border-radius: 0 0 12px 12px;
+}
+
+
+.filters-section,
+.products-table,
+.pagination-section {
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Pagination */
+.pagination-section {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.pagination {
+    margin: 0;
+    gap: 0.3rem;
+}
+
+.pagination .page-item .page-link {
+    border: none;
+    padding: 0.5rem 0.75rem;
+    color: #6c757d;
+    border-radius: 6px;
+    min-width: 36px;
+    text-align: center;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #f8f9fa;
+    color: #8860d0;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #8860d0;
+    color: white;
+    box-shadow: 0 2px 6px rgba(161, 13, 253, 0.25);
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #adb5bd;
+    background-color: transparent;
+    cursor: not-allowed;
+}
+
+/* Table Responsive Styles */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+}
+
+.orders-table {
+    min-width: 900px; /* Minimum width to ensure proper display */
+}
+
+.orders-table th,
+.orders-table td {
+    white-space: nowrap;
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+}
+
+/* Order ID column */
+.orders-table td:first-child {
+    min-width: 100px;
+}
+
+/* Customer column */
+.orders-table td:nth-child(2) {
+    min-width: 200px;
+}
+
+/* Products column */
+.orders-table td:nth-child(3) {
+    min-width: 250px;
+    white-space: normal;
+}
+
+/* Total column */
+.orders-table td:nth-child(4) {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Date column */
+.orders-table td:nth-child(5) {
+    min-width: 140px;
+}
+
+/* Status columns */
+.orders-table td:nth-child(6),
+.orders-table td:nth-child(7) {
+    min-width: 120px;
+    text-align: center;
+}
+
+/* Actions column */
+.orders-table td:last-child {
+    min-width: 100px;
+}
+
+/* Product list in table */
+.product-list {
+    max-height: 60px;
+    overflow-y: auto;
+    font-size: 0.875rem;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    /* Content Header */
+    .content-header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .content-header .header-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    /* Search and Filters */
+    .search-box {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .filters-section {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filters-section select {
+        width: 100%;
+    }
+
+    /* Table Adjustments */
+    .table-responsive {
+        margin: 0 -0.5rem;
+        padding: 0 0.5rem;
+    }
+
+    .orders-table th,
+    .orders-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .customer-info {
+        gap: 0.25rem;
+    }
+
+    .product-list {
+        max-height: 50px;
+        font-size: 0.8125rem;
+    }
+
+    .action-buttons {
+        gap: 0.25rem;
+    }
+
+    .action-buttons .btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+    }
+
+    .badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    /* Modal Adjustments */
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+
+    .modal-body {
+        padding: 1rem;
+    }
+
+    .order-items {
+        max-height: 300px;
+    }
+
+    .order-item {
+        padding: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .order-item-details {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Further adjustments for extra small devices */
+    .content-header h1 {
+        font-size: 1.25rem;
+    }
+
+    .orders-table {
+        min-width: 700px; /* Slightly smaller minimum width */
+    }
+
+    .orders-table th,
+    .orders-table td {
+        font-size: 0.8125rem;
+        padding: 0.5rem 0.4rem;
+    }
+
+    .customer-name {
+        font-size: 0.875rem;
+    }
+
+    .customer-email {
+        font-size: 0.75rem;
+    }
+
+    .product-list {
+        max-height: 40px;
+        font-size: 0.75rem;
+    }
+
+    .pagination .page-link {
+        padding: 0.25rem 0.5rem;
+        min-width: 30px;
+    }
+
+    /* Order Details Modal */
+    .order-summary {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .order-summary > div {
+        width: 100%;
+    }
+
+    .customer-info,
+    .shipping-info,
+    .payment-info {
+        padding: 0.5rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .menu-toggle,
+    .filters-section,
+    .action-buttons,
+    .pagination-section {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    .table td,
+    .table th {
+        padding: 0.5rem !important;
+    }
+
+    .order-details {
+        break-inside: avoid;
+    }
+}
+
+/* Animation */
+.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    transition: transform 0.2s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+}
+
+/* Messages Page Styles */
+
+/* Content Header */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Search Box */
+.search-box {
+    position: relative;
+}
+
+.search-box i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-box input {
+    padding-left: 35px;
+}
+
+/* Messages Table */
+.messages-table {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.messages-table thead th {
+    background: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    color: #495057;
+    font-weight: 600;
+}
+
+.messages-table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.messages-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.messages-table td {
+    vertical-align: middle;
+}
+
+/* Message Status Badge */
+.badge {
+    padding: 0.5em 0.75em;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+/* Action Buttons */
+.btn-group .btn {
+    padding: 0.5rem 1rem;
+    font-weight: 500;
+}
+
+.btn-group .btn.active {
+    background-color: #0d6efd;
+    color: #fff;
+}
+
+.unread-count {
+    margin-left: 5px;
+}
+
+/* Message Modal */
+.message-info p {
+    margin-bottom: 0.5rem;
+}
+
+.message-info strong {
+    color: #495057;
+    min-width: 80px;
+    display: inline-block;
+}
+
+.message-content {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+    white-space: pre-wrap;
+}
+
+/* Pagination */
+.pagination-container {
+    margin-top: 2rem;
+}
+
+.pagination .page-link {
+    padding: 0.5rem 1rem;
+    color: #0d6efd;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    pointer-events: none;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .btn-group {
+        width: 100%;
+        display: flex;
+    }
+
+    .btn-group .btn {
+        flex: 1;
+    }
+
+    .messages-table {
+        font-size: 0.875rem;
+    }
+
+    .messages-table td,
+    .messages-table th {
+        padding: 0.5rem;
+    }
+
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+    }
+} 

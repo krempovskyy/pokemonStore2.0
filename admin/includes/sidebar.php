@@ -22,6 +22,11 @@
                 <i class="fas fa-users"></i>
                 <span>Customers</span>
             </a>
+            <a href="/admin/messages" class="menu-item <?php echo ($currentPage === 'messages') ? 'active' : ''; ?>">
+                <i class="fas fa-envelope"></i>
+                <span>Messages</span>
+                <span class="badge bg-danger unread-count" style="display: none;"></span>
+            </a>
         </div>
 
         <!-- User Badge -->

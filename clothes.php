@@ -1,10 +1,12 @@
 <?php
-$title = "Pokemon Store - Clothes & Accessories";
-$md = "Explore your collection of Pokemon fashion and style";
-include 'includes/header.php';
-include 'includes/db.php';
+session_start();
+require_once __DIR__ . '/includes/config/db.php';
+require_once __DIR__ . '/includes/helpers/image_helper.php';
 
-<<<<<<< HEAD
+$title = "Pokemon Store - Clothing";
+$md = "Explore our collection of Pokemon-themed clothing and accessories";
+include 'includes/header.php';
+
 // Enable error logging
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -13,208 +15,76 @@ ini_set('error_log', __DIR__ . '/logs/php_errors.log');
 
 error_log("Starting clothes.php page load");
 
-// Get database connection
-$pdo = getDBConnection();
-if (!$pdo) {
-    error_log("Failed to connect to database");
-} else {
-    error_log("Successfully connected to database");
-}
-
 // Get products from database
 $products = [];
 try {
     $query = "
         SELECT p.*
         FROM products p 
-        WHERE p.category IN ('accessories', 'clothing-women', 'clothing-women', 'clothing-unisex')
+        WHERE p.category IN ('clothing-men', 'clothing-women', 'clothing-unisex', 'accessories')
         AND p.status = 'in_stock'
         ORDER BY p.created_at DESC
     ";
     error_log("Executing query: " . $query);
     
-    $stmt = $pdo->prepare($query);
-    $stmt->execute();
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = executeQuery($query);
     
-    error_log("Query executed. Found " . count($products) . " products");
-    if (empty($products)) {
-        // Let's check what categories exist in the database
-        $categoryQuery = "SELECT DISTINCT category FROM products";
-        $categoryStmt = $pdo->query($categoryQuery);
-        $categories = $categoryStmt->fetchAll(PDO::FETCH_COLUMN);
-        error_log("Available categories in database: " . implode(", ", $categories));
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            // Get image URLs
+            $row['image'] = getProductImageUrl($row['image']);
+            $row['gallery'] = getGalleryUrls($row['gallery'], $row['image']);
+            
+            // Parse sizes JSON
+            if (!empty($row['sizes'])) {
+                $row['sizes'] = json_decode($row['sizes'], true) ?? [];
+            } else {
+                $row['sizes'] = [];
+            }
+            
+            $products[] = $row;
+        }
         
-        // Check total number of products
-        $countQuery = "SELECT COUNT(*) FROM products";
-        $countStmt = $pdo->query($countQuery);
-        $totalProducts = $countStmt->fetchColumn();
-        error_log("Total products in database: " . $totalProducts);
+        error_log("Query executed. Found " . count($products) . " products");
         
-        // Check active products
-        $activeQuery = "SELECT COUNT(*) FROM products WHERE status = 'in_stock'";
-        $activeStmt = $pdo->query($activeQuery);
-        $activeProducts = $activeStmt->fetchColumn();
-        error_log("Total in_stock products: " . $activeProducts);
+        if (empty($products)) {
+            // Let's check what categories exist in the database
+            $categoryQuery = "SELECT DISTINCT category FROM products";
+            $categoryResult = executeQuery($categoryQuery);
+            $categories = [];
+            if ($categoryResult) {
+                while ($row = $categoryResult->fetch_assoc()) {
+                    $categories[] = $row['category'];
+                }
+            }
+            error_log("Available categories in database: " . implode(", ", $categories));
+            
+            // Check total number of products
+            $countQuery = "SELECT COUNT(*) as total FROM products";
+            $countResult = executeQuery($countQuery);
+            $totalProducts = $countResult ? $countResult->fetch_assoc()['total'] : 0;
+            error_log("Total products in database: " . $totalProducts);
+            
+            // Check active products
+            $activeQuery = "SELECT COUNT(*) as total FROM products WHERE status = 'in_stock'";
+            $activeResult = executeQuery($activeQuery);
+            $activeProducts = $activeResult ? $activeResult->fetch_assoc()['total'] : 0;
+            error_log("Total in_stock products: " . $activeProducts);
+        } else {
+            error_log("Sample product data: " . print_r($products[0], true));
+        }
     } else {
-        error_log("Sample product data: " . print_r($products[0], true));
+        error_log("Failed to execute query");
     }
-
-    // Process gallery images
-    foreach ($products as &$product) {
-        $product['gallery'] = [$product['image']];
-        error_log("Product ID {$product['id']} using main image for gallery");
-    }
-} catch (PDOException $e) {
+} catch (Exception $e) {
     error_log("Database error: " . $e->getMessage());
-    error_log("SQL State: " . $e->getCode());
     $products = []; // Empty array if error occurs
 }
-=======
-// Define products array first
-$products = [
-    [
-        'id' => 2001,
-        'name' => 'Crop top',
-        'price' => 26.99,
-        'category' => 'Women',
-        'image' => 'images/CROP TOP.png',
-        'gallery' => [
-            'images/CROP TOP.png'
-        ],
-        'sizes' => ['XS', 'S', 'M', 'L', 'XL']
-    ],
-    [
-        'id' => 2002,
-        'name' => 'Tank Top',
-        'price' => 29.99,
-        'category' => 'Women',
-        'image' => 'images/TANK TOP.png',
-        'gallery' => [
-            'images/TANK TOP.png'
-        ],
-        'sizes' => ['XS', 'S', 'M', 'L', 'XL']
-    ],
-    [
-        'id' => 2003,
-        'name' => 'Hoodie',
-        'price' => 49.99,
-        'category'=> 'Women',
-        'image' => 'images/HOODIE WOMAN.png',
-        'gallery' => [
-            'images/HOODIE WOMAN.png'
-        ],
-        'sizes' => ['XS', 'S', 'M', 'L', 'XL']
-    ],
-    [
-        'id' => 2004,
-        'name' => 'Jacket',
-        'price' => 39.99,
-        'category'=> 'Men',
-        'image' => 'images/JACKET MAN.png',
-        'gallery' => [
-            'images/JACKET MAN.png'
-        ],
-        'sizes' => ['S', 'M', 'L', 'XL', 'XXL']
-    ],
-    [
-        'id' => 2005,
-        'name' => 'Hoodie',
-        'price' => 49.99,
-        'category'=> 'Men',
-        'image' => 'images/HOODIE MAN.png',
-        'gallery' => [
-            'images/HOODIE MAN.png'
-        ],
-        'sizes' => ['S', 'M', 'L', 'XL', 'XXL']
-    ],
-    [
-        'id' => 2006,
-        'name' => 'Sweater',
-        'price' => 59.99,
-        'category'=> 'Men',
-        'image' => 'images/SWEATER MAN.png',
-        'gallery' => [
-            'images/SWEATER MAN.png'
-        ],
-        'sizes' => ['S', 'M', 'L', 'XL', 'XXL']
-    ],
-    [
-        'id' => 2007,
-        'name' => 'Hat',
-        'price' => 19.99,
-        'category'=> 'Unisex',
-        'image' => 'images/UNI HAT.png',
-        'gallery' => [
-            'images/UNI HAT.png'
-        ],
-        'sizes' => ['S', 'M', 'L']
-    ],
-    [
-        'id' => 2008,
-        'name' => 'T-Shirt',
-        'price' => 19.99,
-        'category'=> 'Unisex',
-        'image' => 'images/T SHIRT MEN.png',
-        'gallery' => [
-            'images/T SHIRT MEN.png'
-        ],
-        'sizes' => ['XS', 'S', 'M', 'L', 'XL', 'XXL']
-    ],
-    [
-        'id' => 2009,
-        'name' => 'Gloves',
-        'price' => 9.99,
-        'category'=> 'Unisex',
-        'image' => 'images/GLOVES UNI.png',
-        'gallery' => [
-            'images/GLOVES UNI.png'
-        ],
-        'sizes' => ['S/M', 'L/XL']
-    ],
-    [
-        'id' => 2010,
-        'name' => 'Multi Purposes Tote',
-        'price' => 29.99,
-        'category'=> 'Unisex',
-        'image' => 'images/TOTE.png',
-        'gallery' => [
-            'images/TOTE.png'
-        ],
-        'sizes' => ['One Size']
-    ],
-    [
-        'id' => 2011,
-        'name' => 'Earbuds Case',
-        'price' => 19.99,
-        'category'=> 'Unisex',
-        'image' => 'images/CASE EARBUDS.png',
-        'gallery' => [
-            'images/CASE EARBUDS.png'
-        ],
-        'sizes' => ['One Size']
-    ],
-    [
-        'id' => 2012,
-        'name' => 'IP Shock Case',
-        'price' => 19.99,
-        'category'=> 'Unisex',
-        'image' => 'images/SHOCK CASE.png',
-        'gallery' => [
-            'images/SHOCK CASE.png'
-        ],
-        'sizes' => ['One Size']
-    ]
-];
->>>>>>> 797c9740154f5edab5c37c203b231323b8cd208e
 ?>
 
 <link href="css/style.css" rel="stylesheet">
 <link href="css/products.css" rel="stylesheet">
 <link href="css/modal.css" rel="stylesheet">
-<script src="js/cart-manager.js" defer></script>
-<script src="js/cart.js" defer></script>
-<script src="js/products.js" defer></script>
 
 <main>
     <div class="container">
@@ -243,7 +113,11 @@ $products = [
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" value="unisex" id="unisex">
-                            <label class="form-check-label" for="women">Unisex</label>
+                            <label class="form-check-label" for="unisex">Unisex</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="accessories" id="accessories">
+                            <label class="form-check-label" for="accessories">Accessories</label>
                         </div>
                     </div>
                     
@@ -293,12 +167,12 @@ $products = [
                                     'id' => $product['id'],
                                     'name' => $product['name'],
                                     'price' => (float)$product['price'],
-                                    'size' => $product['size'],
                                     'category' => $product['category'],
                                     'image' => $product['image'],
                                     'gallery' => $product['gallery'],
                                     'description' => $product['description'],
-                                    'stock_quantity' => (int)$product['stock_quantity']
+                                    'stock_quantity' => (int)$product['stock_quantity'],
+                                    'sizes' => $product['sizes']
                                 ];
                                 
                                 // Encode product data for HTML attribute
@@ -306,7 +180,7 @@ $products = [
                             ?>
                                 <div class="col-12 col-md-6 col-lg-4">
                                     <div class="product-card" data-product="<?php echo $productJson; ?>">
-                                        <div class="product-badge"><?php echo htmlspecialchars($product['category']); ?></div>
+                                        <div class="product-badge" data-category="<?php echo htmlspecialchars($product['category']); ?>"></div>
                                         <div class="img-container">
                                             <img src="<?php echo htmlspecialchars($product['image']); ?>" 
                                                  alt="<?php echo htmlspecialchars($product['name']); ?>">

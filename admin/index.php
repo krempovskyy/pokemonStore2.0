@@ -6,7 +6,7 @@ checkAuth();
 $currentPage = 'dashboard';
 
 // Get database connection
-$pdo = getDBConnection();
+$conn = getDBConnection();
 
 // Get statistics
 $stats = [
@@ -18,23 +18,27 @@ $stats = [
 
 try {
     // Total Orders
-    $stmt = $pdo->query("SELECT COUNT(*) FROM orders");
-    $stats['orders'] = $stmt->fetchColumn();
+    $result = mysqli_query($conn, "SELECT COUNT(*) as count FROM orders");
+    $row = mysqli_fetch_assoc($result);
+    $stats['orders'] = $row['count'];
 
     // Total Revenue
-    $stmt = $pdo->query("SELECT SUM(total_amount) FROM orders WHERE status != 'cancelled'");
-    $stats['revenue'] = $stmt->fetchColumn() ?: 0;
+    $result = mysqli_query($conn, "SELECT SUM(total_amount) as total FROM orders WHERE status != 'cancelled'");
+    $row = mysqli_fetch_assoc($result);
+    $stats['revenue'] = $row['total'] ?: 0;
 
     // Total Customers
-    $stmt = $pdo->query("SELECT COUNT(*) FROM users WHERE role = 'customer' AND status = 'active'");
-    $stats['customers'] = $stmt->fetchColumn();
+    $result = mysqli_query($conn, "SELECT COUNT(*) as count FROM users WHERE role = 'customer' AND status = 'active'");
+    $row = mysqli_fetch_assoc($result);
+    $stats['customers'] = $row['count'];
 
     // Total Products
-    $stmt = $pdo->query("SELECT COUNT(*) FROM products");
-    $stats['products'] = $stmt->fetchColumn();
+    $result = mysqli_query($conn, "SELECT COUNT(*) as count FROM products");
+    $row = mysqli_fetch_assoc($result);
+    $stats['products'] = $row['count'];
 
     // Get recent orders
-    $stmt = $pdo->query("
+    $result = mysqli_query($conn, "
         SELECT o.*, 
                CONCAT(u.first_name, ' ', u.last_name) as customer_name,
                GROUP_CONCAT(CONCAT(oi.quantity, 'x ', p.name) SEPARATOR ', ') as product_list
@@ -46,8 +50,11 @@ try {
         ORDER BY o.created_at DESC
         LIMIT 5
     ");
-    $recentOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
+    $recentOrders = [];
+    while ($row = mysqli_fetch_assoc($result)) {
+        $recentOrders[] = $row;
+    }
+} catch (Exception $e) {
     error_log("Dashboard error: " . $e->getMessage());
 }
 
@@ -61,55 +68,59 @@ $trends = [
 
 try {
     // Orders trend
-    $stmt = $pdo->query("
+    $result = mysqli_query($conn, "
         SELECT 
             (SELECT COUNT(*) FROM orders WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as current_month,
             (SELECT COUNT(*) FROM orders WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH) 
              AND created_at < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as last_month
     ");
-    $orderCounts = $stmt->fetch(PDO::FETCH_ASSOC);
+    $orderCounts = mysqli_fetch_assoc($result);
     if ($orderCounts['last_month'] > 0) {
         $trends['orders'] = (($orderCounts['current_month'] - $orderCounts['last_month']) / $orderCounts['last_month']) * 100;
     }
 
     // Revenue trend
-    $stmt = $pdo->query("
+    $result = mysqli_query($conn, "
         SELECT 
             (SELECT SUM(total_amount) FROM orders WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH) 
              AND status != 'cancelled') as current_month,
             (SELECT SUM(total_amount) FROM orders WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH) 
              AND created_at < DATE_SUB(CURDATE(), INTERVAL 1 MONTH) AND status != 'cancelled') as last_month
     ");
-    $revenueCounts = $stmt->fetch(PDO::FETCH_ASSOC);
+    $revenueCounts = mysqli_fetch_assoc($result);
     if ($revenueCounts['last_month'] > 0) {
         $trends['revenue'] = (($revenueCounts['current_month'] - $revenueCounts['last_month']) / $revenueCounts['last_month']) * 100;
     }
 
     // Customers trend
-    $stmt = $pdo->query("
+    $result = mysqli_query($conn, "
         SELECT 
             (SELECT COUNT(*) FROM users WHERE role = 'customer' AND created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as current_month,
             (SELECT COUNT(*) FROM users WHERE role = 'customer' AND created_at >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH) 
              AND created_at < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as last_month
     ");
-    $customerCounts = $stmt->fetch(PDO::FETCH_ASSOC);
+    $customerCounts = mysqli_fetch_assoc($result);
     if ($customerCounts['last_month'] > 0) {
         $trends['customers'] = (($customerCounts['current_month'] - $customerCounts['last_month']) / $customerCounts['last_month']) * 100;
     }
 
     // Products trend
-    $stmt = $pdo->query("
+    $result = mysqli_query($conn, "
         SELECT 
             (SELECT COUNT(*) FROM products WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as current_month,
             (SELECT COUNT(*) FROM products WHERE created_at >= DATE_SUB(CURDATE(), INTERVAL 2 MONTH) 
              AND created_at < DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) as last_month
     ");
-    $productCounts = $stmt->fetch(PDO::FETCH_ASSOC);
+    $productCounts = mysqli_fetch_assoc($result);
     if ($productCounts['last_month'] > 0) {
         $trends['products'] = (($productCounts['current_month'] - $productCounts['last_month']) / $productCounts['last_month']) * 100;
     }
-} catch (PDOException $e) {
+} catch (Exception $e) {
     error_log("Dashboard trends error: " . $e->getMessage());
+} finally {
+    if (isset($conn)) {
+        mysqli_close($conn);
+    }
 }
 ?>
 <!DOCTYPE html>

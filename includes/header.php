@@ -1,3 +1,6 @@
+<?php
+// Session is started in the parent file
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,9 +15,10 @@
     <link href="css/style.css" rel="stylesheet">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
     <header>
@@ -53,10 +57,10 @@
                                     <span><?php echo htmlspecialchars($_SESSION['username']); ?></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-                                    <li><a class="dropdown-item" href="profile.php">My Profile</a></li>
-                                    <li><a class="dropdown-item" href="orders.php">My Orders</a></li>
+                                    <li><a class="dropdown-item" href="profile.php"><i class="fas fa-user me-2"></i>My Profile</a></li>
+                                    <li><a class="dropdown-item" href="orders.php"><i class="fas fa-shopping-bag me-2"></i>My Orders</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                                    <li><a class="dropdown-item" href="includes/api/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                                 </ul>
                             </div>
                         <?php else: ?>
@@ -68,5 +72,52 @@
             </div>
         </nav>
     </header>
+
+    <script>
+    console.log('Script section loaded');
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded');
+        
+        // Check if Bootstrap is loaded
+        if (typeof bootstrap === 'undefined') {
+            console.error('Bootstrap is not loaded!');
+        } else {
+            console.log('Bootstrap version:', bootstrap.Dropdown.VERSION);
+        }
+        
+        // Check if user menu exists and initialize dropdown
+        const userMenu = document.getElementById('userMenu');
+        console.log('User menu element:', userMenu);
+        
+        if (userMenu) {
+            // Initialize dropdown using Bootstrap's data API
+            const dropdownInstance = new bootstrap.Dropdown(userMenu);
+            console.log('Dropdown instance created:', dropdownInstance);
+            
+            // Add click event listener
+            userMenu.addEventListener('click', function(e) {
+                console.log('User menu clicked');
+                dropdownInstance.toggle();
+            });
+            
+            // Add dropdown event listeners
+            userMenu.addEventListener('show.bs.dropdown', function() {
+                console.log('Dropdown is showing');
+            });
+            
+            userMenu.addEventListener('shown.bs.dropdown', function() {
+                console.log('Dropdown is shown');
+            });
+            
+            userMenu.addEventListener('hide.bs.dropdown', function() {
+                console.log('Dropdown is hiding');
+            });
+            
+            userMenu.addEventListener('hidden.bs.dropdown', function() {
+                console.log('Dropdown is hidden');
+            });
+        }
+    });
+    </script>
 </body>
 </html>

@@ -28,14 +28,14 @@ try {
 
     // Verify admin authentication
     if (!verifyAdminSession()) {
-        header('HTTP/1.1 401 Unauthorized');
+        http_response_code(401);
         echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
         exit();
     }
 
     // Database connection
-    $pdo = getDBConnection();
-    if (!$pdo) {
+    $conn = getDBConnection();
+    if (!$conn) {
         throw new Exception('Database connection failed');
     }
 
@@ -47,14 +47,16 @@ try {
                 $orderId = (int)$_GET['id'];
                 
                 // Get order details
-                $stmt = $pdo->prepare("
+                $stmt = mysqli_prepare($conn, "
                     SELECT o.*, CONCAT(u.first_name, ' ', u.last_name) as customer_name, u.email as customer_email, u.phone as customer_phone
                     FROM orders o
                     JOIN users u ON o.user_id = u.id
                     WHERE o.id = ?
                 ");
-                $stmt->execute([$orderId]);
-                $order = $stmt->fetch(PDO::FETCH_ASSOC);
+                mysqli_stmt_bind_param($stmt, "i", $orderId);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                $order = mysqli_fetch_assoc($result);
                 
                 if (!$order) {
                     http_response_code(404);
@@ -63,14 +65,19 @@ try {
                 }
                 
                 // Get order items
-                $stmt = $pdo->prepare("
+                $stmt = mysqli_prepare($conn, "
                     SELECT oi.*, p.name as product_name, p.image as product_image
                     FROM order_items oi
                     JOIN products p ON oi.product_id = p.id
                     WHERE oi.order_id = ?
                 ");
-                $stmt->execute([$orderId]);
-                $order['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                mysqli_stmt_bind_param($stmt, "i", $orderId);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                $order['items'] = [];
+                while ($item = mysqli_fetch_assoc($result)) {
+                    $order['items'][] = $item;
+                }
                 
                 echo json_encode(['success' => true, 'data' => $order]);
                 break;
@@ -79,10 +86,10 @@ try {
             // Get query parameters for listing orders
             $page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
             $limit = isset($_GET['limit']) ? max(1, min(50, (int)$_GET['limit'])) : 10;
-            $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-            $status = isset($_GET['status']) ? trim($_GET['status']) : '';
-            $dateFilter = isset($_GET['date']) ? trim($_GET['date']) : '';
-            $sort = isset($_GET['sort']) ? trim($_GET['sort']) : 'newest';
+            $search = isset($_GET['search']) ? mysqli_real_escape_string($conn, trim($_GET['search'])) : '';
+            $status = isset($_GET['status']) ? mysqli_real_escape_string($conn, trim($_GET['status'])) : '';
+            $dateFilter = isset($_GET['date']) ? mysqli_real_escape_string($conn, trim($_GET['date'])) : '';
+            $sort = isset($_GET['sort']) ? mysqli_real_escape_string($conn, trim($_GET['sort'])) : 'newest';
             $customerId = isset($_GET['customer_id']) ? (int)$_GET['customer_id'] : null;
 
             // Calculate offset
@@ -96,25 +103,30 @@ try {
             ";
             $whereConditions = [];
             $queryParams = [];
+            $paramTypes = "";
 
             // Add customer filter if provided
             if ($customerId) {
                 $whereConditions[] = "o.user_id = ?";
                 $queryParams[] = $customerId;
+                $paramTypes .= "i";
             }
 
             // Add search condition
             if ($search !== '') {
                 $whereConditions[] = "(o.order_number LIKE ? OR CONCAT(u.first_name, ' ', u.last_name) LIKE ? OR u.email LIKE ?)";
-                $queryParams[] = "%{$search}%";
-                $queryParams[] = "%{$search}%";
-                $queryParams[] = "%{$search}%";
+                $searchPattern = "%{$search}%";
+                $queryParams[] = $searchPattern;
+                $queryParams[] = $searchPattern;
+                $queryParams[] = $searchPattern;
+                $paramTypes .= "sss";
             }
 
             // Add status filter
             if ($status !== '') {
                 $whereConditions[] = "o.status = ?";
                 $queryParams[] = $status;
+                $paramTypes .= "s";
             }
 
             // Add date filter
@@ -143,7 +155,7 @@ try {
             // Add sorting
             $orderBy = match($sort) {
                 'oldest' => "o.created_at ASC",
-                'highest' => "o.total_amount DESC",
+                'highest' => "o.total_amount DESC", 
                 'lowest' => "o.total_amount ASC",
                 default => "o.created_at DESC"
             };
@@ -152,9 +164,13 @@ try {
             try {
                 // Get total count
                 $countQuery = "SELECT COUNT(*) " . $baseQuery;
-                $stmt = $pdo->prepare($countQuery);
-                $stmt->execute($queryParams);
-                $totalCount = (int)$stmt->fetchColumn();
+                $stmt = mysqli_prepare($conn, $countQuery);
+                if (!empty($paramTypes)) {
+                    mysqli_stmt_bind_param($stmt, $paramTypes, ...$queryParams);
+                }
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                $totalCount = (int)mysqli_fetch_row($result)[0];
 
                 // Calculate total pages
                 $totalPages = max(1, ceil($totalCount / $limit));
@@ -172,22 +188,39 @@ try {
                         CONCAT(u.first_name, ' ', u.last_name) as customer_name,
                         u.email as customer_email,
                         u.phone as customer_phone
-                    " . $baseQuery . " LIMIT " . (int)$limit . " OFFSET " . (int)$offset;
+                    " . $baseQuery . " LIMIT ? OFFSET ?";
                 
-                $stmt = $pdo->prepare($query);
-                $stmt->execute($queryParams);
-                $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                // Get order items for each order
-                foreach ($orders as &$order) {
-                    $stmt = $pdo->prepare("
+                $stmt = mysqli_prepare($conn, $query);
+                if (!empty($paramTypes)) {
+                    $paramTypes .= "ii";
+                    $queryParams[] = $limit;
+                    $queryParams[] = $offset;
+                    mysqli_stmt_bind_param($stmt, $paramTypes, ...$queryParams);
+                } else {
+                    mysqli_stmt_bind_param($stmt, "ii", $limit, $offset);
+                }
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                
+                $orders = [];
+                while ($order = mysqli_fetch_assoc($result)) {
+                    // Get order items for each order
+                    $stmt2 = mysqli_prepare($conn, "
                         SELECT oi.*, p.name as product_name, p.image as product_image
                         FROM order_items oi
                         JOIN products p ON oi.product_id = p.id
                         WHERE oi.order_id = ?
                     ");
-                    $stmt->execute([$order['id']]);
-                    $order['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    mysqli_stmt_bind_param($stmt2, "i", $order['id']);
+                    mysqli_stmt_execute($stmt2);
+                    $itemsResult = mysqli_stmt_get_result($stmt2);
+                    
+                    $order['items'] = [];
+                    while ($item = mysqli_fetch_assoc($itemsResult)) {
+                        $order['items'][] = $item;
+                    }
+                    
+                    $orders[] = $order;
                 }
 
                 echo json_encode([
@@ -202,7 +235,7 @@ try {
                         ]
                     ]
                 ]);
-            } catch (PDOException $e) {
+            } catch (Exception $e) {
                 error_log("Database error in orders query: " . $e->getMessage());
                 throw $e;
             }
@@ -218,16 +251,18 @@ try {
             $orderId = (int)$data['id'];
             
             // Validate order exists
-            $stmt = $pdo->prepare("SELECT id FROM orders WHERE id = ?");
-            $stmt->execute([$orderId]);
-            if (!$stmt->fetch()) {
+            $stmt = mysqli_prepare($conn, "SELECT id FROM orders WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, "i", $orderId);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            if (!mysqli_fetch_assoc($result)) {
                 http_response_code(404);
                 echo json_encode(['error' => 'Order not found']);
                 break;
             }
 
             // Start transaction
-            $pdo->beginTransaction();
+            mysqli_begin_transaction($conn);
 
             try {
                 // Update order status
@@ -237,8 +272,9 @@ try {
                         throw new Exception('Invalid order status');
                     }
 
-                    $stmt = $pdo->prepare("UPDATE orders SET status = ? WHERE id = ?");
-                    $stmt->execute([$data['status'], $orderId]);
+                    $stmt = mysqli_prepare($conn, "UPDATE orders SET status = ? WHERE id = ?");
+                    mysqli_stmt_bind_param($stmt, "si", $data['status'], $orderId);
+                    mysqli_stmt_execute($stmt);
                 }
 
                 // Update payment status
@@ -248,42 +284,15 @@ try {
                         throw new Exception('Invalid payment status');
                     }
 
-                    $stmt = $pdo->prepare("UPDATE orders SET payment_status = ? WHERE id = ?");
-                    $stmt->execute([$data['payment_status'], $orderId]);
+                    $stmt = mysqli_prepare($conn, "UPDATE orders SET payment_status = ? WHERE id = ?");
+                    mysqli_stmt_bind_param($stmt, "si", $data['payment_status'], $orderId);
+                    mysqli_stmt_execute($stmt);
                 }
 
-                // Update shipping address if provided
-                if (isset($data['shipping_address']) && trim($data['shipping_address']) !== '') {
-                    $stmt = $pdo->prepare("UPDATE orders SET shipping_address = ? WHERE id = ?");
-                    $stmt->execute([trim($data['shipping_address']), $orderId]);
-                }
-
-                // Commit transaction
-                $pdo->commit();
-
-                // Get updated order data
-                $stmt = $pdo->prepare("
-                    SELECT o.*, CONCAT(u.first_name, ' ', u.last_name) as customer_name, u.email as customer_email, u.phone as customer_phone
-                    FROM orders o
-                    JOIN users u ON o.user_id = u.id
-                    WHERE o.id = ?
-                ");
-                $stmt->execute([$orderId]);
-                $order = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                // Get order items
-                $stmt = $pdo->prepare("
-                    SELECT oi.*, p.name as product_name, p.image as product_image
-                    FROM order_items oi
-                    JOIN products p ON oi.product_id = p.id
-                    WHERE oi.order_id = ?
-                ");
-                $stmt->execute([$orderId]);
-                $order['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-                echo json_encode(['success' => true, 'data' => $order]);
+                mysqli_commit($conn);
+                echo json_encode(['success' => true, 'message' => 'Order updated successfully']);
             } catch (Exception $e) {
-                $pdo->rollBack();
+                mysqli_rollback($conn);
                 throw $e;
             }
             break;
@@ -296,42 +305,45 @@ try {
             $orderId = (int)$_GET['id'];
             
             // Check if order exists
-            $stmt = $pdo->prepare("SELECT id FROM orders WHERE id = ?");
-            $stmt->execute([$orderId]);
-            if (!$stmt->fetch()) {
+            $stmt = mysqli_prepare($conn, "SELECT id FROM orders WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, "i", $orderId);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            if (!mysqli_fetch_assoc($result)) {
                 http_response_code(404);
                 echo json_encode(['error' => 'Order not found']);
                 break;
             }
 
             // Start transaction
-            $pdo->beginTransaction();
+            mysqli_begin_transaction($conn);
 
             try {
                 // Delete order items first (cascade will handle this automatically due to foreign key)
-                $stmt = $pdo->prepare("DELETE FROM orders WHERE id = ?");
-                $stmt->execute([$orderId]);
+                $stmt = mysqli_prepare($conn, "DELETE FROM orders WHERE id = ?");
+                mysqli_stmt_bind_param($stmt, "i", $orderId);
+                mysqli_stmt_execute($stmt);
 
-                // Commit transaction
-                $pdo->commit();
-
+                mysqli_commit($conn);
                 echo json_encode(['success' => true, 'message' => 'Order deleted successfully']);
             } catch (Exception $e) {
-                $pdo->rollBack();
+                mysqli_rollback($conn);
                 throw $e;
             }
             break;
 
         default:
-            throw new Exception('Method not allowed');
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed']);
+            break;
     }
-} catch (PDOException $e) {
-    error_log("Database error: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['error' => 'Database error', 'message' => $e->getMessage()]);
 } catch (Exception $e) {
-    error_log("Application error: " . $e->getMessage());
+    error_log("Error in orders.php: " . $e->getMessage());
     http_response_code(500);
-    echo json_encode(['error' => 'Application error', 'message' => $e->getMessage()]);
+    echo json_encode(['error' => 'Internal server error']);
+} finally {
+    if (isset($conn)) {
+        mysqli_close($conn);
+    }
 }
 ?> 
