@@ -1,8 +1,9 @@
 <?php
+session_start();
+require_once __DIR__ . '/includes/config/db.php';
 $title = "Pokemon Store - Toys & Cards";
 $md = "Explore our collection of Pokemon toys, figures, and plushies";
 include 'includes/header.php';
-include 'includes/db.php';
 
 // Enable error logging
 error_reporting(E_ALL);

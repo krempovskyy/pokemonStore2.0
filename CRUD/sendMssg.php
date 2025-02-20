@@ -1,4 +1,5 @@
-<?php include 'database/db.php' ;
+<?php 
+require_once __DIR__ . '/../includes/config/db.php';
 $fname= $_POST['name'];
 $message= $_POST['message'];
 $sql="insert into studentsinfo (fname, lname, city, groupid)
