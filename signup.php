@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id'])) {
                 <p class="text-muted">Join our Pokemon community</p>
             </div>
 
-            <form id="signupForm" class="needs-validation" novalidate>
+            <form action="signupForm.php" method="post" id="signupForm" class="needs-validation" novalidate>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">First Name</label>
