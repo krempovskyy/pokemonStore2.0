@@ -23,26 +23,14 @@ header('Content-Type: application/json; charset=utf-8');
 try {
     require_once '../includes/auth.php';
 
-    // Initialize session first
+    // Initialize secure session
     initSecureSession();
-    
-    // Log session data for debugging
-    error_log("Session status: " . session_status());
-    error_log("Session ID: " . session_id());
-    error_log("Session data: " . print_r($_SESSION, true));
 
-    // Verify admin session
+    // Verify admin authentication
     if (!verifyAdminSession()) {
-        http_response_code(401);
-        echo json_encode([
-            'error' => 'Unauthorized', 
-            'debug' => [
-                'session_status' => session_status(),
-                'session_id' => session_id(),
-                'has_session_data' => !empty($_SESSION)
-            ]
-        ]);
-        exit;
+        header('HTTP/1.1 401 Unauthorized');
+        echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
+        exit();
     }
 
     // Database connection
@@ -217,15 +205,122 @@ try {
             break;
 
         case 'PUT':
-        case 'POST':
-            $data = json_decode(file_get_contents('php://input'), true);
+            // Get JSON data from request body
+            $jsonData = file_get_contents('php://input');
+            error_log("Received PUT data: " . $jsonData);
             
+            $data = json_decode($jsonData, true);
             if (!$data) {
-                throw new Exception('Invalid request data');
+                throw new Exception('Invalid JSON data received');
             }
+            
+            error_log("Decoded JSON data: " . print_r($data, true));
+            
+            // Validate required fields for PUT
+            if (!isset($data['id'])) {
+                throw new Exception('Product ID is required for update');
+            }
+            
+            // Get existing product to preserve unchanged values
+            $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
+            $stmt->execute([$data['id']]);
+            $existingProduct = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$existingProduct) {
+                throw new Exception('Product not found');
+            }
+            
+            // Merge existing data with updates
+            $name = $data['name'] ?? $existingProduct['name'];
+            $category = $data['category'] ?? $existingProduct['category'];
+            $price = $data['price'] ?? $existingProduct['price'];
+            $stock = $data['stock_quantity'] ?? $existingProduct['stock_quantity'];
+            $description = $data['description'] ?? $existingProduct['description'];
+            $sizes = isset($data['sizes']) ? $data['sizes'] : $existingProduct['sizes'];
+            
+            // Basic validation
+            if (empty($name)) {
+                throw new Exception('Product name cannot be empty');
+            }
+            
+            if ($price <= 0) {
+                throw new Exception('Price must be greater than 0');
+            }
+            
+            if ($stock < 0) {
+                throw new Exception('Stock cannot be negative');
+            }
+            
+            // Update status
+            $status = 0;  // 0 = out of stock
+            if ($stock > 0) {
+                $status = $stock <= 10 ? 1 : 2;  // 1 = low stock, 2 = in stock
+            }
+            
+            // Update product
+            $stmt = $pdo->prepare("UPDATE products SET 
+                name = ?, 
+                category = ?, 
+                price = ?, 
+                stock_quantity = ?, 
+                description = ?, 
+                status = ?,
+                sizes = ?, 
+                updated_at = NOW()
+                WHERE id = ?");
+                
+            $stmt->execute([
+                $name,
+                $category,
+                $price,
+                $stock,
+                $description,
+                $status,
+                $sizes,
+                $data['id']
+            ]);
+            
+            // Get updated product
+            $stmt = $pdo->prepare("SELECT * FROM products WHERE id = ?");
+            $stmt->execute([$data['id']]);
+            $updatedProduct = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            echo json_encode(['success' => true, 'data' => $updatedProduct]);
+            break;
 
+        case 'POST':
+            // Get data from FormData
+            $data = [];
+            $data['name'] = $_POST['name'] ?? null;
+            $data['category'] = $_POST['category'] ?? null;
+            $data['price'] = $_POST['price'] ?? null;
+            $data['stock_quantity'] = $_POST['stock_quantity'] ?? null;
+            $data['description'] = $_POST['description'] ?? null;
+            
+            // Handle file upload
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = __DIR__ . '/../../uploads/products/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+                
+                $fileName = uniqid() . '_' . basename($_FILES['image']['name']);
+                $uploadFile = $uploadDir . $fileName;
+                
+                if (move_uploaded_file($_FILES['image']['tmp_name'], $uploadFile)) {
+                    $data['image'] = '/uploads/products/' . $fileName;
+                } else {
+                    throw new Exception('Failed to upload image');
+                }
+            }
+            
+            // Handle sizes for clothing items
+            if (isset($_POST['sizes'])) {
+                $data['sizes'] = $_POST['sizes'];
+            }
+            
             // Validate required fields
-            $requiredFields = ['name', 'category', 'price', 'stock', 'description'];
+            $requiredFields = ['name', 'category', 'price', 'stock_quantity', 'description'];
             foreach ($requiredFields as $field) {
                 if (!isset($data[$field]) || trim($data[$field]) === '') {
                     throw new Exception("Missing required field: {$field}");
@@ -234,36 +329,25 @@ try {
 
             // Validate sizes for clothing items
             if (strpos($data['category'], 'clothing') !== false) {
-                if (!isset($data['sizes']) || !is_array($data['sizes'])) {
+                if (!isset($data['sizes'])) {
                     throw new Exception("Sizes are required for clothing items");
                 }
-                // Validate size structure
-                foreach ($data['sizes'] as $size) {
-                    if (!isset($size['size']) || !isset($size['quantity'])) {
-                        throw new Exception("Invalid size structure");
-                    }
+                // Keep sizes as is if it's already a JSON string
+                if (!is_string($data['sizes'])) {
+                    $data['sizes'] = json_encode($data['sizes']);
                 }
-                $sizes = json_encode($data['sizes']);
-            } else if ($data['category'] === 'accessories') {
-                $sizes = json_encode([['size' => 'ONE_SIZE', 'quantity' => $data['stock']]]);
             } else {
-                $sizes = null;
+                $data['sizes'] = null;
             }
 
             // Sanitize and validate data
             $name = trim($data['name']);
             $category = trim($data['category']);
             $price = (float)$data['price'];
-            $stock = (int)$data['stock'];
+            $stock = (int)$data['stock_quantity'];
             $description = trim($data['description']);
-            $image = isset($data['image']) ? trim($data['image']) : null;
             
-            // Update status calculation to use numeric values
-            $status = 0;  // 0 = out of stock
-            if ($stock > 0) {
-                $status = $stock <= 10 ? 1 : 2;  // 1 = low stock, 2 = in stock
-            }
-
+            // Validate data
             if (strlen($name) < 3) {
                 throw new Exception('Product name must be at least 3 characters long');
             }
@@ -276,8 +360,14 @@ try {
                 throw new Exception('Stock cannot be negative');
             }
 
+            // Update status calculation
+            $status = 0;  // 0 = out of stock
+            if ($stock > 0) {
+                $status = $stock <= 10 ? 1 : 2;  // 1 = low stock, 2 = in stock
+            }
+
             // Check if updating existing product
-            $productId = isset($data['id']) ? (int)$data['id'] : null;
+            $productId = isset($_POST['id']) ? (int)$_POST['id'] : null;
             
             if ($productId) {
                 // Update existing product
@@ -291,20 +381,15 @@ try {
                     sizes = ?, 
                     updated_at = NOW()";
                 
-                $params = [$name, $category, $price, $stock, $description, $status, $sizes];
+                $params = [$name, $category, $price, $stock, $description, $status, $data['sizes']];
                 
-                if ($image) {
+                if (isset($data['image'])) {
                     $query .= ", image = ?";
-                    $params[] = $image;
+                    $params[] = $data['image'];
                 }
                 
                 $query .= " WHERE id = ?";
                 $params[] = $productId;
-
-                // Log update operation details
-                error_log("Updating product ID: " . $productId);
-                error_log("Update query: " . $query);
-                error_log("Parameters: " . print_r($params, true));
 
                 $stmt = $pdo->prepare($query);
                 $stmt->execute($params);
@@ -314,13 +399,13 @@ try {
                 }
             } else {
                 // Insert new product
-                if (!$image) {
+                if (!isset($data['image'])) {
                     throw new Exception('Image is required for new products');
                 }
 
                 $stmt = $pdo->prepare("INSERT INTO products (name, category, price, stock_quantity, description, image, status, sizes, created_at, updated_at) 
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())");
-                $stmt->execute([$name, $category, $price, $stock, $description, $image, $status, $sizes]);
+                $stmt->execute([$name, $category, $price, $stock, $description, $data['image'], $status, $data['sizes']]);
                 $productId = $pdo->lastInsertId();
             }
 

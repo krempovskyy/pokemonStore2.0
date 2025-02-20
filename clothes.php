@@ -4,6 +4,7 @@ $md = "Explore your collection of Pokemon fashion and style";
 include 'includes/header.php';
 include 'includes/db.php';
 
+<<<<<<< HEAD
 // Enable error logging
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -69,6 +70,143 @@ try {
     error_log("SQL State: " . $e->getCode());
     $products = []; // Empty array if error occurs
 }
+=======
+// Define products array first
+$products = [
+    [
+        'id' => 2001,
+        'name' => 'Crop top',
+        'price' => 26.99,
+        'category' => 'Women',
+        'image' => 'images/CROP TOP.png',
+        'gallery' => [
+            'images/CROP TOP.png'
+        ],
+        'sizes' => ['XS', 'S', 'M', 'L', 'XL']
+    ],
+    [
+        'id' => 2002,
+        'name' => 'Tank Top',
+        'price' => 29.99,
+        'category' => 'Women',
+        'image' => 'images/TANK TOP.png',
+        'gallery' => [
+            'images/TANK TOP.png'
+        ],
+        'sizes' => ['XS', 'S', 'M', 'L', 'XL']
+    ],
+    [
+        'id' => 2003,
+        'name' => 'Hoodie',
+        'price' => 49.99,
+        'category'=> 'Women',
+        'image' => 'images/HOODIE WOMAN.png',
+        'gallery' => [
+            'images/HOODIE WOMAN.png'
+        ],
+        'sizes' => ['XS', 'S', 'M', 'L', 'XL']
+    ],
+    [
+        'id' => 2004,
+        'name' => 'Jacket',
+        'price' => 39.99,
+        'category'=> 'Men',
+        'image' => 'images/JACKET MAN.png',
+        'gallery' => [
+            'images/JACKET MAN.png'
+        ],
+        'sizes' => ['S', 'M', 'L', 'XL', 'XXL']
+    ],
+    [
+        'id' => 2005,
+        'name' => 'Hoodie',
+        'price' => 49.99,
+        'category'=> 'Men',
+        'image' => 'images/HOODIE MAN.png',
+        'gallery' => [
+            'images/HOODIE MAN.png'
+        ],
+        'sizes' => ['S', 'M', 'L', 'XL', 'XXL']
+    ],
+    [
+        'id' => 2006,
+        'name' => 'Sweater',
+        'price' => 59.99,
+        'category'=> 'Men',
+        'image' => 'images/SWEATER MAN.png',
+        'gallery' => [
+            'images/SWEATER MAN.png'
+        ],
+        'sizes' => ['S', 'M', 'L', 'XL', 'XXL']
+    ],
+    [
+        'id' => 2007,
+        'name' => 'Hat',
+        'price' => 19.99,
+        'category'=> 'Unisex',
+        'image' => 'images/UNI HAT.png',
+        'gallery' => [
+            'images/UNI HAT.png'
+        ],
+        'sizes' => ['S', 'M', 'L']
+    ],
+    [
+        'id' => 2008,
+        'name' => 'T-Shirt',
+        'price' => 19.99,
+        'category'=> 'Unisex',
+        'image' => 'images/T SHIRT MEN.png',
+        'gallery' => [
+            'images/T SHIRT MEN.png'
+        ],
+        'sizes' => ['XS', 'S', 'M', 'L', 'XL', 'XXL']
+    ],
+    [
+        'id' => 2009,
+        'name' => 'Gloves',
+        'price' => 9.99,
+        'category'=> 'Unisex',
+        'image' => 'images/GLOVES UNI.png',
+        'gallery' => [
+            'images/GLOVES UNI.png'
+        ],
+        'sizes' => ['S/M', 'L/XL']
+    ],
+    [
+        'id' => 2010,
+        'name' => 'Multi Purposes Tote',
+        'price' => 29.99,
+        'category'=> 'Unisex',
+        'image' => 'images/TOTE.png',
+        'gallery' => [
+            'images/TOTE.png'
+        ],
+        'sizes' => ['One Size']
+    ],
+    [
+        'id' => 2011,
+        'name' => 'Earbuds Case',
+        'price' => 19.99,
+        'category'=> 'Unisex',
+        'image' => 'images/CASE EARBUDS.png',
+        'gallery' => [
+            'images/CASE EARBUDS.png'
+        ],
+        'sizes' => ['One Size']
+    ],
+    [
+        'id' => 2012,
+        'name' => 'IP Shock Case',
+        'price' => 19.99,
+        'category'=> 'Unisex',
+        'image' => 'images/SHOCK CASE.png',
+        'gallery' => [
+            'images/SHOCK CASE.png'
+        ],
+        'sizes' => ['One Size']
+    ]
+];
+>>>>>>> 797c9740154f5edab5c37c203b231323b8cd208e
 ?>
 
 <link href="css/style.css" rel="stylesheet">

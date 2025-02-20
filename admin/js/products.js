@@ -6,162 +6,446 @@ let currentCategory = '';
 let currentStock = '';
 let currentSort = 'newest';
 
+// Constants for image validation
+const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_IMAGE_DIMENSIONS = { width: 2000, height: 2000 };
+
 // Wait for DOM to be fully loaded
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('DOM Content Loaded');
-
-    // Initialize tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-
-    // Initialize all event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    initializeProductForm();
     initializeEventListeners();
-    
-    // Initial load
-    await loadProducts();
+    loadProducts();
 });
 
-// Initialize event listeners for dynamic elements
-function initializeEventListeners() {
-    console.log('Initializing event listeners');
+function initializeProductForm() {
+    const form = document.getElementById('addProductForm');
+    if (!form) {
+        console.error('Form not found!');
+        return;
+    }
 
-    // Category change handler
-    document.getElementById('productCategory').addEventListener('change', function() {
-        const category = this.value;
-        const stockInput = document.getElementById('stockInputContainer');
-        const sizeSection = document.getElementById('sizeManagementSection');
-        
-        // Reset all sections
-        stockInput.style.display = 'none';
-        sizeSection.style.display = 'none';
-        
-        if (category.includes('clothing')) {
-            // For clothing items, show size management
-            sizeSection.style.display = 'block';
-            // Reset all size quantities
-            const sizeInputs = document.querySelectorAll('.size-quantity');
-            sizeInputs.forEach(input => input.value = 0);
-        } else {
-            // For non-clothing items (including accessories), show stock input
-            stockInput.style.display = 'block';
-            document.querySelector('[name="stock"]').value = 0;
-        }
-    });
+    const imageInput = form.querySelector('input[name="image"]');
+    if (!imageInput) {
+        console.error('Image input not found!');
+        return;
+    }
 
-    // Size quantity change handler to update total stock
-    const sizeQuantityInputs = document.querySelectorAll('.size-quantity');
-    if (sizeQuantityInputs.length) {
-        sizeQuantityInputs.forEach(input => {
-            input.addEventListener('change', function() {
-                if (document.getElementById('productCategory').value.includes('clothing')) {
-                    const total = Array.from(sizeQuantityInputs)
-                        .reduce((sum, input) => sum + (parseInt(input.value) || 0), 0);
-                    document.querySelector('input[name="stock"]').value = total;
-                }
+    const previewContainer = form.querySelector('.image-preview-container');
+    if (!previewContainer) {
+        console.error('Preview container not found!');
+        return;
+    }
+
+    // Add event listener for modal show
+    const addProductModal = document.getElementById('addProductModal');
+    if (addProductModal) {
+        addProductModal.addEventListener('show.bs.modal', function (event) {
+            console.log('Modal opening - resetting form');
+            
+            // Reset form fields
+            form.reset();
+            form.removeAttribute('data-edit-id');
+            
+            // Reset image preview container
+            const imagePreviewContainer = form.querySelector('.image-preview-container');
+            if (imagePreviewContainer) {
+                imagePreviewContainer.innerHTML = '';
+            }
+            
+            // Remove any existing image preview
+            const existingPreviews = form.querySelectorAll('.image-preview');
+            existingPreviews.forEach(preview => preview.remove());
+            
+            // Reset image input
+            const imageInput = form.querySelector('input[name="image"]');
+            if (imageInput) {
+                imageInput.value = '';
+            }
+            
+            // Reset category-specific sections
+            const stockInput = document.getElementById('stockInputContainer');
+            const sizeSection = document.getElementById('sizeManagementSection');
+            if (stockInput && sizeSection) {
+                stockInput.style.display = 'block';
+                sizeSection.style.display = 'none';
+            }
+            
+            // Reset size quantities
+            const sizeInputs = form.querySelectorAll('.size-quantity');
+            sizeInputs.forEach(input => {
+                input.value = '0';
             });
+            
+            // Reset stock input
+            const stockQuantityInput = form.querySelector('[name="stock"]');
+            if (stockQuantityInput) {
+                stockQuantityInput.value = '0';
+            }
+            
+            // Reset modal title and button
+            const modalTitle = document.querySelector('#addProductModal .modal-title');
+            const submitButton = document.querySelector('#addProductModal .btn-primary');
+            if (modalTitle) modalTitle.textContent = 'Add New Product';
+            if (submitButton) submitButton.textContent = 'Add Product';
         });
     }
 
-    // Search functionality
+    // Handle form submission
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        await handleProductSubmit(this);
+    });
+
+    // Handle image selection
+    imageInput.addEventListener('change', function(e) {
+        console.log('Image input changed');
+        const file = e.target.files[0];
+        if (!file) {
+            console.log('No file selected');
+            return;
+        }
+        console.log('File selected:', {
+            name: file.name,
+            type: file.type,
+            size: file.size
+        });
+
+        handleImagePreview(file, imageInput, previewContainer);
+    });
+
+    // Handle category change
+    const categorySelect = form.querySelector('#productCategory');
+    if (categorySelect) {
+        categorySelect.addEventListener('change', function() {
+            handleCategoryChange(this.value);
+        });
+    }
+}
+
+// Separate function to handle image preview
+function handleImagePreview(file, imageInput, previewContainer) {
+    console.log('Starting image preview handling');
+    
+    try {
+        // Validate file
+        if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+            throw new Error('Please select a valid image file (JPEG, PNG, GIF, or WEBP)');
+        }
+
+        if (file.size > MAX_IMAGE_SIZE) {
+            throw new Error('Image size must not exceed 5MB');
+        }
+
+        console.log('File validation passed');
+
+        // Clear existing preview
+        previewContainer.innerHTML = '';
+        console.log('Cleared existing preview');
+
+        // Create new preview
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+            console.log('FileReader loaded');
+            
+            const img = new Image();
+            
+            img.onload = function() {
+                console.log('Image loaded, dimensions:', {
+                    width: img.width,
+                    height: img.height
+                });
+
+                // Validate dimensions
+                if (img.width > MAX_IMAGE_DIMENSIONS.width || img.height > MAX_IMAGE_DIMENSIONS.height) {
+                    console.log('Image dimensions too large');
+                    imageInput.value = '';
+                    previewContainer.innerHTML = '';
+                    showNotification('Error', [`Image dimensions must not exceed ${MAX_IMAGE_DIMENSIONS.width}x${MAX_IMAGE_DIMENSIONS.height} pixels`]);
+                    return;
+                }
+
+                console.log('Creating preview HTML');
+                const previewHTML = `
+                    <div class="image-preview">
+                        <img src="${event.target.result}" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: contain;">
+                        <button type="button" class="btn btn-sm btn-danger mt-2" onclick="removeImagePreview()">
+                            <i class="fas fa-times"></i> Remove
+                        </button>
+                    </div>
+                `;
+
+                console.log('Setting preview HTML');
+                previewContainer.innerHTML = previewHTML;
+                console.log('Preview added successfully');
+            };
+
+            img.onerror = function() {
+                console.error('Error loading image');
+                imageInput.value = '';
+                previewContainer.innerHTML = '';
+                showNotification('Error', ['Failed to load image']);
+            };
+
+            console.log('Setting image source');
+            img.src = event.target.result;
+        };
+
+        reader.onerror = function(error) {
+            console.error('FileReader error:', error);
+            imageInput.value = '';
+            previewContainer.innerHTML = '';
+            showNotification('Error', ['Failed to read image file']);
+        };
+
+        console.log('Starting to read file');
+        reader.readAsDataURL(file);
+
+    } catch (error) {
+        console.error('Error in handleImagePreview:', error);
+        imageInput.value = '';
+        previewContainer.innerHTML = '';
+        showNotification('Error', [error.message]);
+    }
+}
+
+// Separate function to handle category change
+function handleCategoryChange(category) {
+    const stockInput = document.getElementById('stockInputContainer');
+    const sizeSection = document.getElementById('sizeManagementSection');
+    
+    if (!stockInput || !sizeSection) {
+        console.error('Required form sections not found');
+        return;
+    }
+    
+    console.log('Updating display for category:', category);
+    stockInput.style.display = category.includes('clothing') ? 'none' : 'block';
+    sizeSection.style.display = category.includes('clothing') ? 'block' : 'none';
+    
+    // Reset quantities
+    if (category.includes('clothing')) {
+        document.querySelectorAll('.size-quantity').forEach(input => {
+            input.value = '0';
+            console.log('Reset size quantity:', input.name);
+        });
+    }
+    document.querySelector('[name="stock"]').value = '0';
+    console.log('Reset stock value');
+}
+
+// Remove image preview
+window.removeImagePreview = function() {
+    console.log('Removing image preview');
+    const form = document.getElementById('addProductForm');
+    if (!form) {
+        console.error('Form not found');
+        return;
+    }
+
+    const imageInput = form.querySelector('input[name="image"]');
+    const previewContainer = form.querySelector('.image-preview-container');
+    
+    if (imageInput) {
+        console.log('Clearing image input');
+        imageInput.value = '';
+    }
+    
+    if (previewContainer) {
+        console.log('Clearing preview container');
+        previewContainer.innerHTML = '';
+    }
+    
+    console.log('Image preview removed');
+};
+
+// Handle product form submission
+async function handleProductSubmit(form) {
+    console.log('Starting form submission');
+    try {
+        const isEdit = !!form.dataset.editId;
+        const formData = new FormData(form);
+        console.log('Form data created');
+
+        // Log all form data
+        for (let [key, value] of formData.entries()) {
+            console.log('Form field:', key, value);
+        }
+
+        // Basic validation
+        const name = formData.get('name');
+        const price = parseFloat(formData.get('price'));
+        const category = formData.get('category');
+        const description = formData.get('description');
+        const image = formData.get('image');
+
+        // Validation for new products
+        if (!isEdit) {
+            if (!name || !price || !category || !description) {
+                throw new Error('Please fill in all required fields');
+            }
+            if (!image || !(image instanceof File) || image.size === 0) {
+                throw new Error('Please select an image for the new product');
+            }
+        } else {
+            // Validation for editing - only validate fields that are provided
+            if ((!name && name !== '') || (!price && price !== 0) || !category || (!description && description !== '')) {
+                throw new Error('Please fill in all required fields');
+            }
+        }
+
+        if (price && price <= 0) {
+            throw new Error('Price must be greater than 0');
+        }
+
+        // Handle stock based on category
+        let stock = 0;
+        let sizes = null;
+
+        if (category.includes('clothing')) {
+            console.log('Processing clothing sizes');
+            const sizeData = {};
+            const sizeInputs = form.querySelectorAll('.size-quantity');
+            
+            sizeInputs.forEach(input => {
+                const quantity = parseInt(input.value) || 0;
+                const size = input.closest('.size-row').querySelector('input[type="text"]').value;
+                sizeData[size] = { quantity };
+                stock += quantity;
+            });
+            
+            sizes = JSON.stringify(sizeData);
+            console.log('Size data:', sizes);
+        } else {
+            stock = parseInt(formData.get('stock')) || 0;
+        }
+
+        if (stock < 0) {
+            throw new Error('Stock quantity cannot be negative');
+        }
+
+        // Create data object
+        const productData = {
+            name: name,
+            category: category,
+            price: price.toFixed(2),
+            stock_quantity: stock,
+            description: description
+        };
+
+        if (sizes) {
+            productData.sizes = sizes;
+        }
+
+        if (isEdit) {
+            productData.id = form.dataset.editId;
+        }
+
+        // For PUT requests, send as JSON
+        if (isEdit) {
+            const response = await fetch('/admin/api/products.php', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(productData)
+            });
+
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.error || result.message || 'Failed to update product');
+            }
+            
+            if (result.success) {
+                showNotification('Success', 'Product updated successfully');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+                if (modal) modal.hide();
+                await loadProducts();
+            }
+        } else {
+            // For POST requests, use FormData
+            const submitData = new FormData();
+            Object.entries(productData).forEach(([key, value]) => {
+                submitData.append(key, value);
+            });
+            
+            // Only append image for new products
+            if (image instanceof File && image.size > 0) {
+                submitData.append('image', image);
+            }
+
+            const response = await fetch('/admin/api/products.php', {
+                method: 'POST',
+                body: submitData
+            });
+
+            const result = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(result.error || result.message || 'Failed to create product');
+            }
+            
+            if (result.success) {
+                showNotification('Success', 'Product added successfully');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
+                if (modal) modal.hide();
+                await loadProducts();
+            }
+        }
+    } catch (error) {
+        console.error('Error in handleProductSubmit:', error);
+        showNotification('Error', error.message || 'Failed to save product');
+    }
+}
+
+// Initialize other event listeners
+function initializeEventListeners() {
+    // Category filter
+    const categoryFilter = document.getElementById('categoryFilter');
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', async function() {
+            currentCategory = this.value;
+            currentPage = 1;
+            await loadProducts();
+        });
+    }
+
+    // Search box
     const searchInput = document.querySelector('.search-box input');
     if (searchInput) {
         searchInput.addEventListener('input', debounce(async function(e) {
             currentSearch = e.target.value;
-            currentPage = 1; // Reset to first page on search
+            currentPage = 1;
             await loadProducts();
         }, 300));
     }
 
-    // Filter change handlers
-    const filters = document.querySelectorAll('.form-select');
-    filters.forEach(filter => {
-        filter.addEventListener('change', async function() {
-            console.log('Filter changed:', this.id, 'Value:', this.value);
-            const filterType = this.getAttribute('data-filter-type');
-            
-            switch(filterType) {
-                case 'category':
-                    currentCategory = this.value;
-                    console.log('Category filter updated to:', currentCategory);
-                    break;
-                case 'stock':
-                    currentStock = this.value;
-                    console.log('Stock filter updated to:', currentStock);
-                    break;
-                case 'sort':
-                    currentSort = this.value;
-                    console.log('Sort filter updated to:', currentSort);
-                    break;
-            }
-            
-            currentPage = 1; // Reset to first page on filter change
+    // Stock filter
+    const stockFilter = document.getElementById('stockFilter');
+    if (stockFilter) {
+        stockFilter.addEventListener('change', async function() {
+            currentStock = this.value;
+            currentPage = 1;
             await loadProducts();
-        });
-    });
-
-    // Add Product Form Handler
-    const addProductForm = document.getElementById('addProductForm');
-    if (addProductForm) {
-        addProductForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            await handleProductSubmit(this);
         });
     }
 
-        // Delete product handler
-    document.addEventListener('click', async function(e) {
-            if (e.target.closest('.btn-danger')) {
-                e.preventDefault();
-                const productId = parseInt(e.target.closest('tr').dataset.productId);
-                if (confirm('Are you sure you want to delete this product?')) {
-                await deleteProduct(productId);
-                }
-            }
+    // Sort handler
+    const sortBy = document.getElementById('sortBy');
+    if (sortBy) {
+        sortBy.addEventListener('change', async function() {
+            currentSort = this.value;
+            currentPage = 1;
+            await loadProducts();
         });
+    }
 
-        // Edit product handler
-    document.addEventListener('click', async function(e) {
-            if (e.target.closest('.btn-info')) {
-                e.preventDefault();
-                const productId = parseInt(e.target.closest('tr').dataset.productId);
-            await editProduct(productId);
-            }
-        });
-
-        // Add Product button handler
-        const addProductBtn = document.querySelector('[data-bs-toggle="modal"][data-bs-target="#addProductModal"]');
-        if (addProductBtn) {
-            addProductBtn.addEventListener('click', function() {
-                const form = document.getElementById('addProductForm');
-                form.reset();
-                document.querySelector('#addProductModal .modal-title').textContent = 'Add New Product';
-                document.querySelector('#addProductModal .btn-primary').textContent = 'Add Product';
-            });
-        }
-
-    // Pagination handler - Using event delegation
-    document.addEventListener('click', async function(e) {
-        const pageLink = e.target.closest('.page-link');
-        if (pageLink) {
-            e.preventDefault();
-            console.log('Pagination element clicked:', e.target);
-            console.log('Page link element:', pageLink);
-            
-            if (!pageLink.parentElement.classList.contains('disabled')) {
-                const page = pageLink.dataset.page;
-                console.log('Page data:', page);
-                
-                if (page) {
-                    currentPage = parseInt(page);
-                    console.log('Loading page:', currentPage);
-                    await loadProducts();
-                }
-            } else {
-                console.log('Pagination link is disabled');
-            }
-        }
+    // Export products handler
+    document.getElementById('exportProducts')?.addEventListener('click', function() {
+        const exportModal = new bootstrap.Modal(document.getElementById('exportOptionsModal'));
+        exportModal.show();
     });
 }
 
@@ -228,19 +512,19 @@ async function loadProducts() {
     } catch (error) {
         console.error('Error in loadProducts:', error);
         showNotification('Error', 'Failed to load products. Please try again.', 'error');
-        }
     }
-    
-    // Render products table
+}
+
+// Render products table
 function renderProducts(products) {
     console.log('Starting to render products:', products);
-        const tbody = document.querySelector('.products-table tbody');
-        if (!tbody) {
+    const tbody = document.querySelector('.products-table tbody');
+    if (!tbody) {
         console.error('Products table tbody not found');
-            return;
-        }
-        tbody.innerHTML = '';
-        
+        return;
+    }
+    tbody.innerHTML = '';
+    
     products.forEach(product => {
         console.log(`Rendering product ${product.id}:`, {
             name: product.name,
@@ -256,17 +540,16 @@ function renderProducts(products) {
             try {
                 const sizes = product.sizes;
                 if (sizes) {
-                    if (sizes.ONE_SIZE) {
-                        sizeDisplay = `ONE SIZE: ${sizes.ONE_SIZE.quantity}`;
-                        stockQuantity = sizes.ONE_SIZE.quantity;
-                    } else {
-                        const sizeEntries = Object.entries(sizes);
-                        if (sizeEntries.length > 0) {
-                            sizeDisplay = sizeEntries
-                                .map(([size, data]) => `${size}: ${data.quantity}`)
-                                .join('<br>');
-                            stockQuantity = sizeEntries.reduce((total, [_, data]) => total + data.quantity, 0);
-                        }
+                    // Define size order
+                    const sizeOrder = ['S', 'M', 'L', 'XL'];
+                    const sizeEntries = Object.entries(sizes)
+                        .sort(([a], [b]) => sizeOrder.indexOf(a) - sizeOrder.indexOf(b));
+                    
+                    if (sizeEntries.length > 0) {
+                        sizeDisplay = sizeEntries
+                            .map(([size, data]) => `${size}: ${data.quantity}`)
+                            .join('<br>');
+                        stockQuantity = sizeEntries.reduce((total, [_, data]) => total + data.quantity, 0);
                     }
                 }
                 console.log(`Generated size display for product ${product.id}:`, sizeDisplay);
@@ -281,6 +564,7 @@ function renderProducts(products) {
 
         const row = `
             <tr data-product-id="${product.id}">
+                <td>${product.id}</td>
                 <td><img src="${product.image}" alt="${product.name}" class="product-thumbnail"></td>
                 <td>${product.name}</td>
                 <td>${formatCategory(product.category)}</td>
@@ -302,14 +586,14 @@ function renderProducts(products) {
                     </div>
                 </td>
             </tr>
-            `;
+        `;
         tbody.insertAdjacentHTML('beforeend', row);
-        });
+    });
 
-        // Reinitialize tooltips
-        const tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltips.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
-    }
+    // Reinitialize tooltips
+    const tooltips = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltips.map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+}
 
 // Update pagination controls
 function updatePagination({ currentPage, totalPages, totalItems, limit }) {
@@ -317,8 +601,8 @@ function updatePagination({ currentPage, totalPages, totalItems, limit }) {
     const paginationContainer = document.querySelector('.pagination-section nav');
     if (!paginationContainer) {
         console.error('Pagination container not found');
-                return;
-            }
+        return;
+    }
 
     const pagination = document.createElement('ul');
     pagination.className = 'pagination';
@@ -368,92 +652,6 @@ function getStockStatus(quantity) {
     if (quantity <= 0) return 'cancelled';
     if (quantity <= 10) return 'pending';
     return 'delivered';
-}
-
-// Validation constants
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
-const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-const MIN_IMAGE_DIMENSIONS = { width: 200, height: 200 };
-const MAX_IMAGE_DIMENSIONS = { width: 2000, height: 2000 };
-
-function validateProductData(data, form) {
-    const errors = [];
-    
-    // Name validation
-    if (!data.name || data.name.length < 3) {
-        errors.push('Product name must be at least 3 characters long');
-    }
-    
-    // Category validation
-    const validCategories = ['plush', 'cards', 'accessories', 'clothing-men', 'clothing-women', 'clothing-unisex'];
-    if (!validCategories.includes(data.category)) {
-        errors.push('Please select a valid category');
-    }
-    
-    // Price validation
-    if (isNaN(data.price) || data.price <= 0) {
-        errors.push('Price must be a positive number');
-    }
-    
-    // Stock validation
-    if (isNaN(data.stock) || data.stock < 0) {
-        errors.push('Stock must be a non-negative number');
-    }
-    
-    // Description validation
-    if (!data.description || data.description.length < 10) {
-        errors.push('Description must be at least 10 characters long');
-    }
-    
-    // Image validation
-    const imageInput = form.querySelector('input[type="file"]');
-    const isNewProduct = !form.dataset.editId;
-
-    if (isNewProduct && (!imageInput || !imageInput.files.length)) {
-        errors.push('Please select a product image');
-        return errors;
-    }
-
-    if (imageInput && imageInput.files.length > 0) {
-        const file = imageInput.files[0];
-        
-        // Check file type
-        if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-            errors.push('Please upload a valid image file (JPEG, PNG, GIF, or WEBP)');
-        }
-        
-        // Check file size
-        if (file.size > MAX_IMAGE_SIZE) {
-            errors.push('Image size must not exceed 5MB');
-        }
-        
-        // Create a promise to check image dimensions
-        const dimensionPromise = new Promise((resolve) => {
-            const img = new Image();
-            img.onload = function() {
-                if (this.width < MIN_IMAGE_DIMENSIONS.width || this.height < MIN_IMAGE_DIMENSIONS.height) {
-                    errors.push(`Image dimensions must be at least ${MIN_IMAGE_DIMENSIONS.width}x${MIN_IMAGE_DIMENSIONS.height} pixels`);
-                }
-                if (this.width > MAX_IMAGE_DIMENSIONS.width || this.height > MAX_IMAGE_DIMENSIONS.height) {
-                    errors.push(`Image dimensions must not exceed ${MAX_IMAGE_DIMENSIONS.width}x${MAX_IMAGE_DIMENSIONS.height} pixels`);
-                }
-                resolve();
-            };
-            img.onerror = function() {
-                errors.push('Failed to load image for validation');
-                resolve();
-            };
-            img.src = URL.createObjectURL(file);
-        });
-
-        // Return promise for async validation
-        return dimensionPromise.then(() => {
-            URL.revokeObjectURL(img.src);
-            return errors;
-        });
-    }
-    
-    return Promise.resolve(errors);
 }
 
 function determineStockStatus(stockQuantity) {
@@ -543,6 +741,17 @@ function showNotification(title, messages = [], type = 'success') {
     }, 5000);
 }
 
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+    }).replace(',', '');
+}
+
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -555,66 +764,13 @@ function debounce(func, wait) {
     };
 }
 
-// Add preview image functionality
-document.querySelector('input[name="image"]')?.addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (file) {
-        // Validate file type
-        if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-            showNotification('Error', ['Please select a valid image file'], 'error');
-            this.value = '';
-            return;
-        }
-        
-        // Validate file size
-        if (file.size > MAX_IMAGE_SIZE) {
-            showNotification('Error', ['Image size must not exceed 5MB'], 'error');
-            this.value = '';
-            return;
-        }
-        
-        // Show preview
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const preview = document.createElement('div');
-            preview.className = 'image-preview mt-2';
-            preview.innerHTML = `
-                <img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 200px; object-fit: contain;">
-                <button type="button" class="btn btn-sm btn-danger mt-2" onclick="removeImage()">
-                    <i class="fas fa-times"></i> Remove
-                </button>
-            `;
-            
-            // Remove existing preview if any
-            const existingPreview = document.querySelector('.image-preview');
-            if (existingPreview) {
-                existingPreview.remove();
-            }
-            
-            // Add new preview
-            e.target.parentNode.appendChild(preview);
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
-// Remove image preview
-window.removeImage = function() {
-    const input = document.querySelector('input[name="image"]');
-    input.value = '';
-    const preview = document.querySelector('.image-preview');
-    if (preview) {
-        preview.remove();
-    }
-};
-
 // Delete Product Function
 async function deleteProduct(productId) {
     try {
         if (!confirm('Are you sure you want to delete this product?')) {
             return;
         }
-
+        
         const response = await fetch(`/admin/api/products.php?id=${productId}`, {
             method: 'DELETE'
         });
@@ -666,7 +822,7 @@ async function editProduct(productId) {
             form.dataset.editId = product.id;
 
             // Fill form data
-            form.querySelector('[name="productName"]').value = product.name;
+            form.querySelector('[name="name"]').value = product.name;
             form.querySelector('[name="price"]').value = product.price;
             form.querySelector('[name="description"]').value = product.description;
 
@@ -678,15 +834,30 @@ async function editProduct(productId) {
                 <p class="text-muted small mt-1">Current image. Upload a new one to change it.</p>
             `;
             
+            // Remove existing preview if any
             const existingPreview = form.querySelector('.image-preview');
             if (existingPreview) {
                 existingPreview.remove();
             }
             
+            // Find the image input and its container
             const imageInput = form.querySelector('input[name="image"]');
             if (imageInput) {
-                imageInput.value = '';
-                imageInput.parentNode.appendChild(imagePreview);
+                imageInput.value = ''; // Reset the file input
+                
+                // Find the appropriate container
+                const container = imageInput.closest('.mb-3') || imageInput.closest('.form-group') || imageInput.parentElement;
+                
+                if (container) {
+                    console.log('Found container for image preview:', container);
+                    container.appendChild(imagePreview);
+                } else {
+                    console.error('Could not find appropriate container for image preview');
+                    showNotification('Error', 'Could not display image preview', 'error');
+                }
+            } else {
+                console.error('Image input not found');
+                showNotification('Error', 'Could not find image input', 'error');
             }
 
             // Handle category and size management
@@ -723,44 +894,24 @@ async function editProduct(productId) {
 
                     if (product.category.includes('clothing')) {
                         console.log('Product is clothing category');
+                        stockInput.style.display = 'none';
+                        sizeSection.style.display = 'block';
                         
-                        // Check if it's ONE_SIZE product
-                        const isOneSize = sizes.ONE_SIZE !== undefined;
-                        console.log('Is ONE_SIZE product?', isOneSize);
-                        console.log('Sizes object:', sizes);
+                        // Map size keys to indices
+                        const sizeToIndex = { 'S': 0, 'M': 1, 'L': 2, 'XL': 3 };
                         
-                        if (isOneSize) {
-                            console.log('Handling ONE_SIZE case');
-                            stockInput.style.display = 'block';
-                            sizeSection.style.display = 'none';
-                            const stockQuantityInput = form.querySelector('[name="stock"]');
-                            if (stockQuantityInput) {
-                                const quantity = sizes.ONE_SIZE.quantity || 0;
-                                console.log('Setting ONE_SIZE quantity:', quantity);
-                                stockQuantityInput.value = quantity;
-                            }
-                        } else {
-                            console.log('Handling regular sizes');
-                            stockInput.style.display = 'none';
-                            sizeSection.style.display = 'block';
-                            
-                            // Map size keys to indices
-                            const sizeToIndex = { 'S': 0, 'M': 1, 'L': 2, 'XL': 3 };
-                            
-                            // Process each size
-                            Object.entries(sizes).forEach(([size, data]) => {
-                                console.log('Processing size:', size, 'with data:', data);
-                                const index = sizeToIndex[size];
-                                if (index !== undefined) {
-                                    const input = form.querySelector(`input[name="sizes[${index}][quantity]"]`);
-                                    console.log('Found input for size', size, ':', input ? 'yes' : 'no');
-                                    if (input) {
-                                        input.value = data.quantity || 0;
-                                        console.log('Set quantity for size', size, 'to', data.quantity || 0);
-                                    }
+                        Object.entries(sizes).forEach(([size, data]) => {
+                            console.log('Processing size:', size, 'with data:', data);
+                            const index = sizeToIndex[size];
+                            if (index !== undefined) {
+                                const input = form.querySelector(`input[name="sizes[${index}][quantity]"]`);
+                                console.log('Found input for size', size, ':', input ? 'yes' : 'no');
+                                if (input) {
+                                    input.value = data.quantity || 0;
+                                    console.log('Set quantity for size', size, 'to', data.quantity || 0);
                                 }
-                            });
-                        }
+                            }
+                        });
                     } else {
                         console.log('Product is not clothing category');
                         stockInput.style.display = 'block';
@@ -790,99 +941,57 @@ async function editProduct(productId) {
     }
 }
 
-// Handle Product Form Submit
-async function handleProductSubmit(form) {
-    try {
-        const formData = new FormData(form);
-        const productData = {
-            name: formData.get('productName'),
-            category: formData.get('category'),
-            price: parseFloat(formData.get('price')),
-            stock: parseInt(formData.get('stock')),
-            description: formData.get('description')
-        };
-
-        // Handle sizes for clothing items
-        if (productData.category.includes('clothing')) {
-            const sizes = [];
-            const sizeInputs = form.querySelectorAll('.size-row');
-            let totalStock = 0;
-            
-            // Check if size management section is visible
-            if (document.getElementById('sizeManagementSection').style.display !== 'none') {
-                sizeInputs.forEach((row, index) => {
-                    const quantity = parseInt(row.querySelector('.size-quantity').value) || 0;
-                    const size = row.querySelector('input[name^="sizes"][name$="[size]"]').value;
-                    sizes.push({ size, quantity });
-                    totalStock += quantity;
-                });
-            } else {
-                // Handle ONE_SIZE case
-                const stockQuantity = parseInt(form.querySelector('[name="stock"]').value) || 0;
-                sizes.push({ size: 'ONE_SIZE', quantity: stockQuantity });
-                totalStock = stockQuantity;
-            }
-            
-            productData.sizes = sizes;
-            productData.stock = totalStock;
-        } else {
-            productData.stock = parseInt(form.querySelector('[name="stock"]').value) || 0;
-        }
-
-        // If editing, add product ID
-        if (form.dataset.editId) {
-            productData.id = parseInt(form.dataset.editId);
-        }
-
-        // Validate data
-        const errors = await validateProductData(productData, form);
-        if (errors.length > 0) {
-            showNotification('Validation Error', errors, 'error');
-            return;
-        }
-
-        // Handle image
-        const imageFile = form.querySelector('input[type="file"]').files[0];
-        if (imageFile) {
-            const reader = new FileReader();
-            reader.onload = async function(e) {
-                productData.image = e.target.result;
-                await saveProduct(productData, form);
-            };
-            reader.readAsDataURL(imageFile);
-        } else if (form.dataset.editId) {
-            // If editing and no new image selected, proceed without image
-            await saveProduct(productData, form);
-        } else {
-            showNotification('Error', 'Please select a product image', 'error');
-        }
-    } catch (error) {
-        console.error('Error handling product submission:', error);
-        showNotification('Error', error.message || 'Failed to save product', 'error');
-    }
-}
-
 // Save Product
-async function saveProduct(productData, form) {
+async function saveProduct(formData, form) {
     try {
+        console.log('Starting to save product');
+        
+        // Log all form data being sent
+        console.log('Form data being sent to server:');
+        for (let [key, value] of formData.entries()) {
+            if (value instanceof File) {
+                console.log(`${key}:`, `File: ${value.name} (${value.type}, ${value.size} bytes)`);
+            } else {
+                console.log(`${key}:`, value);
+            }
+        }
+
+        // Send request
         const response = await fetch('/admin/api/products.php', {
-            method: productData.id ? 'PUT' : 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(productData)
+            method: form.dataset.editId ? 'PUT' : 'POST',
+            body: formData
         });
 
-        const result = await response.json();
+        console.log('API Response status:', response.status);
+        console.log('Response headers:', {
+            type: response.headers.get('content-type'),
+            length: response.headers.get('content-length')
+        });
+        
+        // Check if response has content
+        const text = await response.text();
+        console.log('Raw response:', text);
+        
+        let result;
+        try {
+            result = text ? JSON.parse(text) : {};
+            console.log('Parsed API Response:', result);
+        } catch (e) {
+            console.error('Failed to parse response:', e);
+            throw new Error('Invalid server response format');
+        }
         
         if (!response.ok) {
-            throw new Error(result.error || 'Failed to save product');
+            throw new Error(result.error || result.message || 'Failed to save product');
         }
 
         if (result.success) {
+            console.log('Product saved successfully');
             // Close modal
             const modal = bootstrap.Modal.getInstance(document.getElementById('addProductModal'));
-            modal.hide();
+            if (modal) {
+                modal.hide();
+            }
             
             // Reset form
             form.reset();
@@ -893,14 +1002,162 @@ async function saveProduct(productData, form) {
             }
             
             // Show success message and reload products
-            showNotification('Success', productData.id ? 'Product updated successfully' : 'Product added successfully', 'success');
+            showNotification('Success', form.dataset.editId ? 'Product updated successfully' : 'Product added successfully', 'success');
             await loadProducts();
         } else {
-            throw new Error(result.error || 'Failed to save product');
+            throw new Error(result.error || result.message || 'Failed to save product');
         }
     } catch (error) {
-        console.error('Error saving product:', error);
+        console.error('Error in saveProduct:', error);
         showNotification('Error', error.message || 'Failed to save product', 'error');
+    }
+}
+
+// Export products to Excel
+async function handleExport() {
+    const exportOption = document.querySelector('input[name="exportOption"]:checked').value;
+    const modal = bootstrap.Modal.getInstance(document.getElementById('exportOptionsModal'));
+    modal.hide();
+    
+    try {
+        showNotification('Info', 'Preparing export, please wait...', 'info');
+        
+        // Get products based on export option
+        const queryParams = new URLSearchParams({
+            search: currentSearch,
+            category: currentCategory,
+            stock: currentStock,
+            sort: currentSort
+        });
+
+        if (exportOption === 'all') {
+            queryParams.set('page', 1);
+            queryParams.set('limit', 1000); // Get all products
+        } else {
+            queryParams.set('page', currentPage);
+            queryParams.set('limit', currentLimit);
+        }
+
+        const response = await fetch(`/admin/api/products.php?${queryParams}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch products for export');
+        }
+
+        const result = await response.json();
+        if (!result.success || !result.data.products.length) {
+            showNotification('Error', 'No products available to export', 'error');
+            return;
+        }
+
+        const products = result.data.products;
+
+        // Create workbook and worksheet
+        const workbook = XLSX.utils.book_new();
+        
+        // Convert products to rows with styling
+        const rows = products.map(product => {
+            // Calculate total stock
+            let totalStock = 0;
+            if (product.category.includes('clothing')) {
+                try {
+                    const sizes = typeof product.sizes === 'string' ? JSON.parse(product.sizes) : product.sizes;
+                    totalStock = Object.values(sizes).reduce((sum, size) => sum + (size.quantity || 0), 0);
+                } catch (e) {
+                    console.error('Error parsing sizes:', e);
+                    totalStock = 0;
+                }
+            } else {
+                totalStock = product.stock_quantity;
+            }
+
+            return {
+                'ID': { v: product.id, t: 'n', s: { alignment: { horizontal: 'center' } } },
+                'Name': { v: product.name, t: 's', s: { alignment: { horizontal: 'left' } } },
+                'Category': { v: formatCategory(product.category), t: 's', s: { alignment: { horizontal: 'center' } } },
+                'Price': { 
+                    v: parseFloat(product.price).toFixed(2), 
+                    t: 'n',
+                    s: { 
+                        alignment: { horizontal: 'right' },
+                        numFmt: '"$"#,##0.00'
+                    }
+                },
+                'Stock': { v: totalStock, t: 'n', s: { alignment: { horizontal: 'center' } } },
+                'Status': {
+                    v: determineStockStatus(totalStock),
+                    t: 's',
+                    s: {
+                        alignment: { horizontal: 'center' },
+                        fill: {
+                            patternType: 'solid',
+                            fgColor: { rgb: totalStock <= 0 ? 'FFCDD2' : totalStock <= 10 ? 'FFF9C4' : 'C8E6C9' }
+                        }
+                    }
+                },
+                'Description': { v: product.description, t: 's', s: { alignment: { horizontal: 'left', wrapText: true } } },
+                'Created At': { 
+                    v: new Date(product.created_at), 
+                    t: 'd',
+                    s: { 
+                        alignment: { horizontal: 'center' },
+                        numFmt: 'yyyy-mm-dd hh:mm:ss'
+                    }
+                },
+                'Updated At': { 
+                    v: new Date(product.updated_at), 
+                    t: 'd',
+                    s: { 
+                        alignment: { horizontal: 'center' },
+                        numFmt: 'yyyy-mm-dd hh:mm:ss'
+                    }
+                }
+            };
+        });
+
+        // Create worksheet
+        const worksheet = XLSX.utils.json_to_sheet(rows, { header: Object.keys(rows[0]) });
+
+        // Set column widths
+        const colWidths = [
+            { wch: 5 },  // ID
+            { wch: 30 }, // Name
+            { wch: 15 }, // Category
+            { wch: 10 }, // Price
+            { wch: 8 },  // Stock
+            { wch: 12 }, // Status
+            { wch: 50 }, // Description
+            { wch: 20 }, // Created At
+            { wch: 20 }  // Updated At
+        ];
+        worksheet['!cols'] = colWidths;
+
+        // Add header row styling
+        const headerStyle = {
+            font: { bold: true, color: { rgb: 'FFFFFF' } },
+            fill: { patternType: 'solid', fgColor: { rgb: '4A148C' } },
+            alignment: { horizontal: 'center', vertical: 'center' }
+        };
+
+        // Apply header styles
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            const headerCell = XLSX.utils.encode_cell({ r: 0, c: C });
+            if (!worksheet[headerCell].s) worksheet[headerCell].s = {};
+            Object.assign(worksheet[headerCell].s, headerStyle);
+        }
+
+        // Add the worksheet to workbook
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Products');
+
+        // Generate Excel file with appropriate name
+        const exportType = exportOption === 'all' ? 'all' : `page${currentPage}`;
+        const fileName = `products_export_${exportType}_${formatDate(new Date())}.xlsx`;
+        XLSX.writeFile(workbook, fileName);
+
+        showNotification('Success', `Products exported successfully (${exportOption === 'all' ? 'All Products' : 'Current Page'})`, 'success');
+    } catch (error) {
+        console.error('Error exporting products:', error);
+        showNotification('Error', 'Failed to export products: ' + error.message, 'error');
     }
 }
 

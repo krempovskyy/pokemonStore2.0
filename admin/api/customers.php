@@ -23,14 +23,14 @@ header('Content-Type: application/json; charset=utf-8');
 try {
     require_once '../includes/auth.php';
 
-    // Initialize session first
+    // Initialize secure session
     initSecureSession();
-    
-    // Verify admin session
+
+    // Verify admin authentication
     if (!verifyAdminSession()) {
-        http_response_code(401);
-        echo json_encode(['error' => 'Unauthorized']);
-        exit;
+        header('HTTP/1.1 401 Unauthorized');
+        echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
+        exit();
     }
 
     // Database connection

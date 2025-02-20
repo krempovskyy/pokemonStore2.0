@@ -33,8 +33,11 @@ $currentPage = 'customers';
                 <div class="content-header">
                     <h1>Customers Management</h1>
                     <div class="header-actions">
+                        <button class="btn btn-outline-primary" id="exportCustomers">
+                            <i class="fas fa-file-export"></i> Export Customers
+                        </button>
                         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
-                            <i class="fas fa-plus"></i> Add Customer
+                            <i class="fas fa-plus"></i> Add New Customer
                         </button>
                     </div>
                 </div>
@@ -209,5 +212,39 @@ $currentPage = 'customers';
     <!-- Custom scripts -->
     <script src="/admin/js/dashboard.js"></script>
     <script src="/admin/js/customers.js"></script>
+
+    <!-- Replace SheetJS with xlsx-js-style -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.min.js"></script>
+
+    <!-- Export Options Modal -->
+    <div class="modal fade" id="exportOptionsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export Options</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Choose what data you want to export:</p>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="exportOption" id="exportAll" value="all" checked>
+                        <label class="form-check-label" for="exportAll">
+                            Export all customers
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="exportOption" id="exportCurrent" value="current">
+                        <label class="form-check-label" for="exportCurrent">
+                            Export current page only
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="handleExport()">Export</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

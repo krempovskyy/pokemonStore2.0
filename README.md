@@ -33,31 +33,36 @@ Functionality of the project is described as below,
 
 
 2.	Feature 2 - Product Listing and Categories
+    > Product Display System
+      - Responsive product grid layout
+      - Interactive product cards
+      - Dynamic category badges
+      - Smooth hover animations
+      - Price and stock indicators
+    
+    > Quick Review Features
+      - Modal-based product preview
+      - Image gallery with thumbnails
+      - Detailed product specifications
+      - Mobile-friendly interactions
+      - Zoom functionality for product images
+    
+    > Category Management
+      - Organized product categories
+      - Easy navigation structure
+      - Category-based filtering
+      - Dynamic category updates
 
-### Implemented Features
-- **Product Display**
-  - Responsive product grid layout
-  - Product cards with image, name, price
-  - Category badges and hover effects
-
-- **Filter System**
-  - Brand filters (Pokemon/Figure)
-  - Interactive price range slider
-  - Real-time filtering functionality
-
-- **Quick Review**
-  - Modal-based product preview
-  - Image gallery with thumbnails
-  - Detailed product information
-  - Mobile-friendly touch interactions
-
-### Files Structure
-```
-toys.php         - Main products page
-clothes.php      - Main products page
-css/products.css - Styling
-scripts/products.js - Filter & Quick Review functionality
-```
+    ### Files Structure
+    ```
+    products/
+      ├── toys.php           - Toys category page
+      ├── clothes.php        - Clothes category page
+      ├── js/
+      │   └── products.js    - Product display and interactions
+      └── css/
+          └── products.css   - Product styling and layouts
+    ```
 
 ### Contributors
 - **Vinh Nguyen** - Filter system & interactions
@@ -76,12 +81,72 @@ scripts/products.js - Filter & Quick Review functionality
     > Order Summary
 
 5.	Feature 5 - Vinh Nguyen / Lien Pham - Search & Filters
-    > Users can search/ filter which products they looking for quickly
-    > Users can shorten the products list suitable for their demand
+    > Advanced search functionality with real-time results
+      - Product name and description search
+      - Category-based filtering
+      - Instant search suggestions
+    
+    > Comprehensive filter system
+      - Price range slider with min/max values
+      - Brand/type filtering (Pokemon/Figure)
+      - Category-specific filters
+      - Multiple filter combinations support
+    
+    > User-friendly interface
+      - Clear filter indicators
+      - Easy filter reset options
+      - Mobile-responsive filter menu
+      - Smooth animations and transitions
+
+    ### Files Structure
+    ```
+    js/
+      ├── products.js       - Search bar implementation and Filter components
+    ```
+
+    ### Contributors
+    - **Vinh Nguyen**
+    - **Lien Pham**
 
 
-6. Feature 6 – Vinh Nguyen  - Admin console
+6. Feature 6 – Vinh Nguyen  - Admin site
+    > Secure admin dashboard with authentication
+    > Product management system (CRUD operations)
+      - Add new products with images, details, and pricing
+      - Edit existing product information
+      - Remove products from inventory
+      - Bulk product management capabilities
+    > Order management and tracking
+      - View all customer orders
+      - Update order status
+      - Process refunds when needed
+    > User management interface
+      - View registered users
+      - Manage user roles and permissions
+    > Analytics dashboard
+      - Orders tracking
+      - Products tracking
+      - Revenue reports
 
+    ### Files Structure
+    ```
+    admin/
+      ├── dashboard.php        - Main admin dashboard
+      ├── products/
+      │   ├── add.php         - Add new products
+      │   ├── edit.php        - Edit existing products
+      │   └── manage.php      - Product management overview
+      ├── orders/
+      │   ├── list.php        - Order listing and management
+      │   └── details.php     - Detailed order view
+      ├── users/
+      │   └── manage.php      - User management interface
+      ├── js/
+      │   ├── admin.js        - Admin dashboard functionality
+      │   └── products.js     - Product management scripts
+      └── css/
+          └── admin.css       - Admin interface styling
+    ```
 
 7.	Feature 7 - Responsive and Accessible Design
 
