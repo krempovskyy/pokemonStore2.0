@@ -159,7 +159,7 @@ class CartHandler {
                 sizeSelector.value = ''; // Reset size selection
             }
         } else {
-            // For toys and other non-clothing products
+            // For non-clothing products
             if (sizeSelectorContainer) {
                 sizeSelectorContainer.style.display = 'none';
             }

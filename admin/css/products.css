@@ -183,47 +183,119 @@
     border-top: none;
 }
 
-/* Responsive */
+/* Responsive Styles */
 @media (max-width: 768px) {
-    .filters-section .row > div {
-        margin-bottom: 1rem;
-    }
-    
-    .action-buttons {
-        flex-direction: column;
-    }
-    
-    .products-table {
-        font-size: 0.875rem;
-    }
-    
-    .product-thumbnail {
-        width: 40px;
-        height: 40px;
-    }
-
-    .pagination-section {
+    /* Content Header */
+    .content-header {
         flex-direction: column;
         gap: 1rem;
+        align-items: stretch !important;
+    }
+
+    .content-header .header-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .content-header .header-actions button {
+        width: 100%;
+    }
+
+    /* Filters Section */
+    .filters-section .row > div {
+        margin-bottom: 0.5rem;
+    }
+
+    /* Table Adjustments */
+    .table td, .table th {
+        font-size: 0.875rem;
+        padding: 0.5rem;
+    }
+
+    .product-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .action-buttons {
+        flex-direction: row;
+        gap: 0.25rem;
+    }
+
+    .action-buttons .btn {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    /* Modal Adjustments */
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+
+    .modal-body {
         padding: 1rem;
     }
 
-    .items-per-page {
-        width: 100%;
-        justify-content: center;
-    }
-
-    .pagination {
-        justify-content: center;
-        width: 100%;
-    }
-
-    .modal-dialog {
-        margin: 0.5rem;
-    }
-    
     .image-preview {
         height: 150px;
+    }
+
+    /* Size Management */
+    .size-inputs .row {
+        margin-bottom: 0.5rem;
+    }
+
+    .size-inputs .col-md-6 {
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Further adjustments for extra small devices */
+    .content-header h1 {
+        font-size: 1.25rem;
+    }
+
+    .table td:nth-child(4) {  /* Product Name column */
+        min-width: 150px;
+    }
+
+    .product-img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .pagination .page-link {
+        padding: 0.25rem 0.5rem;
+        min-width: 30px;
+    }
+
+    /* Stack form elements in modals */
+    .modal-body .row > div {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 0.5rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .menu-toggle,
+    .filters-section,
+    .action-buttons,
+    .pagination-section {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    .table td,
+    .table th {
+        padding: 0.5rem !important;
     }
 }
 
@@ -440,4 +512,138 @@
 .modal-body {
     max-height: calc(100vh - 210px);
     overflow-y: auto;
-} 
+}
+
+/* Products Management Styles */
+
+/* Content Header */
+.main-content .content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.main-content .content-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.main-content .content-header .header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.main-content .content-header .header-actions button:first-child {
+    margin-right: 1rem !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-content .content-header .header-actions button:first-child {
+        margin-right: 0.75rem !important;
+    }
+}
+
+/* Table Responsive Styles */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+}
+
+.products-table {
+    min-width: 800px; /* Minimum width to ensure proper display */
+}
+
+.products-table th,
+.products-table td {
+    white-space: nowrap;
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+}
+
+/* Allow specific columns to wrap */
+.products-table td:nth-child(3), /* Name column */
+.products-table td:nth-child(7) /* Description column */ {
+    white-space: normal;
+    min-width: 200px;
+    max-width: 300px;
+}
+
+/* Adjust image column */
+.products-table td:nth-child(2) {
+    min-width: 120px;
+}
+
+/* Price column */
+.products-table td:nth-child(5) {
+    min-width: 100px;
+    text-align: right;
+}
+
+/* Stock column */
+.products-table td:nth-child(6) {
+    min-width: 80px;
+    text-align: center;
+}
+
+/* Actions column */
+.products-table td:last-child {
+    min-width: 120px;
+}
+
+@media (max-width: 768px) {
+    .table-responsive {
+        margin: 0 -0.5rem;
+        padding: 0 0.5rem;
+    }
+
+    .products-table th,
+    .products-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    /* Adjust image size */
+    .product-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    /* Make action buttons more compact */
+    .action-buttons {
+        gap: 0.25rem;
+    }
+
+    .action-buttons .btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .products-table {
+        min-width: 650px; /* Slightly smaller minimum width */
+    }
+
+    .products-table td:nth-child(3), /* Name column */
+    .products-table td:nth-child(7) /* Description column */ {
+        max-width: 200px; /* Reduce max-width */
+    }
+
+    /* Further reduce image size */
+    .product-img {
+        width: 50px;
+        height: 50px;
+    }
+
+    /* Make text smaller */
+    .products-table th,
+    .products-table td {
+        font-size: 0.8125rem;
+        padding: 0.5rem 0.4rem;
+    }
+}

@@ -68,18 +68,12 @@ let currentSort = 'newest';
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('DOM Content Loaded');
-
-    // Initialize tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    // Initialize all event listeners
     initializeEventListeners();
-    
-    // Initial load
     await loadCustomers();
 });
 
@@ -92,10 +86,36 @@ function initializeEventListeners() {
     if (searchInput) {
         searchInput.addEventListener('input', debounce(async function(e) {
             currentSearch = e.target.value;
-            currentPage = 1; // Reset to first page on search
+            currentPage = 1;
             await loadCustomers();
         }, 300));
     }
+
+    // Status filter
+    const statusFilter = document.getElementById('statusFilter');
+    if (statusFilter) {
+        statusFilter.addEventListener('change', async function() {
+            currentStatus = this.value;
+            currentPage = 1;
+            await loadCustomers();
+        });
+    }
+
+    // Sort handler
+    const sortBy = document.getElementById('sortBy');
+    if (sortBy) {
+        sortBy.addEventListener('change', async function() {
+            currentSort = this.value;
+            currentPage = 1;
+            await loadCustomers();
+        });
+    }
+
+    // Export customers handler
+    document.getElementById('exportCustomers')?.addEventListener('click', function() {
+        const exportModal = new bootstrap.Modal(document.getElementById('exportOptionsModal'));
+        exportModal.show();
+    });
 
     // Filter change handlers
     const filters = document.querySelectorAll('.form-select');
@@ -527,4 +547,149 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+// Export customers to Excel
+async function handleExport() {
+    const exportOption = document.querySelector('input[name="exportOption"]:checked').value;
+    const modal = bootstrap.Modal.getInstance(document.getElementById('exportOptionsModal'));
+    modal.hide();
+    
+    try {
+        showNotification('Info', 'Preparing export, please wait...', 'info');
+        
+        // Get customers based on export option
+        const queryParams = new URLSearchParams({
+            search: currentSearch,
+            status: currentStatus,
+            sort: currentSort
+        });
+
+        if (exportOption === 'all') {
+            queryParams.set('page', 1);
+            queryParams.set('limit', 1000); // Get all customers
+        } else {
+            queryParams.set('page', currentPage);
+            queryParams.set('limit', currentLimit);
+        }
+
+        const response = await fetch(`/admin/api/customers.php?${queryParams}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch customers for export');
+        }
+
+        const result = await response.json();
+        if (!result.success || !result.data.customers.length) {
+            showNotification('Error', 'No customers available to export', 'error');
+            return;
+        }
+
+        const customers = result.data.customers;
+
+        // Create workbook and worksheet
+        const workbook = XLSX.utils.book_new();
+        
+        // Convert customers to rows with styling
+        const rows = customers.map(customer => ({
+            'ID': { v: customer.id, t: 'n', s: { alignment: { horizontal: 'center' } } },
+            'Name': { v: `${customer.first_name} ${customer.last_name}`, t: 's', s: { alignment: { horizontal: 'left' } } },
+            'Email': { v: customer.email, t: 's', s: { alignment: { horizontal: 'left' } } },
+            'Phone': { v: customer.phone, t: 's', s: { alignment: { horizontal: 'center' } } },
+            'Address': { v: customer.address, t: 's', s: { alignment: { horizontal: 'left', wrapText: true } } },
+            'Total Orders': { v: customer.total_orders || 0, t: 'n', s: { alignment: { horizontal: 'center' } } },
+            'Total Spent': { 
+                v: parseFloat(customer.total_spent || 0).toFixed(2), 
+                t: 'n',
+                s: { 
+                    alignment: { horizontal: 'right' },
+                    numFmt: '"$"#,##0.00'
+                }
+            },
+            'Last Order': { 
+                v: customer.last_order_date ? new Date(customer.last_order_date) : 'Never', 
+                t: customer.last_order_date ? 'd' : 's',
+                s: { 
+                    alignment: { horizontal: 'center' },
+                    numFmt: 'yyyy-mm-dd hh:mm:ss'
+                }
+            },
+            'Status': {
+                v: customer.status,
+                t: 's',
+                s: {
+                    alignment: { horizontal: 'center' },
+                    fill: {
+                        patternType: 'solid',
+                        fgColor: { 
+                            rgb: customer.status === 'active' ? 'C8E6C9' : 
+                                 customer.status === 'inactive' ? 'FFF9C4' : 'FFCDD2' 
+                        }
+                    }
+                }
+            },
+            'Created At': { 
+                v: new Date(customer.created_at), 
+                t: 'd',
+                s: { 
+                    alignment: { horizontal: 'center' },
+                    numFmt: 'yyyy-mm-dd hh:mm:ss'
+                }
+            },
+            'Updated At': { 
+                v: new Date(customer.updated_at), 
+                t: 'd',
+                s: { 
+                    alignment: { horizontal: 'center' },
+                    numFmt: 'yyyy-mm-dd hh:mm:ss'
+                }
+            }
+        }));
+
+        // Create worksheet
+        const worksheet = XLSX.utils.json_to_sheet(rows, { header: Object.keys(rows[0]) });
+
+        // Set column widths
+        const colWidths = [
+            { wch: 5 },  // ID
+            { wch: 25 }, // Name
+            { wch: 30 }, // Email
+            { wch: 15 }, // Phone
+            { wch: 40 }, // Address
+            { wch: 12 }, // Total Orders
+            { wch: 12 }, // Total Spent
+            { wch: 20 }, // Last Order
+            { wch: 10 }, // Status
+            { wch: 20 }, // Created At
+            { wch: 20 }  // Updated At
+        ];
+        worksheet['!cols'] = colWidths;
+
+        // Add header row styling
+        const headerStyle = {
+            font: { bold: true, color: { rgb: 'FFFFFF' } },
+            fill: { patternType: 'solid', fgColor: { rgb: '4A148C' } },
+            alignment: { horizontal: 'center', vertical: 'center' }
+        };
+
+        // Apply header styles
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            const headerCell = XLSX.utils.encode_cell({ r: 0, c: C });
+            if (!worksheet[headerCell].s) worksheet[headerCell].s = {};
+            Object.assign(worksheet[headerCell].s, headerStyle);
+        }
+
+        // Add the worksheet to workbook
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Customers');
+
+        // Generate Excel file with appropriate name
+        const exportType = exportOption === 'all' ? 'all' : `page${currentPage}`;
+        const fileName = `customers_export_${exportType}_${formatDate(new Date())}.xlsx`;
+        XLSX.writeFile(workbook, fileName);
+
+        showNotification('Success', `Customers exported successfully (${exportOption === 'all' ? 'All Customers' : 'Current Page'})`, 'success');
+    } catch (error) {
+        console.error('Error exporting customers:', error);
+        showNotification('Error', 'Failed to export customers: ' + error.message, 'error');
+    }
 }
