@@ -1,31 +1,43 @@
 # Enable rewrite engine
 RewriteEngine On
-RewriteBase /
+RewriteBase /admin/
 
-# Protect .htaccess
-<Files .htaccess>
+# Protect sensitive files
+<Files ~ "^\.">
     Order allow,deny
     Deny from all
 </Files>
 
-# Redirect users URL to customers
-RewriteRule ^admin/users/?$ /admin/customers [R=301,L]
+# Allow access to assets
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch>
 
-# Admin routing rules
-RewriteCond %{REQUEST_URI} ^/admin/?$
-RewriteRule ^admin/?$ admin/index.php [L]
+# Redirect to index if logged in and trying to access login page
+RewriteCond %{REQUEST_URI} ^/admin/login/?$ [NC]
+RewriteCond %{HTTP_COOKIE} PHPSESSID [NC]
+RewriteRule ^ index.php [R=302,L]
 
-# Handle admin login
-RewriteRule ^admin/login/?$ admin/login.php [L]
+# Redirect to login if not logged in
+RewriteCond %{REQUEST_URI} ^/admin/(index|products|orders|customers)/?$ [NC]
+RewriteCond %{HTTP_COOKIE} !PHPSESSID [NC]
+RewriteRule ^ login.php [R=302,L]
+
+# Basic routing
+RewriteRule ^$ index.php [L]
+RewriteRule ^login/?$ login.php [L]
+RewriteRule ^logout/?$ logout.php [L]
 
 # Handle admin sections
-RewriteCond %{REQUEST_URI} ^/admin/([^/]+)/?$
-RewriteRule ^admin/([^/]+)/?$ admin/$1/index.php [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/?$ $1/index.php [L]
 
-# Protect admin directory except for development
-<IfModule mod_rewrite.c>
-    # Allow access only from localhost
-    RewriteCond %{HTTP_HOST} ^localhost [NC,OR]
-    RewriteCond %{HTTP_HOST} ^127\.0\.0\.1 [NC]
-    RewriteRule ^admin/(.*)$ admin/$1 [L]
+# Security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
 </IfModule>

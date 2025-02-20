@@ -1,0 +1,30 @@
+# Deny direct access to PHP files
+Order Deny,Allow
+Deny from all
+
+# Only allow authenticated requests
+<FilesMatch "\.php$">
+    Order Allow,Deny
+    Allow from all
+
+    # Require authentication check
+    RewriteEngine On
+    RewriteBase /admin/api/
+
+    # Check for session
+    RewriteCond %{HTTP_COOKIE} !PHPSESSID [NC]
+    RewriteRule .* - [F]
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
+
+# Additional security headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+    Header set X-XSS-Protection "1; mode=block"
+    Header always set Content-Type "application/json; charset=utf-8"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Authorization, Content-Type"
+</IfModule> 
