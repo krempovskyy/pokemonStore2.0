@@ -31,7 +31,7 @@ if (isset($_SESSION['user_id'])) {
                 <p class="text-muted">Join our Pokemon community</p>
             </div>
 
-            <form action="signupForm.php" method="post" id="signupForm" class="needs-validation" novalidate>
+            <form action="database/signupForm.php" method="POST" id="signupForm" class="needs-validation" novalidate>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">First Name</label>
@@ -121,7 +121,7 @@ if (isset($_SESSION['user_id'])) {
                                required
                                minlength="8"
                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$">
-                        <button type="button" class="btn btn-outline-secondary toggle-password">
+                        <button type="button" name="createaccount" class="btn btn-outline-secondary toggle-password">
                             <i class="fas fa-eye"></i>
                         </button>
                         <div class="invalid-feedback">
@@ -171,6 +171,7 @@ if (isset($_SESSION['user_id'])) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="js/auth.js"></script>
 </body>
 </html>
