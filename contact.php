@@ -49,7 +49,7 @@ include 'includes/header.php';
         <div class="col-lg-6">
             <div class="contact-form-section">
                 <h2 class="section-title mb-4">Send Us a Message</h2>
-                <form id="contactForm" action="contact_process.php" method="POST" class="contact-form" onsubmit="return validateForm()">
+                <form id="contactForm" action="database/contact_process.php" method="POST" class="contact-form" onsubmit="return validateForm()">
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" id="name" name="name" class="form-control" required>

@@ -1,7 +1,8 @@
 <?php
 
 // Check if the 'submit' button in the form was clicked
-if ($_server["request_method"] == "post") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    echo"Form received!</br>";
 
     // Retrieve data from the form and store it in variables
     $name = trim($_POST['name']);     // name
@@ -19,7 +20,7 @@ if ($_server["request_method"] == "post") {
     if ($stmt = $conn->prepare($sql)) {
 
         //bind paramenters to the prepared stattement
-        $stmt->bind_param("sss", $name, $email);
+        $stmt->bind_param("sss", $name, $email, $message);
 
         //ececute the statement
         if( $stmt->execute() ) {

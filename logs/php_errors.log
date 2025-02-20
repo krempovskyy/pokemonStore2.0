@@ -66865,3 +66865,37 @@ Stack trace:
 [19-Feb-2025 22:09:56 Europe/Helsinki] Session verified successfully. Last activity updated to: 2025-02-19 22:09:56
 [19-Feb-2025 22:09:56 Europe/Helsinki] Attempting database connection to db/pokemonstore...
 [19-Feb-2025 22:09:56 Europe/Helsinki] Database connection successful
+[20-Feb-2025 09:18:25 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 09:18:25 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 09:18:25 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 09:18:25 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 09:18:25 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 17:13:06
+    [updated_at] => 2025-02-19 17:18:54
+)
+
+[20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 1 using main image for gallery

@@ -31,7 +31,7 @@ try {
 function closeConnection() {
     global $conn;
     if ($conn) {
-        $conn->close();
+        
     }
 }
 
