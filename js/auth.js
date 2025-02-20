@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Initialize password toggle buttons
     initializePasswordToggles();
 
@@ -18,11 +18,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // Password toggle functionality
 function initializePasswordToggles() {
     document.querySelectorAll('.toggle-password').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const input = this.previousElementSibling;
             const type = input.type === 'password' ? 'text' : 'password';
             input.type = type;
-            
+
             // Toggle icon
             const icon = this.querySelector('i');
             icon.classList.toggle('fa-eye');
@@ -33,9 +33,9 @@ function initializePasswordToggles() {
 
 // Signin form initialization
 function initializeSigninForm(form) {
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         if (!form.checkValidity()) {
             e.stopPropagation();
             form.classList.add('was-validated');
@@ -76,7 +76,7 @@ function initializeSignupForm(form) {
     const confirmPassword = form.querySelector('input[name="confirmPassword"]');
 
     // Password match validation
-    confirmPassword.addEventListener('input', function() {
+    confirmPassword.addEventListener('input', function () {
         if (this.value !== password.value) {
             this.setCustomValidity('Passwords do not match');
         } else {
@@ -84,9 +84,9 @@ function initializeSignupForm(form) {
         }
     });
 
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         if (!form.checkValidity()) {
             e.stopPropagation();
             form.classList.add('was-validated');
@@ -95,11 +95,12 @@ function initializeSignupForm(form) {
 
         const formData = new FormData(form);
         const data = {
-            firstName: formData.get('firstName'),
-            lastName: formData.get('lastName'),
+            firstname: formData.get('firstName'),
+            lastname: formData.get('lastName'),
             email: formData.get('email'),
             phone: formData.get('phone'),
             password: formData.get('password'),
+            confirmpassword: formData.get('confirmPassword'),
             terms: formData.get('terms') === 'on'
         };
 
@@ -110,17 +111,25 @@ function initializeSignupForm(form) {
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creating account...';
 
         // Simulate API call
-        setTimeout(() => {
-            // TODO: Replace with actual API call
-            if (data.email === 'test@example.com') {
+        $.ajax({
+            url: 'database/signupForm.php', // Use the form's action URL
+            type: "POST",
+            data: data, // Serialize form data
+            success: function (response) {
+                if (response == '1') {
+                    showNotification('Success!', 'Account created successfully. Redirecting...', 'success');
+                    setTimeout(() => window.location.href = 'signin.php', 1500);
+                } else {
+                    showNotification('Error!', response, 'error');
+                }
+
+            },
+            error: function () {
                 showNotification('Error!', 'Email already exists', 'error');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
-            } else {
-                showNotification('Success!', 'Account created successfully. Redirecting...', 'success');
-                setTimeout(() => window.location.href = 'signin.php', 1500);
             }
-        }, 1500);
+        });
     });
 }
 
