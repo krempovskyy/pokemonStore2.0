@@ -1,0 +1,1 @@
+UPDATE products SET sizes = JSON_REMOVE(sizes, '$.ONE_SIZE') WHERE JSON_CONTAINS_PATH(sizes, 'one', '$.ONE_SIZE'); UPDATE products SET stock_quantity = JSON_EXTRACT(sizes, '$.ONE_SIZE.quantity'), sizes = NULL WHERE category = 'accessories' AND JSON_CONTAINS_PATH(sizes, 'one', '$.ONE_SIZE');

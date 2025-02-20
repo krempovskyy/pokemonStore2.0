@@ -99,7 +99,8 @@ function initializeEventListeners() {
 
     // Export orders handler
     document.getElementById('exportOrders')?.addEventListener('click', function() {
-        exportOrders();
+        const exportModal = new bootstrap.Modal(document.getElementById('exportOptionsModal'));
+        exportModal.show();
     });
 
     // Print invoice handler
@@ -359,7 +360,7 @@ async function editOrder(orderId) {
             console.log('Order data:', order);
             
             // Get form and form elements
-            const form = document.getElementById('editOrderForm');
+        const form = document.getElementById('editOrderForm');
             console.log('Form element:', form);
             
             if (!form) {
@@ -375,32 +376,32 @@ async function editOrder(orderId) {
             form.querySelector('select[name="paymentStatus"]').value = order.payment_status;
             form.querySelector('textarea[name="shippingAddress"]').value = order.shipping_address;
         
-            // Populate order items
-            const itemsContainer = document.getElementById('orderItems');
+        // Populate order items
+        const itemsContainer = document.getElementById('orderItems');
             console.log('Items container:', itemsContainer);
             
             if (!itemsContainer) {
                 throw new Error('Order items container not found');
             }
 
-            itemsContainer.innerHTML = order.items.map((item, index) => `
-                <div class="order-item mb-3">
-                    <div class="row">
+        itemsContainer.innerHTML = order.items.map((item, index) => `
+            <div class="order-item mb-3">
+                <div class="row">
                         <div class="col-md-6">
                             <input type="text" class="form-control" value="${item.product_name}" readonly>
-                        </div>
+                    </div>
                         <div class="col-md-2">
                             <input type="number" class="form-control" value="${item.quantity}" readonly>
                         </div>
                         <div class="col-md-2">
                             <input type="text" class="form-control" value="$${parseFloat(item.price).toFixed(2)}" readonly>
-                        </div>
+                    </div>
                         <div class="col-md-2">
                             <input type="text" class="form-control" value="$${(item.quantity * item.price).toFixed(2)}" readonly>
-                        </div>
                     </div>
                 </div>
-            `).join('');
+            </div>
+        `).join('');
 
             // Update totals using values from server
             const subtotalElement = document.getElementById('subtotal');
@@ -416,10 +417,10 @@ async function editOrder(orderId) {
                 totalElement.textContent = total.toFixed(2);
             }
 
-            // Show modal
-            const modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
             console.log('Modal element:', modal);
-            modal.show();
+        modal.show();
         } else {
             throw new Error(result.error || 'Failed to fetch order data');
         }
@@ -485,17 +486,28 @@ function printInvoice(orderId) {
 }
 
 // Export orders to Excel
-async function exportOrders() {
+async function handleExport() {
+    const exportOption = document.querySelector('input[name="exportOption"]:checked').value;
+    const modal = bootstrap.Modal.getInstance(document.getElementById('exportOptionsModal'));
+    modal.hide();
+    
     try {
-        // Get current visible orders
+        showNotification('Info', 'Preparing export, please wait...', 'info');
+        
+        // Get orders based on export option
         const queryParams = new URLSearchParams({
-            page: 1,
-            limit: 1000, // Get all matching orders
             search: currentSearch,
             status: currentStatus,
-            date: currentDateFilter,
             sort: currentSort
         });
+
+        if (exportOption === 'all') {
+            queryParams.set('page', 1);
+            queryParams.set('limit', 1000); // Get all orders
+        } else {
+            queryParams.set('page', currentPage);
+            queryParams.set('limit', currentLimit);
+        }
 
         const response = await fetch(`/admin/api/orders.php?${queryParams}`);
         if (!response.ok) {
@@ -510,33 +522,103 @@ async function exportOrders() {
 
         const orders = result.data.orders;
 
-        // Create workbook
-        const worksheet = XLSX.utils.json_to_sheet(orders.map(order => ({
-            'Order Number': order.order_number,
-            'Customer': order.customer_name,
-            'Email': order.customer_email,
-            'Date': formatDate(order.created_at),
-            'Items': order.items.map(item => `${item.quantity}x ${item.product_name}`).join(', '),
-            'Total': `$${parseFloat(order.total_amount).toFixed(2)}`,
-            'Status': order.status.charAt(0).toUpperCase() + order.status.slice(1),
-            'Payment Status': order.payment_status.charAt(0).toUpperCase() + order.payment_status.slice(1),
-            'Shipping Address': order.shipping_address
-        })));
-
+        // Create workbook and worksheet
         const workbook = XLSX.utils.book_new();
+        
+        // Convert orders to rows with styling
+        const rows = orders.map(order => ({
+            'ID': { v: order.id, t: 'n', s: { alignment: { horizontal: 'center' } } },
+            'Customer Name': { v: order.customer_name, t: 's', s: { alignment: { horizontal: 'left' } } },
+            'Customer Email': { v: order.customer_email, t: 's', s: { alignment: { horizontal: 'left' } } },
+            'Products': { v: formatOrderProducts(order.products, true), t: 's', s: { alignment: { horizontal: 'left', wrapText: true } } },
+            'Total Amount': { 
+                v: parseFloat(order.total_amount).toFixed(2), 
+                t: 'n',
+                s: { 
+                    alignment: { horizontal: 'right' },
+                    numFmt: '"$"#,##0.00'
+                }
+            },
+            'Status': {
+                v: formatStatus(order.status),
+                t: 's',
+                s: {
+                    alignment: { horizontal: 'center' },
+                    fill: {
+                        patternType: 'solid',
+                        fgColor: { 
+                            rgb: order.status === 'delivered' ? 'C8E6C9' : 
+                                 order.status === 'cancelled' ? 'FFCDD2' : 
+                                 order.status === 'pending' ? 'FFF9C4' : 'E1F5FE'
+                        }
+                    }
+                }
+            },
+            'Created At': { 
+                v: new Date(order.created_at), 
+                t: 'd',
+                s: { 
+                    alignment: { horizontal: 'center' },
+                    numFmt: 'yyyy-mm-dd hh:mm:ss'
+                }
+            },
+            'Updated At': { 
+                v: new Date(order.updated_at), 
+                t: 'd',
+                s: { 
+                    alignment: { horizontal: 'center' },
+                    numFmt: 'yyyy-mm-dd hh:mm:ss'
+                }
+            }
+        }));
+
+        // Create worksheet
+        const worksheet = XLSX.utils.json_to_sheet(rows, { header: Object.keys(rows[0]) });
+
+        // Set column widths
+        const colWidths = [
+            { wch: 5 },  // ID
+            { wch: 25 }, // Customer Name
+            { wch: 30 }, // Customer Email
+            { wch: 50 }, // Products
+            { wch: 12 }, // Total Amount
+            { wch: 12 }, // Status
+            { wch: 20 }, // Created At
+            { wch: 20 }  // Updated At
+        ];
+        worksheet['!cols'] = colWidths;
+
+        // Add header row styling
+        const headerStyle = {
+            font: { bold: true, color: { rgb: 'FFFFFF' } },
+            fill: { patternType: 'solid', fgColor: { rgb: '4A148C' } },
+            alignment: { horizontal: 'center', vertical: 'center' }
+        };
+
+        // Apply header styles
+        const range = XLSX.utils.decode_range(worksheet['!ref']);
+        for (let C = range.s.c; C <= range.e.c; ++C) {
+            const headerCell = XLSX.utils.encode_cell({ r: 0, c: C });
+            if (!worksheet[headerCell].s) worksheet[headerCell].s = {};
+            Object.assign(worksheet[headerCell].s, headerStyle);
+        }
+
+        // Add the worksheet to workbook
         XLSX.utils.book_append_sheet(workbook, worksheet, 'Orders');
 
-        // Generate Excel file
-        XLSX.writeFile(workbook, `orders_export_${formatDate(new Date())}.xlsx`);
+        // Generate Excel file with appropriate name
+        const exportType = exportOption === 'all' ? 'all' : `page${currentPage}`;
+        const fileName = `orders_export_${exportType}_${formatDate(new Date())}.xlsx`;
+        XLSX.writeFile(workbook, fileName);
 
-        showNotification('Success', 'Orders exported successfully', 'success');
+        showNotification('Success', `Orders exported successfully (${exportOption === 'all' ? 'All Orders' : 'Current Page'})`, 'success');
     } catch (error) {
         console.error('Error exporting orders:', error);
-        showNotification('Error', 'Failed to export orders', 'error');
+        showNotification('Error', 'Failed to export orders: ' + error.message, 'error');
     }
 }
 
-// Utility Functions
+// Helper functions
 function formatDate(dateStr) {
     const date = new Date(dateStr);
     return date.toLocaleDateString('en-US', {
@@ -546,6 +628,45 @@ function formatDate(dateStr) {
         hour: '2-digit',
         minute: '2-digit'
     });
+}
+
+function formatStatus(status) {
+    return status.charAt(0).toUpperCase() + status.slice(1);
+}
+
+function formatOrderProducts(products, forExport = false) {
+    if (!Array.isArray(products)) {
+        try {
+            products = JSON.parse(products);
+        } catch (e) {
+            console.error('Error parsing products:', e);
+            return 'Error loading products';
+        }
+    }
+
+    if (forExport) {
+        return products.map(p => 
+            `${p.name} (${p.quantity}x $${parseFloat(p.price).toFixed(2)})`
+        ).join('\n');
+    }
+
+    return products.map(p => 
+        `<div class="product-item">
+            ${p.name} <span class="text-muted">(${p.quantity}x $${parseFloat(p.price).toFixed(2)})</span>
+        </div>`
+    ).join('');
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
 
 function showNotification(title, messages = [], type = 'success') {
@@ -570,19 +691,19 @@ function showNotification(title, messages = [], type = 'success') {
         padding: 15px 20px;
         z-index: 9999;
         opacity: 0;
-        transform: translateX(20px);
-        transition: all 0.3s ease;
+        transform: translateX(50px);
+        transition: all 0.3s ease-in-out;
     `;
 
     // Get icon based on type
     const getIcon = () => {
         switch(type) {
             case 'success':
-                return '<i class="fas fa-check-circle"></i>';
+                return '<i class="fas fa-check-circle" style="color: #155724"></i>';
             case 'error':
-                return '<i class="fas fa-exclamation-circle"></i>';
+                return '<i class="fas fa-exclamation-circle" style="color: #721c24"></i>';
             default:
-                return '<i class="fas fa-info-circle"></i>';
+                return '<i class="fas fa-info-circle" style="color: #004085"></i>';
         }
     };
 
@@ -599,15 +720,15 @@ function showNotification(title, messages = [], type = 'success') {
                     ${title}
                 </div>
                 ${content.length > 1 ? `
-                    <ul style="margin: 0; padding-left: 18px;">
-                        ${content.map(msg => `<li>${msg}</li>`).join('')}
+                    <ul style="margin: 0; padding-left: 18px; font-size: 14px;">
+                        ${content.map(msg => `<li style="margin-bottom: 4px;">${msg}</li>`).join('')}
                     </ul>
                 ` : `
-                    <div>${content[0]}</div>
+                    <div style="font-size: 14px;">${content[0]}</div>
                 `}
             </div>
             <button onclick="this.parentElement.parentElement.remove()" 
-                    style="background: none; border: none; font-size: 18px; cursor: pointer; padding: 0 0 0 10px;">
+                    style="background: none; border: none; font-size: 18px; cursor: pointer; padding: 0 0 0 10px; color: ${type === 'success' ? '#155724' : type === 'error' ? '#721c24' : '#004085'}; opacity: 0.5;">
                 ×
             </button>
         </div>
@@ -624,19 +745,7 @@ function showNotification(title, messages = [], type = 'success') {
     // Auto remove after delay
     setTimeout(() => {
         notification.style.opacity = '0';
-        notification.style.transform = 'translateX(20px)';
+        notification.style.transform = 'translateX(50px)';
         setTimeout(() => notification.remove(), 300);
     }, 5000);
-}
-
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
 } 

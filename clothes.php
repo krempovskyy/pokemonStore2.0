@@ -80,7 +80,7 @@ $products = [
         'gallery' => [
             'images/UNI HAT.png'
         ],
-        'sizes' => ['One Size']
+        'sizes' => ['S', 'M', 'L']
     ],
     [
         'id' => 2008,

@@ -29,9 +29,14 @@ $currentPage = 'products';
                 <!-- Content Header -->
                 <div class="content-header">
                     <h1>Products Management</h1>
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
-                        <i class="fas fa-plus"></i> Add New Product
-                    </button>
+                    <div class="header-actions">
+                        <button class="btn btn-outline-primary" id="exportProducts">
+                            <i class="fas fa-file-export"></i> Export Products
+                        </button>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                            <i class="fas fa-plus"></i> Add New Product
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Filters and Search -->
@@ -79,6 +84,7 @@ $currentPage = 'products';
                         <table class="table table-hover products-table">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Image</th>
                                     <th>Product Name</th>
                                     <th>Category</th>
@@ -128,7 +134,7 @@ $currentPage = 'products';
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Product Name</label>
-                                <input type="text" name="productName" class="form-control" required>
+                                <input type="text" name="name" class="form-control" required>
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label">Category</label>
@@ -210,8 +216,13 @@ $currentPage = 'products';
                             <textarea name="description" class="form-control" rows="3" required></textarea>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Product Images</label>
-                            <input type="file" name="image" class="form-control" accept="image/*">
+                            <label class="form-label">Product Image</label>
+                            <div class="image-input-container">
+                                <input type="file" name="image" class="form-control" accept="image/*">
+                                <div class="image-preview-container mt-2">
+                                    <!-- Image preview will be inserted here -->
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -230,5 +241,39 @@ $currentPage = 'products';
     <!-- Custom scripts -->
     <script src="/admin/js/dashboard.js"></script>
     <script src="/admin/js/products.js"></script>
+
+    <!-- Replace SheetJS with xlsx-js-style -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.min.js"></script>
+
+    <!-- Export Options Modal -->
+    <div class="modal fade" id="exportOptionsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Export Options</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Choose what data you want to export:</p>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="radio" name="exportOption" id="exportAll" value="all" checked>
+                        <label class="form-check-label" for="exportAll">
+                            Export all products
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="exportOption" id="exportCurrent" value="current">
+                        <label class="form-check-label" for="exportCurrent">
+                            Export current page only
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="handleExport()">Export</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html> 

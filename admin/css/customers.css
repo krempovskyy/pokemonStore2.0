@@ -120,20 +120,195 @@
     font-size: 0.8rem;
 }
 
+/* Table Responsive Styles */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+}
+
+.customers-table {
+    min-width: 800px; /* Minimum width to ensure proper display */
+}
+
+.customers-table th,
+.customers-table td {
+    white-space: nowrap;
+    padding: 1rem 0.75rem;
+    vertical-align: middle;
+}
+
+/* Customer info column */
+.customers-table td:first-child {
+    min-width: 250px;
+}
+
+/* Phone column */
+.customers-table td:nth-child(2) {
+    min-width: 120px;
+}
+
+/* Orders column */
+.customers-table td:nth-child(3) {
+    min-width: 150px;
+}
+
+/* Date columns */
+.customers-table td:nth-child(4),
+.customers-table td:nth-child(5) {
+    min-width: 140px;
+}
+
+/* Status column */
+.customers-table td:nth-child(6) {
+    min-width: 100px;
+    text-align: center;
+}
+
+/* Actions column */
+.customers-table td:last-child {
+    min-width: 120px;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
-    .customer-info {
+    /* Content Header */
+    .content-header {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .content-header .header-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    /* Search and Filters */
+    .search-box {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .filters-section {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .filters-section select {
+        width: 100%;
+    }
+
+    /* Table Adjustments */
+    .table-responsive {
+        margin: 0 -0.5rem;
+        padding: 0 0.5rem;
+    }
+
+    .customers-table th,
+    .customers-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .customer-info {
+        gap: 0.5rem;
+    }
+
+    .customer-avatar {
+        width: 35px;
+        height: 35px;
     }
 
     .action-buttons {
-        flex-direction: column;
+        gap: 0.25rem;
     }
 
-    .table td {
-        padding: 0.75rem;
+    .action-buttons .btn {
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+    }
+
+    /* Modal Adjustments */
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+
+    .modal-body {
+        padding: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.75rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Further adjustments for extra small devices */
+    .content-header h1 {
+        font-size: 1.25rem;
+    }
+
+    .customers-table {
+        min-width: 650px; /* Slightly smaller minimum width */
+    }
+
+    .customers-table th,
+    .customers-table td {
+        font-size: 0.8125rem;
+        padding: 0.5rem 0.4rem;
+    }
+
+    .customer-avatar {
+        width: 30px;
+        height: 30px;
+    }
+
+    .customer-name {
+        font-size: 0.875rem;
+    }
+
+    .customer-email {
+        font-size: 0.75rem;
+    }
+
+    .pagination .page-link {
+        padding: 0.25rem 0.5rem;
+        min-width: 30px;
+    }
+
+    /* Stack form elements in modals */
+    .modal-body .row > div {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .customer-details {
+        padding: 0.5rem;
+    }
+}
+
+/* Print styles */
+@media print {
+    .menu-toggle,
+    .filters-section,
+    .action-buttons,
+    .pagination-section {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    .table td,
+    .table th {
+        padding: 0.5rem !important;
     }
 }
 
@@ -147,17 +322,26 @@
 }
 
 /* Content Header */
-.content-header {
+.main-content .content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
 }
 
-.content-header h1 {
+.main-content .content-header h1 {
     margin: 0;
     font-size: 1.5rem;
     font-weight: 600;
+}
+
+.main-content .content-header .header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.main-content .content-header .header-actions button:first-child {
+    margin-right: 1rem !important;
 }
 
 /* Pagination */
@@ -268,4 +452,11 @@
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .main-content .content-header .header-actions button:first-child {
+        margin-right: 0.75rem !important;
+    }
 } 

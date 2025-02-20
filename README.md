@@ -80,7 +80,7 @@ scripts/products.js - Filter & Quick Review functionality
     > Users can shorten the products list suitable for their demand
 
 
-6. Feature 6 – Vinh Nguyen  - Admin console
+6. Feature 6 – Vinh Nguyen  - Admin site
 
 
 7.	Feature 7 - Responsive and Accessible Design
