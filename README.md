@@ -29,7 +29,7 @@ ________________________________________
 ## Features
 Functionality of the project is described as below, 
 
-1.	Feature 1 - Dmytro Krempovskyy – User Authentication & Account Management
+1.	Feature 1 - Dmytro Krempovskyy and Madushani – User Authentication & Account Management
 
 
 2.	Feature 2 - Product Listing and Categories
@@ -76,11 +76,7 @@ Functionality of the project is described as below,
      
     > Javacsript validation to ensure form compeleteness
 
-4.	Feature 4 – Madushani / Dmytro - Shopping  Cart
-
-    > Order Summary
-
-5.	Feature 5 - Vinh Nguyen / Lien Pham - Search & Filters
+4.	Feature 4 - Vinh Nguyen / Lien Pham - Search & Filters
     > Advanced search functionality with real-time results
       - Product name and description search
       - Category-based filtering
@@ -162,14 +158,13 @@ Below is the planned database structure
 | **Table Name**     | **Created By**           | **Description**  
 | -----------        | ----------               | ------------   
 | Users              | Dmytro                   | Stores User Information
-| Products           | Vinh/Lien                | Stores Products Infomation                                      
-| Cart               |                          | Stores Cart Items                 
+| Products           | Vinh/Lien                | Stores Products Infomation                
 | Contact            | Madu                     | Stores User Inquery   
 
 
 
 
-![ER diagram](images/ER.jpg)
+![ER diagram](images/ER.png)
 ________________________________________
 
 ## # Created Forms
@@ -179,23 +174,12 @@ List of forms include in the project
 |**Form name**        | **Created by** | **Description**                  | **Validation Applied**
 |---------------      | -----------    | ---------------                  | ---------------------
 | Registration        | Dmytro         | Allow users to create accounts   | E-mail & password validation 
-| Login form          | Dmytro         | User authentication              | Required fields and password encryption 
+| Login form          | Dmytro and Madu        | User authentication              | Required fields and password encryption 
 | Product upload form | Vinh/ Lien     | Admin adds new products          | Image validation and required fields 
-| Order Summary form  | Madu/Dmytro    | Summary of the shopping cart     |
 | Contact form        | Madu           | User submit inquiries            | Required fields and email validation 
 
 ________________________________________
 
-## # Created Tables
-Database tables that will be created
-
-|**Table name**        | **Created by**   | **Link to GitHub**           | **Link to Shell**
-|---------------       | -----------      | ---------------              | ---------------------
-| Users                |                  |                              |
-| Products / Toys      |      Lien       |                              |
-| Products / Clothes   |      Lien        |                              |
-| Cart                 |                  |                              |
-| Contact              |                  |                              |
 
  
 
