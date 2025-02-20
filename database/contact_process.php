@@ -25,17 +25,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         //ececute the statement
         if( $stmt->execute() ) {
             //success message 
-            echo"New record added successfully!";
+            echo '<script type="text/javascript">
+            alert("Data Successfully submitted!");
+            window.location.href = "../index.php";
+            </script>';
         } else {
-            echo "Error: " . $stmt->error;
+            echo '<script type ="text/javascript">
+            alert("Error: ' . $stmt->error . '";
+            </script>';
+        }
+            $stmt->close();
+     } else {
+            echo '<script type="text/javascript">
+                     alert("Error preparing the SQL statement.");
+        </script>';
         }
         //close statement
         $conn->close();
-    } else {
-        // if someone access the script without submitting the form 
-        echo "Invalid Request!";
-    }
 }
-    ?>
+?>
 
     

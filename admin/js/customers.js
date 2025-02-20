@@ -68,18 +68,12 @@ let currentSort = 'newest';
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', async function() {
-    console.log('DOM Content Loaded');
-
-    // Initialize tooltips
     const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    // Initialize all event listeners
     initializeEventListeners();
-    
-    // Initial load
     await loadCustomers();
 });
 
