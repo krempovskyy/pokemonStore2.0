@@ -66899,3 +66899,1991 @@ Stack trace:
 [20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 3 using main image for gallery
 [20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 4 using main image for gallery
 [20-Feb-2025 09:18:25 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 10:22:44 UTC] Starting toys.php page load
+[20-Feb-2025 10:22:44 UTC] Database connection failed: could not find driver
+[20-Feb-2025 10:22:44 UTC] Failed to connect to database
+[20-Feb-2025 10:22:44 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 10:22:44 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 10:22:49 UTC] Starting toys.php page load
+[20-Feb-2025 10:22:49 UTC] Database connection failed: could not find driver
+[20-Feb-2025 10:22:49 UTC] Failed to connect to database
+[20-Feb-2025 10:22:49 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 10:22:49 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 10:29:14 UTC] Starting toys.php page load
+[20-Feb-2025 10:29:14 UTC] Database connection failed: could not find driver
+[20-Feb-2025 10:29:14 UTC] Failed to connect to database
+[20-Feb-2025 10:29:14 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 10:29:14 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 10:29:17 UTC] Starting toys.php page load
+[20-Feb-2025 10:29:17 UTC] Database connection failed: could not find driver
+[20-Feb-2025 10:29:17 UTC] Failed to connect to database
+[20-Feb-2025 10:29:17 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 10:29:17 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 10:54:53 UTC] Starting toys.php page load
+[20-Feb-2025 10:54:53 UTC] Database connection failed: could not find driver
+[20-Feb-2025 10:54:53 UTC] Failed to connect to database
+[20-Feb-2025 10:54:53 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 10:54:53 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 12:04:03 UTC] Starting toys.php page load
+[20-Feb-2025 12:04:03 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:04:03 UTC] Failed to connect to database
+[20-Feb-2025 12:04:03 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:04:03 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 12:04:31 UTC] Starting toys.php page load
+[20-Feb-2025 12:04:31 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:04:31 UTC] Failed to connect to database
+[20-Feb-2025 12:04:31 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:04:31 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 12:16:49 UTC] Starting toys.php page load
+[20-Feb-2025 12:16:49 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:16:49 UTC] Failed to connect to database
+[20-Feb-2025 12:16:49 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:16:49 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 12:16:55 UTC] Starting toys.php page load
+[20-Feb-2025 12:16:55 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:16:55 UTC] Failed to connect to database
+[20-Feb-2025 12:16:55 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:16:55 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 12:38:01 UTC] Starting toys.php page load
+[20-Feb-2025 12:38:01 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:38:01 UTC] Failed to connect to database
+[20-Feb-2025 12:38:01 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:38:01 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php on line 35
+[20-Feb-2025 12:39:27 UTC] Starting toys.php page load
+[20-Feb-2025 12:39:27 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:39:27 UTC] Failed to connect to database
+[20-Feb-2025 12:39:27 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:39:27 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php on line 35
+[20-Feb-2025 12:39:30 UTC] Starting toys.php page load
+[20-Feb-2025 12:39:30 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:39:30 UTC] Failed to connect to database
+[20-Feb-2025 12:39:30 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:39:30 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php on line 35
+[20-Feb-2025 12:39:31 UTC] Starting toys.php page load
+[20-Feb-2025 12:39:31 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:39:31 UTC] Failed to connect to database
+[20-Feb-2025 12:39:31 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:39:31 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 12:39:33 UTC] Starting toys.php page load
+[20-Feb-2025 12:39:33 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:39:33 UTC] Failed to connect to database
+[20-Feb-2025 12:39:33 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:39:33 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 12:39:35 UTC] Starting toys.php page load
+[20-Feb-2025 12:39:35 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:39:35 UTC] Failed to connect to database
+[20-Feb-2025 12:39:35 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:39:35 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php on line 35
+[20-Feb-2025 12:39:37 UTC] Starting toys.php page load
+[20-Feb-2025 12:39:37 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:39:37 UTC] Failed to connect to database
+[20-Feb-2025 12:39:37 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:39:37 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 12:39:38 UTC] Starting toys.php page load
+[20-Feb-2025 12:39:38 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:39:38 UTC] Failed to connect to database
+[20-Feb-2025 12:39:38 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:39:38 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 12:39:39 UTC] Starting toys.php page load
+[20-Feb-2025 12:39:39 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:39:39 UTC] Failed to connect to database
+[20-Feb-2025 12:39:39 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:39:39 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php on line 35
+[20-Feb-2025 12:39:43 UTC] Starting toys.php page load
+[20-Feb-2025 12:39:43 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:39:43 UTC] Failed to connect to database
+[20-Feb-2025 12:39:43 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:39:43 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php on line 35
+[20-Feb-2025 12:39:45 UTC] Starting toys.php page load
+[20-Feb-2025 12:39:45 UTC] Database connection failed: could not find driver
+[20-Feb-2025 12:39:45 UTC] Failed to connect to database
+[20-Feb-2025 12:39:45 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 12:39:45 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\toys.php on line 35
+[20-Feb-2025 14:40:24 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:40:24 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:40:24 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:40:24 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 14:40:24 Europe/Helsinki] Available categories in database: clothing-women, clothing-men, clothing-unisex
+[20-Feb-2025 14:40:24 Europe/Helsinki] Total products in database: 12
+[20-Feb-2025 14:40:24 Europe/Helsinki] Total in_stock products: 11
+[20-Feb-2025 14:40:31 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:40:31 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:40:31 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:40:31 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 14:40:31 Europe/Helsinki] Available categories in database: clothing-women, clothing-men, clothing-unisex
+[20-Feb-2025 14:40:31 Europe/Helsinki] Total products in database: 12
+[20-Feb-2025 14:40:31 Europe/Helsinki] Total in_stock products: 11
+[20-Feb-2025 14:46:50 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:46:50 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:46:50 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:46:50 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:46:50 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Hamburger
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:46:50 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:46:57 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:46:57 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:46:57 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:46:57 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:46:57 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Hamburger
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:46:57 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:47:02 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:47:02 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:47:02 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:47:02 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:47:02 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Hamburger
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:47:02 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:47:04 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:47:04 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:47:04 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:47:04 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:47:04 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Hamburger
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:47:04 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:47:09 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:47:09 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:47:09 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:47:09 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:47:09 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Hamburger
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:47:09 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:54:56 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:54:56 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:54:56 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:54:56 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:54:56 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:54:56 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:55:00 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:55:00 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:55:00 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:55:00 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:55:00 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:55:00 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:55:07 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:55:07 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:55:07 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:55:07 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:55:07 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:55:07 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:55:48 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:55:48 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:55:48 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:55:48 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:55:48 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:55:48 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:55:50 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:55:50 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:55:50 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:55:50 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:55:50 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:55:50 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:58:51 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:58:51 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:58:51 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:58:51 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:58:51 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:58:51 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:58:54 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:58:54 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:58:54 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:58:54 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:58:54 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:58:54 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:58:56 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:58:56 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:58:56 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:58:56 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:58:56 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:58:56 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:59:56 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:59:56 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:59:56 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:59:56 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:59:56 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:59:56 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 14:59:58 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 14:59:58 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 14:59:58 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 14:59:58 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 14:59:58 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 14:59:58 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 15:00:00 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:00:00 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:00:00 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:00:00 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 15:00:00 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 15:00:00 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 15:00:03 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:00:03 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:00:03 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:00:03 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 15:00:03 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 15:00:03 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 15:00:05 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:00:05 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:00:05 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:00:05 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 15:00:05 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 15:00:05 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 15:00:06 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:00:06 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:00:06 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:00:06 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 15:00:06 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 15:00:06 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 15:03:22 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:03:23 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:03:23 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:03:23 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 15:03:23 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 15:03:23 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 15:03:25 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:03:25 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:03:25 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:03:25 Europe/Helsinki] Query executed. Found 1 products
+[20-Feb-2025 15:03:25 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 14
+    [name] => Gloves
+    [price] => 9.99
+    [description] => Item for everyone
+    [category] => cards
+    [image] => ‰PNG
+
+
+[20-Feb-2025 15:03:25 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 15:12:21 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:12:21 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:12:21 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:12:21 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:12:21 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:12:21 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:12:21 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:12:31 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:12:31 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:12:31 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:12:31 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:12:31 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:12:31 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:12:31 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:12:33 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:12:33 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:12:33 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:12:33 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:12:33 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:12:33 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:12:33 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:12:53 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:12:53 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:12:53 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:12:53 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:12:53 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:12:53 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:12:53 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:12:59 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:12:59 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:12:59 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:12:59 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:12:59 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:12:59 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:12:59 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 13:23:57 UTC] Starting toys.php page load
+[20-Feb-2025 13:23:57 UTC] Database connection failed: could not find driver
+[20-Feb-2025 13:23:57 UTC] Failed to connect to database
+[20-Feb-2025 13:23:57 UTC] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 13:23:57 UTC] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php:35
+Stack trace:
+#0 {main}
+  thrown in D:\WEB PROGRAMMING\PKM NEW\pokemonStore2.0\clothes.php on line 35
+[20-Feb-2025 15:24:15 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:24:15 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:24:15 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:24:15 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:24:15 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:24:15 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:24:15 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:24:18 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:24:18 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:24:18 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:24:18 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:24:18 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:24:18 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:24:18 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:25:14 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:25:14 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:25:14 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:25:14 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:25:14 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:25:14 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:25:14 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:25:24 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:25:24 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:25:24 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:25:24 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:25:24 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:25:24 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:25:24 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:25:25 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:25:25 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:25:25 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:25:25 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:25:25 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:25:25 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:25:25 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:19 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:19 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:19 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:19 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:19 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:19 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:19 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:21 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:21 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:21 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:21 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:21 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:21 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:21 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:22 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:22 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:22 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:22 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:22 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:22 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:22 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:23 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:23 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:23 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:23 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:23 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:23 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:23 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:28 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:28 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:28 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:28 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:28 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:28 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:28 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:29 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:29 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:29 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:29 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:29 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:29 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:29 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:30 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:30 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:30 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:30 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:30 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:30 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:30 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:31 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:31 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:31 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:31 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:31 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:31 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:31 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:32 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:32 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:32 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:32 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:32 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:32 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:32 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:35 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:35 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:35 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:35 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:35 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:35 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:35 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:38 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:38 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:38 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:38 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:38 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:38 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:38 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:41 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:41 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:41 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:41 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:41 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:41 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:41 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:43 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:43 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:43 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:43 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:43 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:43 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:43 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:45 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:45 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:45 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:45 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:45 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:45 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:45 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:26:50 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:26:50 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:26:50 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:26:50 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:26:50 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:26:50 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:26:50 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:38:19 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:38:19 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:38:19 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:38:19 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:38:19 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:38:19 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:38:19 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:38:23 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:38:23 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:38:23 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:38:23 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:38:23 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:38:23 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:38:23 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:38:24 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:38:24 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:38:24 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:38:24 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:38:24 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:38:24 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:38:24 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:38:26 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:38:26 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:38:26 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:38:26 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:38:26 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:38:26 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:38:26 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:38:33 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:38:33 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:38:33 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:38:33 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:38:33 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:38:33 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:38:33 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:38:40 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:38:40 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:38:40 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:38:40 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:38:40 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:38:40 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:38:40 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 15:40:31 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 15:40:31 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 15:40:31 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 15:40:31 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 15:40:31 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 15:40:31 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 15:40:31 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:24:18 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 16:24:18 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:24:18 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:24:18 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:24:18 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:24:18 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:24:18 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:24:19 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 16:24:19 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:24:19 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:24:19 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:24:19 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:24:19 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:24:19 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:24:29 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 16:24:29 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:24:29 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:24:29 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:24:29 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:24:29 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:24:29 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:24:30 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 16:24:30 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:24:30 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:24:30 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:24:30 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:24:30 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:24:30 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:24:41 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 16:24:41 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:24:41 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:24:41 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:24:41 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:24:41 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:24:41 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:29:48 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 16:29:48 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:29:48 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:29:48 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:29:48 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:29:48 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:29:48 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:29:51 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 16:29:51 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:29:51 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:29:51 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:29:51 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:29:51 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:29:51 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:52:31 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 16:52:31 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:52:31 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:52:31 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:52:31 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:52:31 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:52:31 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:52:34 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 16:52:34 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:52:34 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:52:34 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:52:34 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:52:34 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:52:34 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:52:37 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 16:52:37 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:52:37 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:52:37 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:52:37 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:52:37 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:52:37 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 16:52:46 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 16:52:46 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 16:52:46 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 16:52:46 Europe/Helsinki] Query executed. Found 0 products
+[20-Feb-2025 16:52:46 Europe/Helsinki] Available categories in database: clothing-women, clothing-men
+[20-Feb-2025 16:52:46 Europe/Helsinki] Total products in database: 4
+[20-Feb-2025 16:52:46 Europe/Helsinki] Total in_stock products: 4
+[20-Feb-2025 17:17:07 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 17:17:07 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:17:07 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:17:07 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:17:07 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:17:07 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:17:07 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:17:07 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:17:07 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:17:07 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:17:07 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:17:07 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:17:07 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:17:07 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:07 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:07 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:07 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:07 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:07 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:07 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:07 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:25 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 17:17:25 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:17:25 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:17:25 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:17:25 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:17:25 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:17:25 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:17:25 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:17:25 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:17:25 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:17:25 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:17:25 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:17:25 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:17:25 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:25 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:25 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:25 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:25 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:25 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:25 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:25 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:26 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 17:17:26 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:17:26 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:17:26 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:17:26 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:17:26 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:17:26 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:17:26 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:17:26 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:17:26 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:17:26 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:17:26 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:17:26 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:17:42 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 17:17:42 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:17:42 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:17:42 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:17:42 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:17:42 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:17:42 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:17:42 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:17:42 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:17:42 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:17:42 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:17:42 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:17:42 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:17:42 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:42 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:42 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:42 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:42 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:42 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:42 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:17:42 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:18:25 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 17:18:25 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:18:25 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:18:25 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:18:25 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:18:25 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:18:25 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:18:25 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:18:25 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:18:25 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:18:25 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:18:25 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:18:25 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:18:52 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 17:18:52 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:18:52 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:18:52 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:18:52 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:18:52 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:18:52 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:18:52 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:18:52 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:18:52 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:18:52 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:18:52 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:18:52 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:18:52 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:18:52 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:18:52 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:18:52 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:18:52 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:18:52 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:18:52 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:18:52 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:29 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 17:24:29 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:24:29 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:24:29 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:24:29 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:24:29 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:24:29 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:24:29 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:24:29 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:24:29 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:24:29 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:24:29 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:24:29 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:24:29 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:29 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:29 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:29 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:29 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:29 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:29 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:29 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:43 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 17:24:43 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:24:43 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:24:43 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:24:43 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:24:43 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:24:43 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:24:43 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:24:43 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:24:43 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:24:43 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:24:43 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:24:43 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:24:45 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 17:24:45 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:24:45 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:24:45 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:24:45 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:24:45 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:24:45 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:24:45 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:24:45 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:24:45 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:24:45 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:24:45 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:24:45 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:24:57 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 17:24:57 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:24:57 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:24:57 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:24:57 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:24:57 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:24:57 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:24:57 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:24:57 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:24:57 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:24:57 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:24:57 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:24:57 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:24:57 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:57 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:57 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:57 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:57 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:57 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:57 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:24:57 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 17:29:11 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:29:11 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('accessories', 'clothing-women', 'clothing-women', 'clothing-unisex')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:29:11 Europe/Helsinki] Query executed. Found 11 products
+[20-Feb-2025 17:29:11 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 26
+    [name] => Pokemon Baseball Jersey
+    [price] => 44.99
+    [description] => Unisex Pokemon baseball jersey
+    [category] => clothing-unisex
+    [image] => /Images/SWEATER MAN.png
+    [gallery] => 
+    [stock_quantity] => 40
+    [sizes] => {"L": {"status": "in_stock", "quantity": 10}, "M": {"status": "in_stock", "quantity": 10}, "S": {"status": "in_stock", "quantity": 12}, "XL": {"status": "in_stock", "quantity": 8}}
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:14:03
+    [updated_at] => 2025-02-19 18:56:27
+)
+
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 26 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 27 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 28 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 29 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 22 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 23 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 24 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 11 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 12 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 13 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:29:11 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:30:55 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 17:30:55 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:30:55 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:30:55 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:30:55 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:30:55 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:30:55 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:30:55 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:30:55 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:30:55 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:30:55 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:30:55 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:30:55 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:31:00 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 17:31:00 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:31:00 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:31:00 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:31:00 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:31:00 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:31:00 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:31:00 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:31:00 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:31:00 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:31:00 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:31:00 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:31:00 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 17:31:03 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:31:03 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('accessories', 'clothing-women', 'clothing-women', 'clothing-unisex')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:31:03 Europe/Helsinki] Query executed. Found 11 products
+[20-Feb-2025 17:31:03 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 26
+    [name] => Pokemon Baseball Jersey
+    [price] => 44.99
+    [description] => Unisex Pokemon baseball jersey
+    [category] => clothing-unisex
+    [image] => /Images/SWEATER MAN.png
+    [gallery] => 
+    [stock_quantity] => 40
+    [sizes] => {"L": {"status": "in_stock", "quantity": 10}, "M": {"status": "in_stock", "quantity": 10}, "S": {"status": "in_stock", "quantity": 12}, "XL": {"status": "in_stock", "quantity": 8}}
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:14:03
+    [updated_at] => 2025-02-19 18:56:27
+)
+
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 26 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 27 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 28 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 29 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 22 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 23 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 24 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 11 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 12 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 13 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:03 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] Starting clothes.php page load
+[20-Feb-2025 17:31:22 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:31:22 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('accessories', 'clothing-women', 'clothing-women', 'clothing-unisex')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:31:22 Europe/Helsinki] Query executed. Found 11 products
+[20-Feb-2025 17:31:22 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 26
+    [name] => Pokemon Baseball Jersey
+    [price] => 44.99
+    [description] => Unisex Pokemon baseball jersey
+    [category] => clothing-unisex
+    [image] => /Images/SWEATER MAN.png
+    [gallery] => 
+    [stock_quantity] => 40
+    [sizes] => {"L": {"status": "in_stock", "quantity": 10}, "M": {"status": "in_stock", "quantity": 10}, "S": {"status": "in_stock", "quantity": 12}, "XL": {"status": "in_stock", "quantity": 8}}
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:14:03
+    [updated_at] => 2025-02-19 18:56:27
+)
+
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 26 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 27 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 28 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 29 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 22 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 23 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 24 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 11 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 12 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 13 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 14 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] PHP Warning:  Undefined array key "size" in /var/www/html/clothes.php on line 158
+[20-Feb-2025 17:31:22 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 17:31:22 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:31:22 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:31:22 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:31:22 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:31:22 Europe/Helsinki] Product ID 1 using main image for gallery
+[20-Feb-2025 17:32:04 Europe/Helsinki] Starting toys.php page load
+[20-Feb-2025 17:32:04 Europe/Helsinki] Successfully connected to database
+[20-Feb-2025 17:32:04 Europe/Helsinki] Executing query: 
+        SELECT p.*
+        FROM products p 
+        WHERE p.category IN ('plush', 'cards')
+        AND p.status = 'in_stock'
+        ORDER BY p.created_at DESC
+    
+[20-Feb-2025 17:32:04 Europe/Helsinki] Query executed. Found 8 products
+[20-Feb-2025 17:32:04 Europe/Helsinki] Sample product data: Array
+(
+    [id] => 6
+    [name] => Charizard VMAX
+    [price] => 199.99
+    [description] => Rare Charizard VMAX card in mint condition
+    [category] => cards
+    [image] => /Images/mewtwo.jpg
+    [gallery] => 
+    [stock_quantity] => 5
+    [sizes] => 
+    [status] => in_stock
+    [created_at] => 2025-02-19 15:13:06
+    [updated_at] => 2025-02-19 15:18:54
+)
+
+[20-Feb-2025 17:32:04 Europe/Helsinki] Product ID 6 using main image for gallery
+[20-Feb-2025 17:32:04 Europe/Helsinki] Product ID 7 using main image for gallery
+[20-Feb-2025 17:32:04 Europe/Helsinki] Product ID 8 using main image for gallery
+[20-Feb-2025 17:32:04 Europe/Helsinki] Product ID 9 using main image for gallery
+[20-Feb-2025 17:32:04 Europe/Helsinki] Product ID 2 using main image for gallery
+[20-Feb-2025 17:32:04 Europe/Helsinki] Product ID 3 using main image for gallery
+[20-Feb-2025 17:32:04 Europe/Helsinki] Product ID 4 using main image for gallery
+[20-Feb-2025 17:32:04 Europe/Helsinki] Product ID 1 using main image for gallery

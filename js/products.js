@@ -405,6 +405,7 @@ function showQuickView(product) {
     const productPrice = modal.querySelector('.product-price');
     const productDescription = modal.querySelector('.product-description p');
     const productCategory = modal.querySelector('.category-value');
+    const productSize = modal.querySelector('.size-value');
     const stockStatus = modal.querySelector('.stock-status');
     const quantityValue = modal.querySelector('.quantity-value');
     const addToCartBtn = modal.querySelector('.add-to-cart-btn');
@@ -415,6 +416,7 @@ function showQuickView(product) {
         productPrice: !!productPrice,
         productDescription: !!productDescription,
         productCategory: !!productCategory,
+        productSize: !!productSize,
         stockStatus: !!stockStatus,
         quantityValue: !!quantityValue,
         addToCartBtn: !!addToCartBtn
@@ -426,6 +428,7 @@ function showQuickView(product) {
     if (productPrice) productPrice.textContent = `$${product.price.toFixed(2)}`;
     if (productDescription) productDescription.textContent = product.description;
     if (productCategory) productCategory.textContent = product.category;
+    if (productSize) productSize.textContent = product.sizes;
 
     // Update stock status and quantity
     const inStock = product.stock_quantity > 0;
