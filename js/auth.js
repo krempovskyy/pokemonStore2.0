@@ -56,17 +56,24 @@ function initializeSigninForm(form) {
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Signing in...';
 
         // Simulate API call
-        setTimeout(() => {
-            // TODO: Replace with actual API call
-            if (data.email === 'test@example.com' && data.password === 'Test@123') {
-                showNotification('Success!', 'Signed in successfully. Redirecting...', 'success');
-                setTimeout(() => window.location.href = 'index.php', 1500);
-            } else {
+        $.ajax({
+            url: 'database/signin_process.php', // Use the form's action URL
+            type: "POST",
+            data: data, // Serialize form data
+            success: function (response) {
+                if (response == '1') {
+                    showNotification('Success!', 'Signed in successfully. Redirecting...', 'success');
+                    setTimeout(() => window.location.href = 'index.php', 1500);
+                } else {
+                    showNotification('Error!', response, 'error');
+                }
+            },
+            error: function () {
                 showNotification('Error!', 'Invalid email or password', 'error');
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
             }
-        }, 1500);
+        });
     });
 }
 
